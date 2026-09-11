@@ -218,6 +218,12 @@ def validation(config_path: Path) -> Config:
                 wipe_coments.append("")
         clean_config = "\n".join(wipe_coments)
         json_config = json.loads(clean_config)
+        if type(json_config) is not dict:
+            print(
+                "Config warning: config must be dict "
+                f"type, its {type(json_config)}. "
+                "Setting everything to default.")
+            json_config = {}
         config = Config.model_validate(json_config)
         return config
 
