@@ -1,0 +1,64 @@
+# General game settings
+{
+    "highscore_filename": "highscores.json",
+    "lives": 0,
+    "pacgum": 42,
+    "points_per_pacgum": 10,
+    "points_per_super_pacgum": 50,
+    "points_per_ghost": 200,
+    "level_max_time": 90,
+
+# The first level has a fixed seed; null means random generation
+    "levels": [
+        {
+            "width": 21,
+            "height": 21,
+            "seed": 42
+        },
+        {
+            "width": 21,
+            "height": 21,
+            "seed": null
+        },
+        {
+            "width": 23,
+            "height": 21,
+            "seed": null
+        },
+        {
+            "width": 23,
+            "height": 23,
+            "seed": null
+        },
+        {
+            "width": 25,
+            "height": 23,
+            "seed": null
+        },
+        {
+            "width": 25,
+            "height": 25,
+            "seed": null
+        },
+        {
+            "width": 27,
+            "height": 25,
+            "seed": null
+        },
+        {
+            "width": 27,
+            "height": 27,
+            "seed": null
+        },
+        {
+            "width": 29,
+            "height": 27,
+            "seed": null
+        },
+        {
+            "width": 29,
+            "height": 29,
+            "seed": null
+        }
+    ]
+}
