@@ -9,6 +9,11 @@ class Level(BaseModel):
     seed: Any = Field(default=None)
 
 
+class WorldExeption(Exception):
+    def __init__(self, msg: str = "Unkonwn World Exeption") -> None:
+        super().__init__(msg)
+
+
 Direction = Literal["up", "down", "left", "right"]
 Pos = tuple[int, int]  # (col, row)
 DELTA: dict[Direction, tuple[int, int]] = {

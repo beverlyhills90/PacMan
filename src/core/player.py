@@ -1,9 +1,6 @@
-from dataclasses import dataclass
-
-from shared_types import Direction, Grid, Pos
+from shared_types import Direction, Grid, Pos, Tile
 
 
-@dataclass
 class Player:
     def __init__(self, start: Pos, speed: float) -> None:
         self.start: Pos = start  # (col,row)
@@ -12,6 +9,7 @@ class Player:
         self.facing: Direction = "right"
         self._next_direction: Direction = "right"
         self.progress: float = 0.0
+        self.tile: Pos = start
 
     def update(self, dt: float, grid: Grid, intent: Direction | None) -> None:
         pass
