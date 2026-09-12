@@ -31,10 +31,10 @@ class Config(BaseModel):
     @field_validator("highscore_filename", mode="before")
     @classmethod
     def highscore_filename_validator(cls, value: Any):
-        if not isinstance(value, str) or isinstance(value, Path):
+        if not isinstance(value, (str, Path)):
             print("Highscore filename not valid,set to default\n")
             return Path("highscores.json")
-        return value
+        return Path(value)
 
     @model_validator(mode="after")
     def levels_validator(self):
