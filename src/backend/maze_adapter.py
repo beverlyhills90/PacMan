@@ -3,7 +3,7 @@ from typing import Any, cast
 
 from mazegenerator import MazeGenerator
 
-from parcing import Level
+from parsing import Level
 from sheredtypes import Grid
 
 NORTH = 1
