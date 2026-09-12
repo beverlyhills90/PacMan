@@ -4,16 +4,12 @@ from typing import Any
 
 from pydantic import BaseModel, Field, ValidationError, model_validator
 
+from .types import Level
+
 
 class ParsingError(Exception):
     def __init__(self, message: str) -> None:
         super().__init__(message)
-
-
-class Level(BaseModel):
-    width: Any = Field(default=20)
-    height: Any = Field(default=20)
-    seed: Any = Field(default=None)
 
 
 class Config(BaseModel):

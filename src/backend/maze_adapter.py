@@ -1,26 +1,21 @@
 import random
-from typing import Any, Literal, TypeAlias, cast
+from typing import Any, cast
 
 from mazegenerator import MazeGenerator
-from pydantic import TypeAdapter
 
-from parcing import Level
-
-
-class MazeError(Exception):
-    def __init__(self, msg: str = "unknown MazeError") -> None:
-        super().__init__(msg)
-
-
-Tile: TypeAlias = Literal["wall", "floor"]
-Grid: TypeAlias = list[list[Tile]]
-ta: TypeAdapter = TypeAdapter(list[list[int]])
+from ..parcing import Level
+from ..types import Grid
 
 NORTH = 1
 EAST = 2
 SOUTH = 4
 WEST = 8
 CLOSED = 15
+
+
+class MazeError(Exception):
+    def __init__(self, msg: str = "unknown MazeError") -> None:
+        super().__init__(msg)
 
 
 def build_grid_for_level(level: Level) -> Grid:
