@@ -2,7 +2,7 @@ from argparse import ArgumentParser, Namespace
 from pathlib import Path
 from sys import stderr
 
-from maze_adapter import build_grid
+from maze_adapter import build_grid_for_level
 from parcing import ParsingError, validation
 
 
@@ -11,7 +11,8 @@ def main() -> None:
     config_path = args.config
     try:
         config = validation(config_path)
-        #grid = build_grid(config.levels[0])
+        grid = build_grid_for_level(config.levels[0])
+        print(grid)
     except ParsingError as e:
         print(e, file=stderr)
 
