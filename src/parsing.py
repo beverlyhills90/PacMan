@@ -1,8 +1,14 @@
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
-from pydantic import BaseModel, Field, ValidationError, model_validator
+from pydantic import (
+    BaseModel,
+    Field,
+    ValidationError,
+    field_validator,
+    model_validator,
+)
 
 from sheredtypes import Level
 
@@ -21,6 +27,14 @@ class Config(BaseModel):
     points_per_ghost: Any = Field(default=200)
     level_max_time: Any = Field(default=90)
     levels: Any = Field(default_factory=list)
+
+    @field_validator("highscore_filename", mode="before")
+    @classmethod
+    def highscore_filename_validator(cls, value: Any):
+        if not isinstance(value, str) or isinstance(value, Path):
+            print("Highscore filename not valid,set to default\n")
+            return Path("highscores.json")
+        return value
 
     @model_validator(mode="after")
     def levels_validator(self):
