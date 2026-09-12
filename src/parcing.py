@@ -24,7 +24,7 @@ class Config(BaseModel):
     points_per_super_pacgum: Any = Field(default=50)
     points_per_ghost: Any = Field(default=200)
     level_max_time: Any = Field(default=90)
-    levels: list = Field(default_factory=list)
+    levels: Any = Field(default_factory=list)
 
     @model_validator(mode="after")
     def levels_validator(self):
