@@ -1,8 +1,38 @@
-from shared_types import DELTA, Direction, Grid, Pos
+from collections import deque
+
+from shared_types import DELTA, Direction, Grid, Pos, Tile, WorldExeption
+
+
+def tile_at(grid: Grid, pos: Pos) -> Tile:
+    col, row = pos
+    return grid[row][col]
 
 
 def find_start(grid: Grid) -> Pos:
-    pass
+    cc, cr = (len(grid[0]) // 2, len(grid) // 2)
+    queue = deque([((cc, cr), tile_at(grid, (cc, cr)))])
+    visited = {(cc, cr)}
+    while len(queue) != 0:
+        (mc, mr), current_tile = queue.popleft()
+        if current_tile == "floor":
+            return (mc, mr)
+        else:
+            for v in DELTA.values():
+                vc, vr = v
+                neighbor_col, neighbor_row = (vc + mc, vr + mr)
+                if 0 <= neighbor_col < len(grid[0]) and 0 <= neighbor_row < len(
+                    grid
+                ):
+                    if (neighbor_col, neighbor_row) not in visited:
+                        queue.append(
+                            (
+                                (neighbor_col, neighbor_row),
+                                tile_at(grid, (neighbor_col, neighbor_row)),
+                            )
+                        )
+                        visited.add((neighbor_col, neighbor_row))
+
+    raise WorldExeption("No floor tile in maze")
 
 
 def can_move(grid: Grid, pos: Pos, direction: Direction) -> bool:

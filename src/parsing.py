@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import (
     BaseModel,
@@ -30,14 +30,14 @@ class Config(BaseModel):
 
     @field_validator("highscore_filename", mode="before")
     @classmethod
-    def highscore_filename_validator(cls, value: Any):
+    def highscore_filename_validator(cls, value: Any) -> Path:
         if not isinstance(value, (str, Path)):
             print("Highscore filename not valid,set to default\n")
             return Path("highscores.json")
         return Path(value)
 
     @model_validator(mode="after")
-    def levels_validator(self):
+    def levels_validator(self) -> "Config":
         if type(self.levels) is not list:
             print(
                 f"Config warning: levels: {self.levels} is not list. "
@@ -132,7 +132,7 @@ class Config(BaseModel):
                 level.seed = None
 
     @model_validator(mode="after")
-    def config_validator(self):
+    def config_validator(self) -> "Config":
         if type(self.lives) is not int:
             print(
                 "Config warning: 'lives' must be an integer; "

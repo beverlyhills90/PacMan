@@ -39,7 +39,7 @@ def _generate(width: int, height: int, seed: int | None) -> list[list[int]]:
         maze = MazeGenerator(size=(width, height), seed=seed2)
     except Exception as e:
         raise MazeError(f"Maze generator failed: {e}")
-    return maze.maze
+    return cast(list[list[int]], maze.maze)
 
 
 def _is_list_of_lists_of_ints(obj: object) -> bool:
