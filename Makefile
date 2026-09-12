@@ -1,4 +1,4 @@
-ON = python3
+PYTHON = python3
 UV = uv
 
 .PHONY: all install run debug clean lint format

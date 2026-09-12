@@ -3,8 +3,8 @@ from typing import Any, cast
 
 from mazegenerator import MazeGenerator
 
-from ..parcing import Level
-from ..types import Grid
+from parcing import Level
+from sheredtypes import Grid
 
 NORTH = 1
 EAST = 2

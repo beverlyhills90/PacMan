@@ -2,7 +2,7 @@ from argparse import ArgumentParser, Namespace
 from pathlib import Path
 from sys import stderr
 
-from maze_adapter import build_grid_for_level
+from backend.maze_adapter import build_grid_for_level
 from parcing import ParsingError, validation
 
 
