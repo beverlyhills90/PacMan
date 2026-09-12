@@ -4,7 +4,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field, ValidationError, model_validator
 
-from .types import Level
+from sheredtypes import Level
 
 
 class ParsingError(Exception):
