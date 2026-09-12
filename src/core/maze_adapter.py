@@ -4,7 +4,7 @@ from typing import Any, cast
 from mazegenerator import MazeGenerator
 
 from parsing import Level
-from sheredtypes import Grid
+from shared_types import Grid
 
 NORTH = 1
 EAST = 2
