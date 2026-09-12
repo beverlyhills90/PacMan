@@ -236,7 +236,5 @@ def validation(config_path: Path) -> Config:
         raise ParsingError(
             f"Json Error: {e.msg} on line {e.lineno - 1}, column {e.colno}"
         )
-    except UnicodeDecodeError as e:
-        raise ParsingError(
-            f"Error: {e}"
-        )
+    except UnicodeDecodeError:
+        raise ParsingError("Error: config file must be UTF-8 encoded")
