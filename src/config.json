@@ -1,6 +1,6 @@
 # General game settings
 {
-    "highscore_filename": "highscores.json",
+    "highscore_filename": 123,
     "lives": 0,
     "pacgum": 42,
     "points_per_pacgum": 10,
