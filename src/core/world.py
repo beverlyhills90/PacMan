@@ -8,7 +8,7 @@ def tile_at(grid: Grid, pos: Pos) -> Tile:
     return grid[row][col]
 
 
-def neighbor(grid: Grid, pos: Pos, direction: Direction) -> Pos:
+def neighbor(pos: Pos, direction: Direction) -> Pos:
     nc, nr = pos
     dc, dr = DELTA[direction]
 
