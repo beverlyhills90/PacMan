@@ -19,6 +19,9 @@ venv = ".venv"
 extraPaths = ["src"]
 typeCheckingMode = "standard"
 
+[tool.mypy]
+mypy_path = "src"
+explicit_package_bases = true
 
 [tool.ruff]
 line-length = 80
@@ -30,10 +33,6 @@ exclude = [
     ".ruff_cache",
     ".venv",
     "venv",
-    "datasets_public",
-    "moulinette-ubuntu",
-    "moulinette-fedora",
-    "vllm-0.10.1"
 ]
 
 [tool.ruff.lint]
@@ -50,7 +49,6 @@ line-ending = "lf"
 dev = [
     "pytest>=9.1.1",
 ]
-
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
