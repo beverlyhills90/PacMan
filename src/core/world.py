@@ -8,6 +8,14 @@ def tile_at(grid: Grid, pos: Pos) -> Tile:
     return grid[row][col]
 
 
+def neighbor(grid: Grid, pos: Pos, direction: Direction) -> Pos:
+    nc, nr = pos
+    dc, dr = DELTA[direction]
+
+    neighbor_x, neighbor_y = nc + dc, nr + dr
+    return (neighbor_x, neighbor_y)
+
+
 def find_start(grid: Grid) -> Pos:
     cc, cr = (len(grid[0]) // 2, len(grid) // 2)
     queue = deque([((cc, cr), tile_at(grid, (cc, cr)))])
