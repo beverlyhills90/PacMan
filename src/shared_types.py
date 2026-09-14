@@ -19,6 +19,11 @@ class GhostExeption(WorldExeption):
         super().__init__(msg)
 
 
+class GameState:
+    def __init__(self) -> None:
+        pass
+
+
 Direction = Literal["up", "down", "left", "right"]
 GhostMode = Literal["chase", "frightened", "eaten"]
 GameStatus = Literal["playing", "level_won", "dead", "game_over", "victory"]
