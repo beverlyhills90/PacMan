@@ -67,8 +67,10 @@ class Config(BaseModel):
             max_pacgums = level.width * level.height
             if max_pacgums < self.pacgum:
                 print(f"Max pacgum amount for current level is {max_pacgums!r},"
-                      f" got {self.pacgum}. Reseting )
-        return self
+                      f" got {self.pacgum}. Reseting to default: '42'")
+                self.pacgum = 42
+                return self
+            return self
 
     def validate_levels(self) -> None:
         correct_list: list[Level] = []
