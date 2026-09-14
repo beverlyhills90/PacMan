@@ -58,7 +58,16 @@ class Config(BaseModel):
 
         self.check_size()
         self.check_seed()
+        self.validate_pacgums()
 
+        return self
+
+    def validate_pacgums(self):
+        for level in self.levels:
+            max_pacgums = level.width * level.height
+            if max_pacgums < self.pacgum:
+                print(f"Max pacgum amount for current level is {max_pacgums!r},"
+                      f" got {self.pacgum}. Reseting )
         return self
 
     def validate_levels(self) -> None:
