@@ -1,18 +1,21 @@
-from pathlib import Path
-from pydantic import BaseModel, ValidationError, Field, model_validator
 import json
+from pathlib import Path
 from typing import Any
+
+from pydantic import (
+    BaseModel,
+    Field,
+    ValidationError,
+    field_validator,
+    model_validator,
+)
+
+from shared_types import Level
 
 
 class ParsingError(Exception):
     def __init__(self, message: str) -> None:
         super().__init__(message)
-
-
-class Level(BaseModel):
-    width: Any = Field(default=20)
-    height: Any = Field(default=20)
-    seed: Any = Field(default=None)
 
 
 class Config(BaseModel):
@@ -25,11 +28,21 @@ class Config(BaseModel):
     level_max_time: Any = Field(default=90)
     levels: Any = Field(default_factory=list)
 
+    @field_validator("highscore_filename", mode="before")
+    @classmethod
+    def highscore_filename_validator(cls, value: Any) -> Path:
+        if not isinstance(value, (str, Path)):
+            print("Highscore filename not valid,set to default\n")
+            return Path("highscores.json")
+        return Path(value)
+
     @model_validator(mode="after")
-    def levels_validator(self):
+    def levels_validator(self) -> "Config":
         if type(self.levels) is not list:
-            print(f"Config warning: levels: {self.levels} is not list. "
-                  "Deleting pshhhh.....")
+            print(
+                f"Config warning: levels: {self.levels} is not list. "
+                "Deleting pshhhh....."
+            )
             self.levels = []
 
         self.validate_levels()
@@ -64,10 +77,9 @@ class Config(BaseModel):
     def create_levels(self, missing_levels: int) -> None:
         i = 10 - missing_levels
         while i < 10:
+            level: Level = Level()
             if i == 0:
-                level: Level = Level(seed=42)
-            else:
-                level: Level = Level()
+                level = Level(seed=42)
             self.levels.append(level)
             i += 1
 
@@ -120,7 +132,7 @@ class Config(BaseModel):
                 level.seed = None
 
     @model_validator(mode="after")
-    def config_validator(self):
+    def config_validator(self) -> "Config":
         if type(self.lives) is not int:
             print(
                 "Config warning: 'lives' must be an integer; "
@@ -153,7 +165,10 @@ class Config(BaseModel):
                 "integer; using default value 50."
             )
             self.points_per_super_pacgum = 50
-        elif self.points_per_super_pacgum < 25 or self.points_per_super_pacgum > 100:
+        elif (
+            self.points_per_super_pacgum < 25
+            or self.points_per_super_pacgum > 100
+        ):
             print(
                 "Config warning: 'points_per_super_pacgum' must be between "
                 f"25 and 100; got {self.points_per_super_pacgum!r}, "
@@ -222,7 +237,8 @@ def validation(config_path: Path) -> Config:
             print(
                 "Config warning: config must be dict "
                 f"type, its {type(json_config)}. "
-                "Setting everything to default.")
+                "Setting everything to default."
+            )
             json_config = {}
         config = Config.model_validate(json_config)
         return config
@@ -232,4 +248,7 @@ def validation(config_path: Path) -> Config:
         raise ParsingError(f"Error: {e} '{target}'")
     except json.JSONDecodeError as e:
         raise ParsingError(
-            f"Json Error: {e.msg} on line {e.lineno - 1}, column {e.colno}")
+            f"Json Error: {e.msg} on line {e.lineno - 1}, column {e.colno}"
+        )
+    except UnicodeDecodeError:
+        raise ParsingError("Error: config file must be UTF-8 encoded")
