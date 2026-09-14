@@ -10,6 +10,10 @@ from shared_types import (
 )
 
 
+def place_pacgums(grid, start, corners) -> tuple[set[Pos], set[Pos]]:
+    pass
+
+
 def tile_at(grid: Grid, pos: Pos) -> Tile:
     col, row = pos
     return grid[row][col]
