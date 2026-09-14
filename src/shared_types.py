@@ -13,6 +13,7 @@ class WorldExeption(Exception):
     def __init__(self, msg: str = "Unkonwn World Exeption") -> None:
         super().__init__(msg)
 
+
 class GhostExeption(WorldExeption):
     def __init__(self, msg: str = "Unkonwn Ghost Exeption") -> None:
         super().__init__(msg)
@@ -20,8 +21,9 @@ class GhostExeption(WorldExeption):
 
 Direction = Literal["up", "down", "left", "right"]
 GhostMode = Literal["chase", "frightened", "eaten"]
-
+GameStatus = Literal["playing", "level_won", "dead", "game_over", "victory"]
 Pos = tuple[int, int]  # (col, row)
+
 DELTA: dict[Direction, tuple[int, int]] = {
     "up": (0, -1),
     "down": (0, 1),
