@@ -67,7 +67,7 @@ class Game:
             self.score,
             self.status,
             self.lives,
-            self.level_index,
+            self.level_index
         )
         return game_state
 
@@ -80,6 +80,9 @@ class Game:
             self.status = "game_over"
 
     def _start_level(self, index: int) -> None:
+        pass
+
+    def _eat_pucgum(self) -> None:
         pass
 
     def _respawn(self) -> None:
