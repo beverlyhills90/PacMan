@@ -82,9 +82,6 @@ class Game:
     def _start_level(self, index: int) -> None:
         pass
 
-    def _eat_pucgum(self) -> None:
-        pass
-
     def _respawn(self) -> None:
         pass
 
