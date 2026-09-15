@@ -66,3 +66,5 @@ class GameState:
     super_pacgums: frozenset[Pos]
     score: int
     status: GameStatus
+    lives: int
+    level: int
