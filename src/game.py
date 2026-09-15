@@ -38,8 +38,7 @@ class Game:
 
     def update(self, dt: float, intent: Direction | None) -> None:
         self._tick_timer(dt)
-        if self.status != "playing":
-            return
+
         self.player.update(dt, self.level_grid, intent)
         self._eat_pucgum()
 

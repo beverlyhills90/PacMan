@@ -17,6 +17,7 @@ class EventHandler():
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_UP:
                     self.game.update(dt, "up")
+                    # print(self.game.player.tile)
                 elif event.key == pg.K_DOWN:
                     self.game.update(dt, "down")
                 elif event.key == pg.K_LEFT:

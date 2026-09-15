@@ -32,7 +32,7 @@ class Visualiser():
         self.game_layout.get_tile_size()
 
         while (True):
-            dt: float = clock.tick(60) * 1000
+            dt: float = clock.tick(60) / 1000
             self.event_handler.event_handling(dt)
             self.screen.fill('black')
             self.maze_view.draw_maze()
