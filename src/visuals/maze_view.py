@@ -1,79 +1,52 @@
-from shared_types import Grid, Tile
-from .game_layout import GameLayaout
+from shared_types import Grid
+from .game_layout import GameLayout
 import pygame as pg
-from .errors import VisulisationError
+from enum import IntFlag
+
+
+class WallConnection(IntFlag):
+    EMPTY = 0
+    UP = 1
+    RIGHT = 2
+    DOWN = 4
+    LEFT = 8
 
 
 class MazeView():
-    def __init__(self, grid: Grid, game_layout: GameLayaout, screen: pg.Surface) -> None:
+    def __init__(self, grid: Grid, game_layout: GameLayout, screen: pg.Surface) -> None:
         self.grid: Grid = grid
-        self.game_layout: GameLayaout = game_layout
+        self.game_layout: GameLayout = game_layout
         self.screen: pg.Surface = screen
+        self.wall_sprites: list[pg.Surface] = [pg.transform.scale(pg.image.load(
+            f"visuals/sprites/tiles/wall_{i:02d}.png").convert_alpha(),
+            (35, 35)) for i in range(16)]
+
+        self.wall_color = "white"
 
     def draw_maze(self) -> None:
         self.game_layout.get_tile_size()
-
         grid_h = self.game_layout.grid_h
-        for i in range(grid_h):
-            self.draw_row(i)
-
-    def draw_row(self, row_num: int) -> None:
-        row = self.grid[row_num]
-        tile_size = self.game_layout.tile_size
-        x = self.game_layout.get_offset_x()
-        y = (self.game_layout.get_offset_y() + (tile_size * row_num))
-        for i in range(len(row)):
-            if row_num == 0:
-                self.draw_upper_wall(x, y)
-            if row_num == self.game_layout.grid_h - 1:
-                self.draw_down_wall(x, y)
-            if i == 0:
-                self.draw_left_wall(x, y)
-            if i == len(row) - 1:
-                self.draw_right_wall(x, y)
-            if row[i] == "floor":
-                self.decide_wall(x, y, i, row_num)
-            x += tile_size
-
-    def decide_wall(self, x: int, y: int, tile_num: int, row_num: int) -> None:
-        up_tile = self.grid[row_num - 1][tile_num]
-        r_tile = self.grid[row_num][tile_num + 1]
-        down_tile = self.grid[row_num+1][tile_num]
-        l_tile = self.grid[row_num][tile_num - 1]
-        if up_tile == "wall":
-            self.draw_upper_wall(x, y)
-        if r_tile == "wall":
-            self.draw_right_wall(x, y)
-        if down_tile == "wall":
-            self.draw_down_wall(x, y)
-        if l_tile == "wall":
-            self.draw_left_wall(x, y)
-
-    def draw_left_wall(self, x: int, y: int) -> None:
-        tile_size = self.game_layout.tile_size
-        pg.draw.line(self.screen, "white", (x, y), (x, y + tile_size))
-
-    def draw_right_wall(self, x: int, y: int) -> None:
-        tile_size = self.game_layout.tile_size
-        pg.draw.line(self.screen, "white", (x + tile_size, y), (x + tile_size, y + tile_size))
-
-    def draw_down_wall(self, x: int, y: int) -> None:
-        tile_size = self.game_layout.tile_size
-        pg.draw.line(self.screen, "white", (x, y + tile_size), (x + tile_size, y + tile_size))
-
-    def draw_upper_wall(self, x: int, y: int) -> None:
-        tile_size = self.game_layout.tile_size
-        pg.draw.line(self.screen, "white", (x, y), (x + tile_size, y))
-
-    """def draw_upper_wall(self, row: list[Tile]) -> None:
+        grid_w = self.game_layout.grid_w
         x = self.game_layout.get_offset_x()
         y = self.game_layout.get_offset_y()
         tile_size = self.game_layout.tile_size
-        for tile in row:
-            if tile == "wall":
-                pg.draw.line(self.screen, "white",
-                             (x, y), (x + tile_size, y))
+        for row_n in range(grid_h):
+            row = self.grid[row_n]
+            for col_n in range(grid_w):
+                if row[col_n] == "wall":
+                    mask: WallConnection = WallConnection.EMPTY
+                    if col_n - 1 > -1 and row[col_n-1] == "wall":
+                        mask |= WallConnection.LEFT
+                    if col_n + 1 < grid_w and row[col_n+1] == "wall":
+                        mask |= WallConnection.RIGHT
+                    if row_n - 1 > -1 and self.grid[row_n-1][col_n] == "wall":
+                        mask |= WallConnection.UP
+                    if row_n + 1 < grid_h and self.grid[row_n+1][col_n] == "wall":
+                        mask |= WallConnection.DOWN
+                    self.screen.blit(self.wall_sprites[mask], (x, y))
+                    wall_hitbox = pg.Surface((tile_size, tile_size), pg.SRCALPHA)
+                    wall_hitbox.fill((0, 50, 0, 128))
+                    self.screen.blit(wall_hitbox, (x, y))
                 x += tile_size
-            else:
-                raise VisulisationError("Missing border wall, something went "
-                                        "wrong somewhere on genarating")"""
+            x = self.game_layout.get_offset_x()
+            y += tile_size

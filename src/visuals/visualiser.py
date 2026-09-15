@@ -1,7 +1,8 @@
 import pygame as pg
 from shared_types import Grid
-from .game_layout import GameLayaout
+from .game_layout import GameLayout
 from .maze_view import MazeView
+from .entity_view import EntityView
 import sys
 
 
@@ -13,8 +14,9 @@ class Visualiser():
         self.height: int = 800
         self.screen = pg.display.set_mode((self.width, self.height))
 
-        self.game_layout: GameLayaout
+        self.game_layout: GameLayout
         self.maze_view: MazeView
+        self.entity_view: EntityView
 
     def main_loop(self) -> None:
         pg.init()
@@ -25,6 +27,7 @@ class Visualiser():
             self.event_handling()
             self.screen.fill('black')
             self.maze_view.draw_maze()
+            self.entity_view.draw_entities()
 
             pg.display.flip()
 
@@ -38,6 +41,7 @@ class Visualiser():
 
     def set_cur_grid(self, grid: Grid) -> None:
         self.grid = grid
-        self.game_layout = GameLayaout(self.grid,
-                                       self.width, self.height)
+        self.game_layout = GameLayout(self.grid,
+                                      self.width, self.height)
         self.maze_view = MazeView(self.grid, self.game_layout, self.screen)
+        self.entity_view = EntityView(self.grid, self.game_layout, self.screen)
