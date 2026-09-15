@@ -1,12 +1,11 @@
 from abc import ABC, abstractmethod
 
 from core.world import can_move, find_target, neighbor, tile_at
-from shared_types import DELTA, Direction, GhostMode, Grid, Pos
+from shared_types import DELTA, OPPOSITE, Direction, GhostMode, Grid, Pos
 
 
 class Ghost(ABC):
     def __init__(self, home: Pos, name: str, speed: float) -> None:
-        super().__init__()
         self.home: Pos = home
         self.name: str = name
         self.speed: float = speed
@@ -25,7 +24,7 @@ class Ghost(ABC):
         pass
 
     def update(
-        self, dt: float, grid: Grid, target: Pos, pacman_facing: Direction
+        self, dt: float, grid: Grid, pacman_tile: Pos, pacman_facing: Direction
     ) -> None:
         if self.mode == "frightened":
             self._frightened_left -= dt
@@ -35,20 +34,38 @@ class Ghost(ABC):
             self._respawn_left -= dt
             if self._respawn_left >= 0.0:
                 return
+            else:
+                self.mode = "chase"
         if self._progress == 0.0:
-            self.direction = self._choose_direction(grid, target, pacman_facing)
+            self.direction = self._choose_direction(
+                grid, pacman_tile, pacman_facing
+            )
             self.facing = self.direction
         self._progress += self.speed * dt
         while self._progress >= 1:
             self.tile = neighbor(self.tile, self.direction)
-            self.direction = self._choose_direction(grid, target, pacman_facing)
+            self.direction = self._choose_direction(
+                grid, pacman_tile, pacman_facing
+            )
             self.facing = self.direction
             self._progress -= 1
             if self.mode == "eaten" and self.tile == self.home:
                 self.direction = "right"
                 self.facing = self.direction
 
-    def frighten(self, duration: float) -> None: ...
+    def frighten(self, duration: float) -> None:
+        if self.mode == "eaten":
+            return
+        if self.mode == "frightened":
+            self._frightened_left = duration
+            return
+        self.mode = "frightened"
+        self._frightened_left = duration
+        if self._progress != 0:
+            self.tile = neighbor(self.tile, self.direction)
+            self.direction = OPPOSITE[self.direction]
+            self.facing = self.direction
+            self._progress = 1 - self._progress
 
     def reset(self) -> None:
         self.tile = self.home
