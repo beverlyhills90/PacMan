@@ -37,9 +37,9 @@ class Game:
         self.status: GameStatus = "playing"
 
     def update(self, dt: float, intent: Direction | None) -> None:
-        self._tick_timer(dt)
         if self.status != "playing":
             return
+        self._tick_timer(dt)
         self.player.update(dt, self.level_grid, intent)
         self._eat_pucgum()
 
@@ -66,6 +66,8 @@ class Game:
             frozenset(self.super_pacgums),
             self.score,
             self.status,
+            self.lives,
+            self.level_index,
         )
         return game_state
 
