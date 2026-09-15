@@ -25,7 +25,7 @@ class EntityView():
         game_state: GameState = game.snapshot()
         pacman_state: PacmanView = game_state.player
         x_tile, y_tile = pacman_state.pos
-        print(x_tile, y_tile)
+        # print(x_tile, y_tile)
         tile_size = self.game_layout.tile_size
         x = x_tile * tile_size + self.game_layout.get_offset_x()
         y = y_tile * tile_size + self.game_layout.get_offset_y()

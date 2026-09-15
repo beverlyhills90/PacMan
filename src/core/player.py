@@ -22,6 +22,7 @@ class Player:
         return None
         no raise
         """
+        print(dt, intent)
         if intent is not None:
             self._next_direction = intent
         if (
