@@ -33,4 +33,4 @@ class EntityView():
         pacman_hitbox = pg.Surface(pacman_sprite.size, pg.SRCALPHA)
         pg.draw.rect(pacman_hitbox, (0, 50, 0, 120), pacman_sprite.get_rect(), border_radius=5)
         self.screen.blit(pacman_sprite, (x, y))
-        self.screen.blit(pacman_hitbox, (x, y))
+        # self.screen.blit(pacman_hitbox, (x, y))

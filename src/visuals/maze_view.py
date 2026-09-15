@@ -47,7 +47,7 @@ class MazeView():
                     overlay = pg.Surface(sprite.size, pg.SRCALPHA)
                     pg.draw.rect(overlay, (50, 0, 0, 120), sprite.get_rect(), border_radius=5)
                     self.screen.blit(self.wall_sprites[mask], (x, y))
-                    self.screen.blit(overlay, (x, y))
+                    # self.screen.blit(overlay, (x, y))
 
                 x += tile_size
             x = self.game_layout.get_offset_x()
