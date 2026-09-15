@@ -43,10 +43,12 @@ class MazeView():
                         mask |= WallConnection.UP
                     if row_n + 1 < grid_h and self.grid[row_n+1][col_n] == "wall":
                         mask |= WallConnection.DOWN
+                    sprite = self.wall_sprites[mask]
+                    overlay = pg.Surface(sprite.size, pg.SRCALPHA)
+                    pg.draw.rect(overlay, (50, 0, 0, 120), sprite.get_rect(), border_radius=5)
                     self.screen.blit(self.wall_sprites[mask], (x, y))
-                    wall_hitbox = pg.Surface((tile_size, tile_size), pg.SRCALPHA)
-                    wall_hitbox.fill((0, 50, 0, 128))
-                    self.screen.blit(wall_hitbox, (x, y))
+                    self.screen.blit(overlay, (x, y))
+
                 x += tile_size
             x = self.game_layout.get_offset_x()
             y += tile_size
