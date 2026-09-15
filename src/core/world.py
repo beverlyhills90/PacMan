@@ -1,6 +1,17 @@
 from collections import deque
 
-from shared_types import DELTA, Direction, Grid, Pos, Tile, WorldExeption
+from shared_types import (
+    DELTA,
+    Direction,
+    Grid,
+    Pos,
+    Tile,
+    WorldExeption,
+)
+
+
+def place_pacgums(grid, start, corners) -> tuple[set[Pos], set[Pos]]:
+    pass
 
 
 def tile_at(grid: Grid, pos: Pos) -> Tile:
@@ -18,8 +29,33 @@ def neighbor(pos: Pos, direction: Direction) -> Pos:
 
 def find_start(grid: Grid) -> Pos:
     cc, cr = (len(grid[0]) // 2, len(grid) // 2)
+    res = find_target(grid, (cc, cr))
+    return res
+
+
+def can_move(grid: Grid, pos: Pos, direction: Direction) -> bool:
+    nc, nr = pos
+    dc, dr = DELTA[direction]
+
+    next_move = grid[nr + dr][nc + dc]
+    if next_move == "wall":
+        return False
+    return True
+
+
+def find_target(grid: Grid, target_pos: Pos) -> Pos:
+    cc, cr = target_pos
+    if cc < 0:
+        cc = 0
+    if cc > len(grid[0]) - 1:
+        cc = len(grid[0]) - 1
+    if cr < 0:
+        cr = 0
+    if cr > len(grid) - 1:
+        cr = len(grid) - 1
     queue = deque([((cc, cr), tile_at(grid, (cc, cr)))])
     visited = {(cc, cr)}
+
     while len(queue) != 0:
         (mc, mr), current_tile = queue.popleft()
         if current_tile == "floor":
@@ -41,13 +77,3 @@ def find_start(grid: Grid) -> Pos:
                         visited.add((neighbor_col, neighbor_row))
 
     raise WorldExeption("No floor tile in maze")
-
-
-def can_move(grid: Grid, pos: Pos, direction: Direction) -> bool:
-    nc, nr = pos
-    dc, dr = DELTA[direction]
-
-    next_move = grid[nr + dr][nc + dc]
-    if next_move == "wall":
-        return False
-    return True

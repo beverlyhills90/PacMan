@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from typing import Any, Literal, TypeAlias
 
 from pydantic import BaseModel, Field
@@ -14,8 +15,16 @@ class WorldExeption(Exception):
         super().__init__(msg)
 
 
+class GhostExeption(WorldExeption):
+    def __init__(self, msg: str = "Unkonwn Ghost Exeption") -> None:
+        super().__init__(msg)
+
+
 Direction = Literal["up", "down", "left", "right"]
+GhostMode = Literal["chase", "frightened", "eaten"]
+GameStatus = Literal["playing", "level_won", "dead", "game_over", "victory"]
 Pos = tuple[int, int]  # (col, row)
+
 DELTA: dict[Direction, tuple[int, int]] = {
     "up": (0, -1),
     "down": (0, 1),
@@ -30,3 +39,30 @@ OPPOSITE: dict[Direction, Direction] = {
 }
 Tile: TypeAlias = Literal["wall", "floor"]
 Grid: TypeAlias = list[list[Tile]]  # (row, col)
+
+
+@dataclass(frozen=True)
+class PacmanView:
+    pos: tuple[float, float]
+    facing: Direction
+    moving: bool
+
+
+@dataclass(frozen=True)
+class GhostView:
+    name: str
+    pos: tuple[float, float]
+    facing: Direction
+    mode: GhostMode
+    frightened_left: float
+
+
+@dataclass(frozen=True)
+class GameState:
+    grid: Grid
+    player: PacmanView
+    ghosts: list[GhostView]
+    pacgums: frozenset[Pos]
+    super_pacgums: frozenset[Pos]
+    score: int
+    status: GameStatus
