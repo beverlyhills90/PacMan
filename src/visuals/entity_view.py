@@ -22,4 +22,8 @@ class EntityView():
 
     def draw_pacman(self) -> None:
         x, y = self.game_layout.get_grid_center()
-        self.screen.blit(self.pacman_sprites["right"][0], (x, y))
+        pacman_sprite = self.pacman_sprites["right"][0]
+        pacman_hitbox = pg.Surface(pacman_sprite.size, pg.SRCALPHA)
+        pg.draw.rect(pacman_hitbox, (0, 50, 0, 120), pacman_sprite.get_rect(), border_radius=5)
+        self.screen.blit(pacman_sprite, (x, y))
+        self.screen.blit(pacman_hitbox, (x, y))
