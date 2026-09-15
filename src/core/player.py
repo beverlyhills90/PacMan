@@ -45,6 +45,8 @@ class Player:
                 return
         self._progress += self.speed * dt
         while self._progress >= 1:
+            if self.direction is None:
+                break
             self.tile = neighbor(self.tile, self.direction)
             self._progress -= 1
             if self._next_direction is not None and can_move(
