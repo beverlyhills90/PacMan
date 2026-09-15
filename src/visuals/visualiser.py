@@ -3,7 +3,7 @@ from shared_types import Grid
 from .game_layout import GameLayout
 from .maze_view import MazeView
 from .entity_view import EntityView
-import sys
+from .event_handler import EventHandler
 
 
 class Visualiser():
@@ -17,6 +17,7 @@ class Visualiser():
         self.game_layout: GameLayout
         self.maze_view: MazeView
         self.entity_view: EntityView
+        self.event_handler: EventHandler
 
     def main_loop(self) -> None:
         pg.init()
@@ -24,7 +25,7 @@ class Visualiser():
         pg.display.set_caption("Pacman")
 
         while (True):
-            self.event_handling()
+            self.event_handler.event_handling()
             self.screen.fill('black')
             self.maze_view.draw_maze()
             self.entity_view.draw_entities()
@@ -33,15 +34,10 @@ class Visualiser():
 
             clock.tick(60)
 
-    def event_handling(self) -> None:
-        for event in pg.event.get():
-            if event.type == pg.QUIT:
-                pg.quit()
-                sys.exit()
-
     def set_cur_grid(self, grid: Grid) -> None:
         self.grid = grid
         self.game_layout = GameLayout(self.grid,
                                       self.width, self.height)
         self.maze_view = MazeView(self.grid, self.game_layout, self.screen)
         self.entity_view = EntityView(self.grid, self.game_layout, self.screen)
+        self.event_handler = EventHandler(self.screen)
