@@ -1,6 +1,7 @@
 import pygame as pg
-from shared_types import Grid
+from shared_types import Grid, PacmanView, GameState
 from .game_layout import GameLayout
+from game import Game
 
 
 class EntityView():
@@ -17,11 +18,17 @@ class EntityView():
             for direction in ("right", "down", "left", "up")
         }
 
-    def draw_entities(self) -> None:
-        self.draw_pacman()
+    def draw_entities(self, game: Game) -> None:
+        self.draw_pacman(game)
 
-    def draw_pacman(self) -> None:
-        x, y = self.game_layout.get_grid_center()
+    def draw_pacman(self, game: Game) -> None:
+        game_state: GameState = game.snapshot()
+        pacman_state: PacmanView = game_state.player
+        x_tile, y_tile = pacman_state.pos
+        print(x_tile, y_tile)
+        tile_size = self.game_layout.tile_size
+        x = x_tile * tile_size + self.game_layout.get_offset_x()
+        y = y_tile * tile_size + self.game_layout.get_offset_y()
         pacman_sprite = self.pacman_sprites["right"][0]
         pacman_hitbox = pg.Surface(pacman_sprite.size, pg.SRCALPHA)
         pg.draw.rect(pacman_hitbox, (0, 50, 0, 120), pacman_sprite.get_rect(), border_radius=5)

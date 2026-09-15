@@ -11,8 +11,8 @@
 # The first level has a fixed seed; null means random generation
     "levels": [
         {
-            "width": 20,
-            "height": 20,
+            "width": 10,
+            "height": 10,
             "seed": 42
         },
         {

@@ -5,17 +5,22 @@ from sys import stderr
 from core.maze_adapter import build_grid_for_level
 from parsing import ParsingError, validation
 from visuals.visualiser import Visualiser
+from core.player import Player
+from game import Game
+from core.world import find_start
 
 
 def main() -> None:
     args = argument_parser()
     config_path = args.config
     visualiser = Visualiser()
+
     try:
         config = validation(config_path)
         grid = build_grid_for_level(config.levels[0])
-        print(grid)
-        visualiser.set_cur_grid(grid)
+        player = Player(find_start(grid), 2)
+        game = Game(config, grid, player, [], set(), set(), 3, 90)
+        visualiser.set_cur_grid(grid, game, player)
         visualiser.main_loop()
     except ParsingError as e:
         print(e, file=stderr)
