@@ -1,20 +1,33 @@
 import pygame as pg
 import sys
-from shared_types import Direction
+from shared_types import Direction, VisualState
 from game import Game
+from .menu_view import MenuView
+from .highscore_view import HighscoreView
 
 
 class EventHandler():
-    def __init__(self, screen: pg.Surface, game: Game) -> None:
-        self.screen = screen
-        self.game = game
+    def __init__(self, screen: pg.Surface, game: Game, menu_view: MenuView, highscore_view: HighscoreView) -> None:
+        self.screen: pg.Surface = screen
+        self.game: Game = game
+        self.menu_view: MenuView = menu_view
+        self.highscore_view: HighscoreView = highscore_view
 
-    def event_handling(self, dt: float) -> None:
+    def event_handling(self, dt: float, state: VisualState) -> VisualState | None:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
                 sys.exit()
-            # if event.type == pg.KEYDOWN:
+            if state == "menu" and event.type == pg.MOUSEBUTTONUP:
+                return self.menu_events(event)
+            if state == "highscore" and event.type == pg.MOUSEBUTTONUP:
+                return self.highscore_events(event)
+
+        if state == "start":
+            return self.game_events(dt)
+        return None
+
+    def game_events(self, dt: float) -> VisualState | None:
         keys = pg.key.get_pressed()
         intent = None
         if keys[pg.K_UP]:
@@ -26,3 +39,16 @@ class EventHandler():
         if keys[pg.K_RIGHT]:
             intent = "right"
         self.game.update(dt, intent)
+        return None
+
+    def menu_events(self, event: pg.Event) -> VisualState | None:
+        mouse_pos = event.pos
+        if event.button == 1:
+            return (self.menu_view.handle_input(mouse_pos))
+        return None
+
+    def highscore_events(self, event: pg.Event) -> VisualState | None:
+        mouse_pos = event.pos
+        if event.button == 1:
+            return (self.highscore_view.handle_input(mouse_pos))
+        return None

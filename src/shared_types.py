@@ -23,6 +23,7 @@ class GhostExeption(WorldExeption):
 Direction = Literal["up", "down", "left", "right"]
 GhostMode = Literal["chase", "frightened", "eaten"]
 GameStatus = Literal["playing", "level_won", "dead", "game_over", "victory"]
+VisualState = Literal["menu", "start", "exit", "highscore"]
 Pos = tuple[int, int]  # (col, row)
 
 DELTA: dict[Direction, tuple[int, int]] = {

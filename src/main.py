@@ -8,6 +8,7 @@ from visuals.visualiser import Visualiser
 from core.player import Player
 from game import Game
 from core.world import find_start
+import pygame as pg
 
 
 def main() -> None:
@@ -16,6 +17,8 @@ def main() -> None:
     visualiser = Visualiser()
 
     try:
+        pg.init()
+
         config = validation(config_path)
         grid = build_grid_for_level(config.levels[0])
         player = Player(find_start(grid), 4)
@@ -31,7 +34,7 @@ def argument_parser() -> Namespace:
     parser.add_argument(
         "--config",
         help="path to config file",
-        default=Path("/Users/og/myubuntu/42repo/PACMAN/src/config.json"),
+        default=Path("/home/ypopovyc/Desktop/pacman/src/config.json"),
         type=Path,
     )
     args: Namespace = parser.parse_args()
