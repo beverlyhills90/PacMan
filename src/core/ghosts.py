@@ -176,7 +176,7 @@ class Pinky(Ghost):
 
 
 class Inky(Ghost):
-    def __init__(self, home: Pos, name: str, speed: float) -> None:
+    def __init__(self, home: Pos, speed: float) -> None:
         super().__init__(home, "inky", speed)
 
     def chase_target(
@@ -186,7 +186,7 @@ class Inky(Ghost):
 
 
 class Clyde(Ghost):
-    def __init__(self, home: Pos, name: str, speed: float) -> None:
+    def __init__(self, home: Pos, speed: float) -> None:
         super().__init__(home, "clyde", speed)
 
     def chase_target(

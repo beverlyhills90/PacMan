@@ -1,5 +1,6 @@
-from core.ghosts import Ghost
+from core.ghosts import Blinky, Clyde, Ghost, Inky, Pinky
 from core.player import Player
+from core.world import new_ghosts, new_player
 from parsing import Config
 from shared_types import (
     Direction,
@@ -17,18 +18,17 @@ class Game:
         self,
         config: Config,
         level_grid: Grid,
-        player: Player,
-        ghosts: list[Ghost],
         pacgums: set[Pos],
         super_pacgums: set[Pos],
         lives: int,
         time_left: int = 90,
+        speed: float = 8,
     ) -> None:
         self.config: Config = config
         self.level_index: int = 0
         self.level_grid: Grid = level_grid
-        self.player: Player = player
-        self.ghosts: list[Ghost] = ghosts
+        self.player: Player = new_player(self.level_grid, speed)
+        self.ghosts: list[Ghost] = new_ghosts(self.level_grid, speed)
         self.pacgums: set[Pos] = pacgums
         self.super_pacgums = super_pacgums
         self.score: int = 0
@@ -57,7 +57,13 @@ class Game:
             facing=self.player.facing,
             moving=player_moving,
         )
-        ghost_views = []  # TODO ADD GHOSTS
+        ghost_views = []
+        for g in self.ghosts:
+            ghost_views.append(
+                GhostView(
+                    g.name, g.screen_pos(), g.facing, g.mode, g._frightened_left
+                )
+            )
         game_state = GameState(
             self.level_grid,
             pacman_view,
@@ -67,7 +73,7 @@ class Game:
             self.score,
             self.status,
             self.lives,
-            self.level_index
+            self.level_index,
         )
         return game_state
 
