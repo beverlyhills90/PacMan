@@ -1,5 +1,9 @@
 from collections import deque
+from operator import le
 
+from ghosts import Blinky, Clyde, Ghost, Inky, Pinky
+
+from core.player import Player
 from shared_types import (
     DELTA,
     Direction,
@@ -77,3 +81,19 @@ def find_target(grid: Grid, target_pos: Pos) -> Pos:
                         visited.add((neighbor_col, neighbor_row))
 
     raise WorldExeption("No floor tile in maze")
+
+
+def new_ghosts(grid: Grid, speed: float) -> list[Ghost]:
+    left_up_pos = (0, 0)
+    right_up_pos = (len(grid[0]), 0)
+    left_down_pos = (0, len(grid))
+    right_down_pos = (len(grid[0]), len(grid))
+    blinky = Blinky(home=find_target(grid, left_up_pos), speed=speed)
+    pinky = Pinky(home=find_target(grid, right_up_pos), speed=speed)
+    inky = Inky(home=find_target(grid, left_down_pos), speed=speed)
+    clyde = Clyde(home=find_target(grid, right_down_pos), speed=speed)
+    return [blinky, pinky, inky, clyde]
+
+
+def new_player(grid: Grid, speed: float) -> Player:
+    return Player(find_start(grid), speed)
