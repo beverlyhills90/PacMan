@@ -1,4 +1,7 @@
+import random
 from abc import ABC, abstractmethod
+from collections import deque
+from typing import get_args
 
 from core.world import can_move, find_target, neighbor, tile_at
 from shared_types import DELTA, OPPOSITE, Direction, GhostMode, Grid, Pos
@@ -16,6 +19,7 @@ class Ghost(ABC):
         self._frightened_left: float = 0.0
         self._respawn_left: float = 0.0
         self.mode: GhostMode = "chase"
+        self._rng = random.Random()
 
     @abstractmethod
     def chase_target(
@@ -37,21 +41,12 @@ class Ghost(ABC):
             else:
                 self.mode = "chase"
         if self._progress == 0.0:
-            self.direction = self._choose_direction(
-                grid, pacman_tile, pacman_facing
-            )
-            self.facing = self.direction
+            self._decide(grid, pacman_tile, pacman_facing)
         self._progress += self.speed * dt
         while self._progress >= 1:
             self.tile = neighbor(self.tile, self.direction)
-            self.direction = self._choose_direction(
-                grid, pacman_tile, pacman_facing
-            )
-            self.facing = self.direction
+            self._decide(grid, pacman_tile, pacman_facing)
             self._progress -= 1
-            if self.mode == "eaten" and self.tile == self.home:
-                self.direction = "right"
-                self.facing = self.direction
 
     def frighten(self, duration: float) -> None:
         if self.mode == "eaten":
@@ -70,7 +65,8 @@ class Ghost(ABC):
     def reset(self) -> None:
         self.tile = self.home
         self.mode = "chase"
-        self.direction = "right"
+        self.direction = "left"
+        self.facing = "left"
         self._progress = 0.0
         self._frightened_left = 0.0
         self._respawn_left = 0.0
@@ -83,8 +79,6 @@ class Ghost(ABC):
 
     def screen_pos(self) -> tuple[float, float]:
         x, y = self.tile
-        if self.direction is None:
-            return (float(x), float(y))
         delta_x, delta_y = DELTA[self.direction]
         res_x = x + delta_x * self._progress
         res_y = y + delta_y * self._progress
@@ -93,12 +87,60 @@ class Ghost(ABC):
     def _current_target(
         self, grid: Grid, pacman_tile: Pos, pacman_facing: Direction
     ) -> Pos:
-        pass
+        if self.mode == "chase":
+            return find_target(
+                grid, self.chase_target(grid, pacman_tile, pacman_facing)
+            )
+        if self.mode == "frightened":
+            self_x, self_y = self.tile
+            pac_x, pac_y = pacman_tile
+            (t_x, t_y) = self_x * 2, self_y * 2
+            target_pos = (t_x - pac_x, t_y - pac_y)
+            return find_target(grid, target_pos)
+        return self.home
 
-    def _choose_direction(
-        self, grid: Grid, target: Pos, pacman_facing: Direction
-    ) -> Direction:
-        pass
+    def _choose_direction(self, grid: Grid, target: Pos) -> Direction:
+        candidats = []
+        for d in get_args(Direction):
+            if can_move(grid, self.tile, d) and d != OPPOSITE[self.direction]:
+                candidats.append(d)
+        if not candidats:
+            candidats.append(OPPOSITE[self.direction])
+        if self.mode == "frightened":
+            return self._rng.choice(candidats)
+        if len(candidats) == 1:
+            return candidats[0]
+        visited = {self.tile}
+        q = deque([])
+        for d in candidats:
+            p = neighbor(self.tile, d)
+            if p == target:
+                return d
+            visited.add(p)
+            q.append((p, d))
+        while q:
+            pos, direct = q.popleft()
+            for d, delta in DELTA.items():
+                if can_move(grid, pos, d):
+                    n = neighbor(pos, d)
+                    if n in visited:
+                        continue
+                    if n == target:
+                        return direct
+                    else:
+                        visited.add(n)
+                        q.append((n, direct))
+        if self.direction in candidats:
+            return self.direction
+        else:
+            return candidats[0]
+
+    def _decide(
+        self, grid: Grid, pacman_tile: Pos, pacman_facing: Direction
+    ) -> None:
+        target = self._current_target(grid, pacman_tile, pacman_facing)
+        self.direction = self._choose_direction(grid, target)
+        self.facing = self.direction
 
 
 class Blinky(Ghost):
