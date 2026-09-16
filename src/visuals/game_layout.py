@@ -34,20 +34,8 @@ class GameLayout():
     def get_offset_y(self) -> int:
         return self.top_margin
 
-    def get_grid_center(self) -> tuple[int, int]:
-        x_tile = self.grid_w // 2
-        y_tile = self.grid_h // 2
-        if self.grid[y_tile][x_tile] == 'floor':
-            return (self.get_offset_x() * x_tile, self.get_offset_y() * y_tile)
-        radius = 1
-        limiter = max(self.grid_h, self.grid_w)
-        for radius in range(limiter + 1):
-            for dx in range(-radius, radius + 1):
-                vertical = radius - abs(dx)
-                for dy in {vertical, -vertical}:
-                    if (0 <= x_tile + dx < self.grid_w and 0 <= y_tile+dy < self.grid_h):
-                        if self.grid[y_tile + dy][x_tile + dx] == 'floor':
-                            return (self.get_offset_x() + (self.tile_size*(x_tile + dx)),
-                                    self.get_offset_y() + (self.tile_size*(y_tile + dy)))
-
-        raise VisulisationError("Couldnt find a place for pacman. Shouldnt happen...")
+    def tiles_to_coordinates(self, tiles: tuple[float, float]) -> tuple[float, float]:
+        x_tile, y_tile = tiles
+        x = x_tile * self.tile_size + self.get_offset_x()
+        y = y_tile * self.tile_size + self.get_offset_y()
+        return (x, y)
