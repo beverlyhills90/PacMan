@@ -23,6 +23,7 @@ class GhostExeption(WorldExeption):
 Direction = Literal["up", "down", "left", "right"]
 GhostMode = Literal["chase", "frightened", "eaten"]
 GameStatus = Literal["playing", "level_won", "dead", "game_over", "victory"]
+GhsotsNames = Literal["blinky", "pinky", "inky", "clyde"]
 Pos = tuple[int, int]  # (col, row)
 
 DELTA: dict[Direction, tuple[int, int]] = {
@@ -50,7 +51,7 @@ class PacmanView:
 
 @dataclass(frozen=True)
 class GhostView:
-    name: str
+    name: GhsotsNames
     pos: tuple[float, float]
     facing: Direction
     mode: GhostMode

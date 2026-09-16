@@ -3,14 +3,22 @@ from abc import ABC, abstractmethod
 from collections import deque
 from typing import get_args
 
-from core.world import can_move, find_target, neighbor, tile_at
-from shared_types import DELTA, OPPOSITE, Direction, GhostMode, Grid, Pos
+from core.world import can_move, find_target, neighbor
+from shared_types import (
+    DELTA,
+    OPPOSITE,
+    Direction,
+    GhostMode,
+    GhsotsNames,
+    Grid,
+    Pos,
+)
 
 
 class Ghost(ABC):
-    def __init__(self, home: Pos, name: str, speed: float) -> None:
+    def __init__(self, home: Pos, name: GhsotsNames, speed: float) -> None:
         self.home: Pos = home
-        self.name: str = name
+        self.name: GhsotsNames = name
         self.speed: float = speed
         self.tile: Pos = self.home
         self.direction: Direction = "right"
@@ -147,6 +155,41 @@ class Blinky(Ghost):
     def __init__(
         self,
         home: Pos,
-        speed: float = 2.0,
+        speed: float,
     ) -> None:
         super().__init__(home, "blinky", speed)
+
+    def chase_target(
+        self, grid: Grid, pacman_tile: Pos, pacman_facing: Direction
+    ) -> Pos:
+        return (0, 1)
+
+
+class Pinky(Ghost):
+    def __init__(self, home: Pos, speed: float) -> None:
+        super().__init__(home, "pinky", speed)
+
+    def chase_target(
+        self, grid: Grid, pacman_tile: Pos, pacman_facing: Direction
+    ) -> Pos:
+        return (0, 1)
+
+
+class Inky(Ghost):
+    def __init__(self, home: Pos, name: str, speed: float) -> None:
+        super().__init__(home, "inky", speed)
+
+    def chase_target(
+        self, grid: Grid, pacman_tile: Pos, pacman_facing: Direction
+    ) -> Pos:
+        return (0, 1)
+
+
+class Clyde(Ghost):
+    def __init__(self, home: Pos, name: str, speed: float) -> None:
+        super().__init__(home, "clyde", speed)
+
+    def chase_target(
+        self, grid: Grid, pacman_tile: Pos, pacman_facing: Direction
+    ) -> Pos:
+        return (0, 1)
