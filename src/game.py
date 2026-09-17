@@ -98,7 +98,7 @@ class Game:
 
     def _eat_pacgum(self) -> None:
         if self.time_left <= 80:
-            self.pacgums.pop()
+            self.pacgums.clear()
 
     def _respawn(self) -> None:
         if self.lives <= 0:
