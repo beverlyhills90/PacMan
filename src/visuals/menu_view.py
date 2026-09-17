@@ -1,6 +1,6 @@
 import pygame as pg
 from shared_types import VisualState
-from .buttons import Button, Fonts
+from .buttons import MenuButton, Fonts
 
 
 class MenuView():
@@ -8,7 +8,7 @@ class MenuView():
         self.screen = screen
         self.fonts = fonts
 
-        self.button_list: list[Button] = self.create_buttons()
+        self.button_list: list[MenuButton] = self.create_buttons()
 
     def draw_menu(self, mouse_pos: tuple[int, int]) -> None:
         for button in self.button_list:
@@ -20,19 +20,19 @@ class MenuView():
                 return button.action
         return None
 
-    def create_buttons(self) -> list[Button]:
-        button_list: list[Button] = []
+    def create_buttons(self) -> list[MenuButton]:
+        button_list: list[MenuButton] = []
 
-        start_buton = Button((400, 200), "Start Game", "start",
-                             self.fonts.mid_button_font, self.fonts.mid_button_hover_font)
+        start_buton = MenuButton((400, 200), "Start Game", "start",
+                                 self.fonts.mid_button_font, self.fonts.mid_button_hover_font)
         button_list.append(start_buton)
 
-        highscore_button = Button((400, 300), "Highscore", "highscore",
-                                  self.fonts.mid_button_font, self.fonts.mid_button_hover_font)
+        highscore_button = MenuButton((400, 300), "Highscore", "highscore",
+                                      self.fonts.mid_button_font, self.fonts.mid_button_hover_font)
         button_list.append(highscore_button)
 
-        exit_button = Button((400, 400), "Exit", "exit",
-                             self.fonts.mid_button_font, self.fonts.mid_button_hover_font)
+        exit_button = MenuButton((400, 400), "Exit", "exit",
+                                 self.fonts.mid_button_font, self.fonts.mid_button_hover_font)
         button_list.append(exit_button)
 
         return button_list

@@ -15,7 +15,7 @@ class Fonts:
         self.big_button_hover_font = pg.font.Font(main_font_path, 35)
 
 
-class Button:
+class MenuButton:
     def __init__(self, center: tuple[int, int], text: str, action: VisualState | None,
                  normal_font: pg.font.Font, hover_font: pg.font.Font) -> None:
         self.text_surface: pg.Surface = normal_font.render(text, False, "white")
@@ -34,3 +34,12 @@ class Button:
                 screen.blit(self.hover_text_surface, self.hover_rect)
         else:
             screen.blit(self.text_surface, self.button_rect)
+
+
+class HudButton():
+    def __init__(self, left: tuple[int, int], text: str, normal_font: pg.font.Font) -> None:
+        self.text_surface: pg.Surface = normal_font.render(text, False, "white")
+        self.button_rect = self.text_surface.get_rect(topleft=left)
+
+    def draw_button(self, screen: pg.Surface) -> None:
+        screen.blit(self.text_surface, self.button_rect)

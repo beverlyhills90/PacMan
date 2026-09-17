@@ -3,7 +3,6 @@ from shared_types import Grid, PacmanView, GhostView, GameState, Direction
 from .game_layout import GameLayout
 from .errors import VisulisationError
 from pathlib import Path
-from game import Game
 from abc import ABC
 
 DIRECTIONS: tuple[Direction, ...] = ("right", "down", "left", "up")
