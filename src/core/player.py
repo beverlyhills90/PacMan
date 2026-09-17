@@ -1,4 +1,4 @@
-from core.world import can_move, neighbor
+from core.world import can_move, find_start, neighbor
 from shared_types import DELTA, OPPOSITE, Direction, Grid, Pos
 
 
@@ -29,7 +29,7 @@ class Player:
             self._next_direction is not None
             and OPPOSITE[self._next_direction] == self.direction
         ):
-            self.tile = neighbor(self.tile, self.direction)
+            self.tile = neighbor(self.tile, self.direction)  # type: ignore
             self.direction = self._next_direction
             self.facing = self.direction
             self._progress = 1 - self._progress
@@ -75,3 +75,7 @@ class Player:
         res_x = x + delta_x * self._progress
         res_y = y + delta_y * self._progress
         return (res_x, res_y)
+
+
+def new_player(grid: Grid, speed: float) -> Player:
+    return Player(find_start(grid), speed)
