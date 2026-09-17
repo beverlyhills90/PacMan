@@ -1,5 +1,7 @@
-from core.ghosts import Ghost
-from core.player import Player
+from core.ghosts import Ghost, new_ghosts
+from core.maze_adapter import build_grid_for_level
+from core.player import Player, new_player
+from core.world import place_pacgums
 from parsing import Config
 from shared_types import (
     Direction,
@@ -17,19 +19,18 @@ class Game:
         self,
         config: Config,
         level_grid: Grid,
-        player: Player,
-        ghosts: list[Ghost],
-        pacgums: set[Pos],
         super_pacgums: set[Pos],
         lives: int,
         time_left: int = 90,
+        speed: float = 8,
     ) -> None:
+        self.speed = speed
         self.config: Config = config
         self.level_index: int = 0
         self.level_grid: Grid = level_grid
-        self.player: Player = player
-        self.ghosts: list[Ghost] = ghosts
-        self.pacgums: set[Pos] = pacgums
+        self.player: Player = new_player(self.level_grid, speed)
+        self.ghosts: list[Ghost] = new_ghosts(self.level_grid, speed)
+        self.pacgums: set[Pos] = set([(1, 0)])
         self.super_pacgums = super_pacgums
         self.score: int = 0
         self.lives: int = lives
@@ -41,12 +42,16 @@ class Game:
             return
         self._tick_timer(dt)
         self.player.update(dt, self.level_grid, intent)
-        self._eat_pucgum()
+        self._eat_pacgum()
 
         for g in self.ghosts:
-            pass
+            g.update(dt, self.level_grid, self.player.tile, self.player.facing)
         self._check_collisions()
         self._check_level_end()
+        if self.status == "level_won":
+            self._next_level()
+        if self.status == "victory":
+            return
 
     def snapshot(self) -> GameState:
         player_moving = True
@@ -57,7 +62,13 @@ class Game:
             facing=self.player.facing,
             moving=player_moving,
         )
-        ghost_views = []  # TODO ADD GHOSTS
+        ghost_views = []
+        for g in self.ghosts:
+            ghost_views.append(
+                GhostView(
+                    g.name, g.screen_pos(), g.facing, g.mode, g._frightened_left
+                )
+            )
         game_state = GameState(
             self.level_grid,
             pacman_view,
@@ -67,7 +78,7 @@ class Game:
             self.score,
             self.status,
             self.lives,
-            self.level_index
+            self.level_index,
         )
         return game_state
 
@@ -80,22 +91,36 @@ class Game:
             self.status = "game_over"
 
     def _start_level(self, index: int) -> None:
-        pass
+        self.level_grid = build_grid_for_level(level=self.config.levels[index])
+        self.player = new_player(self.level_grid, self.speed)
+        self.ghosts = new_ghosts(self.level_grid, self.speed)
+        self.pacgums = set([(10, 10)])
 
-    def _eat_pucgum(self) -> None:
-        pass
+    def _eat_pacgum(self) -> None:
+        if self.time_left <= 80:
+            self.pacgums.clear()
 
     def _respawn(self) -> None:
-        pass
+        if self.lives <= 0:
+            return
+        self.player.reset()
+        for g in self.ghosts:
+            g.mode = "chase"
+        self.lives -= 1
 
     def _check_collisions(self) -> None:
         pass
 
     def _check_level_end(self) -> None:
-        pass
+        if len(self.pacgums) == 0:
+            self.status = "level_won"
 
     def _next_level(self) -> None:
-        pass
+        if self.level_index <= len(self.config.levels):
+            self.status = "victory"
+            return
+        self.level_index += 1
+        self._start_level(self.level_index)
 
     def _eat_at(self, tile: Pos) -> None:
         pass
