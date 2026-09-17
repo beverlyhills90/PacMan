@@ -128,7 +128,7 @@ class Ghost(ABC):
             q.append((p, d))
         while q:
             pos, direct = q.popleft()
-            for d, delta in DELTA.items():
+            for d, _ in DELTA.items():
                 if can_move(grid, pos, d):
                     n = neighbor(pos, d)
                     if n in visited:
@@ -162,7 +162,7 @@ class Blinky(Ghost):
     def chase_target(
         self, grid: Grid, pacman_tile: Pos, pacman_facing: Direction
     ) -> Pos:
-        return (0, 1)
+        return pacman_tile
 
 
 class Pinky(Ghost):
@@ -172,7 +172,11 @@ class Pinky(Ghost):
     def chase_target(
         self, grid: Grid, pacman_tile: Pos, pacman_facing: Direction
     ) -> Pos:
-        return (0, 1)
+        pac_x, pac_y = pacman_tile
+        delta_x, delta_y = DELTA[pacman_facing]
+        target_x = pac_x + (delta_x * 4)
+        target_y = pac_y + (delta_y * 4)
+        return (target_x, target_y)
 
 
 class Inky(Ghost):
@@ -193,3 +197,16 @@ class Clyde(Ghost):
         self, grid: Grid, pacman_tile: Pos, pacman_facing: Direction
     ) -> Pos:
         return (0, 1)
+
+
+def new_ghosts(grid: Grid, speed: float) -> list[Ghost]:
+
+    left_up_pos = (0, 0)
+    right_up_pos = (len(grid[0]), 0)
+    left_down_pos = (0, len(grid))
+    right_down_pos = (len(grid[0]), len(grid))
+    blinky = Blinky(home=find_target(grid, left_up_pos), speed=speed)
+    pinky = Pinky(home=find_target(grid, right_up_pos), speed=speed)
+    inky = Inky(home=find_target(grid, left_down_pos), speed=speed)
+    clyde = Clyde(home=find_target(grid, right_down_pos), speed=speed)
+    return [blinky, pinky, inky, clyde]
