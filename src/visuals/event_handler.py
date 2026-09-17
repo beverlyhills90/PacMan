@@ -1,6 +1,6 @@
 import pygame as pg
 import sys
-from shared_types import Direction, VisualState
+from shared_types import VisualState
 from game import Game
 from .menu_view import MenuView
 from .highscore_view import HighscoreView

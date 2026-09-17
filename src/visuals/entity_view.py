@@ -94,9 +94,7 @@ class EntityView():
         self.pacman: Pacman = Pacman(screen, game_layout, self.game_layout.tile_size)
         self.ghosts: list[Ghost] = self.create_ghosts()
 
-    def draw_entities(self, game: Game, dt: float) -> None:
-        snapshot = game.snapshot()
-
+    def draw_entities(self, snapshot: GameState, dt: float) -> None:
         self.pacman.draw_pacman(snapshot.player, dt)
         for ghost in self.ghosts:
             ghost.draw_ghost(snapshot, dt)
