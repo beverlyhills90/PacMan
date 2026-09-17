@@ -17,9 +17,10 @@ class MazeView():
         self.grid: Grid = grid
         self.game_layout: GameLayout = game_layout
         self.screen: pg.Surface = screen
+        self.size = game_layout.tile_size
         self.wall_sprites: list[pg.Surface] = [pg.transform.scale(pg.image.load(
             f"visuals/sprites/tiles/wall_{i:02d}.png").convert_alpha(),
-            (35, 35)) for i in range(16)]
+            (self.size, self.size)) for i in range(16)]
 
         self.wall_color = "white"
 
@@ -43,9 +44,9 @@ class MazeView():
                         mask |= WallConnection.UP
                     if row_n + 1 < grid_h and self.grid[row_n+1][col_n] == "wall":
                         mask |= WallConnection.DOWN
-                    sprite = self.wall_sprites[mask]
-                    overlay = pg.Surface(sprite.size, pg.SRCALPHA)
-                    pg.draw.rect(overlay, (50, 0, 0, 120), sprite.get_rect(), border_radius=5)
+                    # sprite = self.wall_sprites[mask]
+                    # overlay = pg.Surface(sprite.size, pg.SRCALPHA)
+                    # Spg.draw.rect(overlay, (50, 0, 0, 120), sprite.get_rect(), border_radius=5)
                     self.screen.blit(self.wall_sprites[mask], (x, y))
                     # self.screen.blit(overlay, (x, y))
 

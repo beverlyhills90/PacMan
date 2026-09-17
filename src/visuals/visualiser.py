@@ -5,6 +5,7 @@ from .game_layout import GameLayout
 from .maze_view import MazeView
 from .entity_view import EntityView
 from .highscore_view import HighscoreView
+from .buttons import Fonts
 from .event_handler import EventHandler
 from core.player import Player
 from game import Game
@@ -23,10 +24,12 @@ class Visualiser():
         self.maze_view: MazeView
         self.entity_view: EntityView
         self.event_handler: EventHandler
-        self.menu_view: MenuView
-        self.highscore_view: HighscoreView
-        self.game: Game
-        self.player: Player
+
+        self.fonts = Fonts()
+        self.menu_view: MenuView = MenuView(self.screen, self.fonts)
+        self.highscore_view: HighscoreView = HighscoreView(self.screen, self.fonts)
+        self.game: Game = game
+        self.player: Player = player
 
         self.state: VisualState = "menu"
 
@@ -37,7 +40,8 @@ class Visualiser():
 
         while (True):
             snapshot = self.game.snapshot()
-            if snapshot.status == "level_won":
+            print(snapshot.status)
+            if snapshot.status == "victory":
                 self.set_new_level()
             dt: float = clock.tick(60) / 1000
             new_state = self.event_handler.event_handling(dt, self.state)
@@ -72,12 +76,10 @@ class Visualiser():
 
         self.game_layout = GameLayout(self.grid,
                                       self.width, self.height)
-        self.maze_view = MazeView(self.grid, self.game_layout, self.screen)
         self.game_layout.get_tile_size()
 
+        self.maze_view = MazeView(self.grid, self.game_layout, self.screen)
         self.entity_view = EntityView(self.grid, self.game_layout, self.screen)
-        self.menu_view = MenuView(self.screen)
-        self.highscore_view = HighscoreView(self.screen)
 
         self.event_handler = EventHandler(
             self.screen, self.game, self.menu_view, self.highscore_view)

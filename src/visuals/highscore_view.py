@@ -1,16 +1,13 @@
 import pygame as pg
-from .buttons import Button
-from pathlib import Path
+from .buttons import Button, Fonts
 from shared_types import VisualState
 
 
 class HighscoreView:
-    def __init__(self, screen: pg.Surface) -> None:
+    def __init__(self, screen: pg.Surface, fonts: Fonts) -> None:
         self.screen: pg.Surface = screen
-        main_font_path = Path(__file__).resolve(
-        ).parent / "fonts" / "PressStart2P-vaV7.ttf"
-        self.button_font = pg.font.Font(main_font_path, 15)
-        self.button_hover_font = pg.font.Font(main_font_path, 20)
+        self.fonts: Fonts = fonts
+
         self.button_list: list[Button] = self._create_buttons()
 
     def draw_highscore(self, mouse_pos: tuple[int, int]) -> None:
@@ -26,7 +23,8 @@ class HighscoreView:
     def _create_buttons(self) -> list[Button]:
         button_list: list[Button] = []
 
-        back_button = Button((50, 30), "Back", "menu", self.button_font, self.button_hover_font)
+        back_button = Button((50, 30), "Back", "menu",
+                             self.fonts.small_button_font, self.fonts.small_button_hover_font)
         button_list.append(back_button)
 
         return button_list
