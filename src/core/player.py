@@ -1,4 +1,4 @@
-from core.world import can_move, neighbor
+from core.world import can_move, find_start, neighbor
 from shared_types import DELTA, OPPOSITE, Direction, Grid, Pos
 
 
@@ -74,3 +74,7 @@ class Player:
         res_x = x + delta_x * self._progress
         res_y = y + delta_y * self._progress
         return (res_x, res_y)
+
+
+def new_player(grid: Grid, speed: float) -> Player:
+    return Player(find_start(grid), speed)
