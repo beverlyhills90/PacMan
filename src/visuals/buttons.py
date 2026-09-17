@@ -1,5 +1,16 @@
 from shared_types import VisualState
 import pygame as pg
+from pathlib import Path
+
+
+class Fonts:
+    def __init__(self) -> None:
+        main_font_path = Path(__file__).resolve(
+        ).parent / "fonts" / "PressStart2P-vaV7.ttf"
+        self.mid_button_font = pg.font.Font(main_font_path, 20)
+        self.mid_button_hover_font = pg.font.Font(main_font_path, 25)
+        self.small_button_font = pg.font.Font(main_font_path, 15)
+        self.small_button_hover_font = pg.font.Font(main_font_path, 20)
 
 
 class Button:
