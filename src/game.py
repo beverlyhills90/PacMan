@@ -24,6 +24,7 @@ class Game:
         time_left: int = 90,
         speed: float = 8,
     ) -> None:
+        self.save_time: int = time_left
         self.speed = speed
         self.config: Config = config
         self.level_index: int = 0
@@ -49,10 +50,6 @@ class Game:
             g.update(dt, self.level_grid, self.player.tile, self.player.facing)
         self._check_collisions()
         self._check_level_end()
-        if self.status == "level_won":
-            self._next_level()
-        if self.status == "victory":
-            return
 
     def snapshot(self) -> GameState:
         player_moving = True
@@ -96,6 +93,7 @@ class Game:
         self.player = new_player(self.level_grid, self.speed)
         self.ghosts = new_ghosts(self.level_grid, self.speed)
         self.pacgums = set([(10, 10)])
+        self.time_left = self.save_time
 
     def _eat_pacgum(self) -> None:
         if self.time_left <= 80:
@@ -106,7 +104,7 @@ class Game:
             return
         self.player.reset()
         for g in self.ghosts:
-            g.mode = "chase"
+            g.reset()
         self.lives -= 1
 
     def _check_collisions(self) -> None:
@@ -116,7 +114,7 @@ class Game:
         if len(self.pacgums) == 0:
             self.status = "level_won"
 
-    def _next_level(self) -> None:
+    def next_level(self) -> None:
         if self.level_index == len(self.config.levels) - 1:
             self.status = "victory"
             return
