@@ -174,8 +174,8 @@ class Pinky(Ghost):
     ) -> Pos:
         pac_x, pac_y = pacman_tile
         delta_x, delta_y = DELTA[pacman_facing]
-        target_x = pac_x + (delta_x * 4)
-        target_y = pac_y + (delta_y * 4)
+        target_x = pac_x + (delta_x * 8)
+        target_y = pac_y + (delta_y * 8)
         return (target_x, target_y)
 
 
