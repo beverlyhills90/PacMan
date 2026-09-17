@@ -13,33 +13,34 @@ from shared_types import (
     Pos,
 )
 
+SCORES_CONST = {"Ghost": 400, "PucGum": 50, "SuperPacGum": 100}
+
 
 class Game:
     def __init__(
         self,
         config: Config,
-        level_grid: Grid,
         super_pacgums: set[Pos],
-        lives: int,
-        time_left: int = 90,
+        lives: int = 3,
         speed: float = 8,
     ) -> None:
-        self.save_time: int = time_left
         self.speed = speed
         self.config: Config = config
         self.level_index: int = 0
-        self.level_grid: Grid = level_grid
+        self.level_grid: Grid = build_grid_for_level(self.config.levels[0])
         self.player: Player = new_player(self.level_grid, speed)
         self.ghosts: list[Ghost] = new_ghosts(self.level_grid, speed)
         self.pacgums: set[Pos] = set([(1, 0)])
         self.super_pacgums = super_pacgums
         self.score: int = 0
         self.lives: int = lives
-        self.time_left: float = float(time_left)
+        self.time_left: float = float(self.config.level_max_time)
         self.status: GameStatus = "playing"
         self.level_timeout: float = 3
 
     def update(self, dt: float, intent: Direction | None) -> None:
+        if self.status == "dead":
+            self._respawn()
         if self.status != "playing":
             return
         self._tick_timer(dt)
@@ -76,7 +77,7 @@ class Game:
             self.score,
             self.status,
             self.lives,
-            self.level_index,
+            self.level_index + 1,
         )
         return game_state
 
@@ -93,7 +94,7 @@ class Game:
         self.player = new_player(self.level_grid, self.speed)
         self.ghosts = new_ghosts(self.level_grid, self.speed)
         self.pacgums = set([(10, 10)])
-        self.time_left = self.save_time
+        self.time_left = self.config.level_max_time
 
     def _eat_pacgum(self) -> None:
         if self.time_left <= 80:
@@ -105,10 +106,14 @@ class Game:
         self.player.reset()
         for g in self.ghosts:
             g.reset()
-        self.lives -= 1
 
     def _check_collisions(self) -> None:
-        pass
+        for g in self.ghosts:
+            if self.player.tile == g.tile:
+                if g.mode == "frightened":
+                    g.eat(respawn_left=2)
+                else:
+                    self._die()
 
     def _check_level_end(self) -> None:
         if len(self.pacgums) == 0:
@@ -121,6 +126,13 @@ class Game:
         self.level_index += 1
         self._start_level(self.level_index)
         self.status = "playing"
+
+    def _die(self):
+        self.lives -= 1
+        if self.lives <= 0:
+            self.status = "game_over"
+        else:
+            self.status = "dead"
 
     def _eat_at(self, tile: Pos) -> None:
         pass
