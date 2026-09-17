@@ -25,7 +25,7 @@ class EventHandler():
             if state == "victory_screen" and event.type == pg.KEYDOWN:
                 return self.victory_events()
 
-        if state == "start":
+        if state == "playing":
             return self.game_events(dt)
         return None
 
