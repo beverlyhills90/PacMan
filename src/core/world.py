@@ -11,7 +11,7 @@ from shared_types import (
 
 
 def place_pacgums(grid, start, corners) -> tuple[set[Pos], set[Pos]]:
-    pass
+    return ()
 
 
 def tile_at(grid: Grid, pos: Pos) -> Tile:

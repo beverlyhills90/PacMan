@@ -1,6 +1,7 @@
-from core.ghosts import Blinky, Clyde, Ghost, Inky, Pinky
-from core.player import Player
-from core.world import new_ghosts, new_player
+from core.ghosts import Ghost, new_ghosts
+from core.maze_adapter import build_grid_for_level
+from core.player import Player, new_player
+from core.world import place_pacgums
 from parsing import Config
 from shared_types import (
     Direction,
@@ -24,6 +25,7 @@ class Game:
         time_left: int = 90,
         speed: float = 8,
     ) -> None:
+        self.speed = speed
         self.config: Config = config
         self.level_index: int = 0
         self.level_grid: Grid = level_grid
@@ -44,7 +46,7 @@ class Game:
         self._eat_pucgum()
 
         for g in self.ghosts:
-            pass
+            g.update(dt, self.level_grid, self.player.tile, self.player.facing)
         self._check_collisions()
         self._check_level_end()
 
@@ -86,13 +88,20 @@ class Game:
             self.status = "game_over"
 
     def _start_level(self, index: int) -> None:
-        pass
+        self.level_grid = build_grid_for_level(level=self.config.levels[index])
+        self.player = new_player(self.level_grid, self.speed)
+        self.ghosts = new_ghosts(self.level_grid, self.speed)
 
     def _eat_pucgum(self) -> None:
         pass
 
     def _respawn(self) -> None:
-        pass
+        if self.lives <= 0:
+            return
+        self.player.reset()
+        for g in self.ghosts:
+            g.mode = "chase"
+        self.lives -= 1
 
     def _check_collisions(self) -> None:
         pass
@@ -101,7 +110,11 @@ class Game:
         pass
 
     def _next_level(self) -> None:
-        pass
+        if self.level_index <= len(self.config.levels):
+            self.status = "victory"
+            return
+        self.level_index += 1
+        self._start_level(self.level_index)
 
     def _eat_at(self, tile: Pos) -> None:
         pass
