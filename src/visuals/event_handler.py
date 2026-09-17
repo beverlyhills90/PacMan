@@ -22,6 +22,8 @@ class EventHandler():
                 return self.menu_events(event)
             if state == "highscore" and event.type == pg.MOUSEBUTTONUP:
                 return self.highscore_events(event)
+            if state == "victory_screen" and event.type == pg.KEYDOWN:
+                return self.victory_events()
 
         if state == "start":
             return self.game_events(dt)
@@ -52,3 +54,6 @@ class EventHandler():
         if event.button == 1:
             return (self.highscore_view.handle_input(mouse_pos))
         return None
+
+    def victory_events(self) -> VisualState | None:
+        return "menu"

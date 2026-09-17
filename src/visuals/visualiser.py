@@ -5,6 +5,7 @@ from .game_layout import GameLayout
 from .maze_view import MazeView
 from .entity_view import EntityView
 from .highscore_view import HighscoreView
+from .victory_view import VictoryView
 from .buttons import Fonts
 from .event_handler import EventHandler
 from core.player import Player
@@ -28,10 +29,11 @@ class Visualiser():
         self.fonts = Fonts()
         self.menu_view: MenuView = MenuView(self.screen, self.fonts)
         self.highscore_view: HighscoreView = HighscoreView(self.screen, self.fonts)
+        self.victory_view = VictoryView(self.screen, self.fonts)
         self.game: Game = game
         self.player: Player = player
 
-        self.state: VisualState = "menu"
+        self.state: VisualState = "victory_screen"
 
     def main_loop(self) -> None:
         clock = pg.time.Clock()
@@ -41,8 +43,10 @@ class Visualiser():
         while (True):
             snapshot = self.game.snapshot()
             print(snapshot.status)
-            if snapshot.status == "victory":
+            if snapshot.status == "level_won":
                 self.set_new_level()
+            if snapshot.status == "victory":
+                self.state = "victory_screen"
             dt: float = clock.tick(60) / 1000
             new_state = self.event_handler.event_handling(dt, self.state)
             if new_state is not None:
@@ -69,6 +73,12 @@ class Visualiser():
         elif self.state == "highscore":
             mouse_pos = pg.mouse.get_pos()
             self.highscore_view.draw_highscore(mouse_pos)
+
+        elif self.state == "victory_screen":
+            mouse_pos = pg.mouse.get_pos()
+            self.maze_view.draw_maze()
+            self.entity_view.draw_entities(self.game, dt)
+            self.victory_view.draw_victory(mouse_pos)
 
     def set_new_level(self) -> None:
         snapshot = self.game.snapshot()
