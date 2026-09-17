@@ -20,24 +20,21 @@ class Game:
     def __init__(
         self,
         config: Config,
-        level_grid: Grid,
         super_pacgums: set[Pos],
-        lives: int,
-        time_left: int = 90,
+        lives: int = 3,
         speed: float = 8,
     ) -> None:
-        self.save_time: int = time_left
         self.speed = speed
         self.config: Config = config
         self.level_index: int = 0
-        self.level_grid: Grid = level_grid
+        self.level_grid: Grid = build_grid_for_level(self.config.levels[0])
         self.player: Player = new_player(self.level_grid, speed)
         self.ghosts: list[Ghost] = new_ghosts(self.level_grid, speed)
         self.pacgums: set[Pos] = set([(1, 0)])
         self.super_pacgums = super_pacgums
         self.score: int = 0
         self.lives: int = lives
-        self.time_left: float = float(time_left)
+        self.time_left: float = float(self.config.level_max_time)
         self.status: GameStatus = "playing"
         self.level_timeout: float = 3
 
@@ -80,7 +77,7 @@ class Game:
             self.score,
             self.status,
             self.lives,
-            self.level_index,
+            self.level_index + 1,
         )
         return game_state
 
@@ -97,7 +94,7 @@ class Game:
         self.player = new_player(self.level_grid, self.speed)
         self.ghosts = new_ghosts(self.level_grid, self.speed)
         self.pacgums = set([(10, 10)])
-        self.time_left = self.save_time
+        self.time_left = self.config.level_max_time
 
     def _eat_pacgum(self) -> None:
         if self.time_left <= 80:
@@ -109,7 +106,6 @@ class Game:
         self.player.reset()
         for g in self.ghosts:
             g.reset()
-        self.lives -= 1
 
     def _check_collisions(self) -> None:
         for g in self.ghosts:
