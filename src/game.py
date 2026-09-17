@@ -116,7 +116,7 @@ class Game:
             self.status = "level_won"
 
     def _next_level(self) -> None:
-        if self.level_index <= len(self.config.levels):
+        if self.level_index == len(self.config.levels) - 1:
             self.status = "victory"
             return
         self.level_index += 1
