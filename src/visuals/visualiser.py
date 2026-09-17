@@ -4,7 +4,7 @@ import sys
 from shared_types import Grid, VisualState
 from game import Game
 from core.player import Player
-from ..parsing import Config
+from parsing import Config
 
 from .menu_view import MenuView
 from .game_layout import GameLayout
@@ -32,7 +32,7 @@ class Visualiser():
         self.maze_view: MazeView
         self.entity_view: EntityView
         self.hud_view: HudView
-        self.game: Game
+        self.game: Game = Game(self.config, set(), 3, 8)
 
         self.event_handler: EventHandler
 
@@ -47,6 +47,7 @@ class Visualiser():
     def main_loop(self) -> None:
         clock = pg.time.Clock()
         pg.display.set_caption("Pacman")
+        self.set_new_level()
 
         while (True):
             dt: float = clock.tick(60) / 1000
@@ -54,11 +55,12 @@ class Visualiser():
             new_state = self.event_handler.event_handling(dt, self.state)
 
             if new_state is not None:
+                if new_state == "menu":
+                    self.refresh_game()
                 self.state = new_state
 
             if self.state == "start":
                 self.state = "playing"
-                self.game = Game(self.config, set(), 3, 90)
 
             if self.state == "playing":
                 self.game_logic()
@@ -79,6 +81,7 @@ class Visualiser():
     def visual(self, dt: float) -> None:
         mouse_pos = pg.mouse.get_pos()
         snapshot = self.game.snapshot()
+        print(snapshot.status)
 
         if self.state == "menu":
             self.menu_view.draw_menu(mouse_pos)
@@ -117,3 +120,6 @@ class Visualiser():
 
         self.event_handler = EventHandler(
             self.screen, self.game, self.menu_view, self.highscore_view)
+
+    def refresh_game(self) -> None:
+        self.game = Game(self.config, set(), 3, 90)
