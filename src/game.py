@@ -36,6 +36,7 @@ class Game:
         self.lives: int = lives
         self.time_left: float = float(time_left)
         self.status: GameStatus = "playing"
+        self.level_timeout: float = 3
 
     def update(self, dt: float, intent: Direction | None) -> None:
         if self.status != "playing":
@@ -121,6 +122,7 @@ class Game:
             return
         self.level_index += 1
         self._start_level(self.level_index)
+        self.status = "playing"
 
     def _eat_at(self, tile: Pos) -> None:
         pass
