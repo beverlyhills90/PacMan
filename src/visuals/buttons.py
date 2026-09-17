@@ -11,20 +11,26 @@ class Fonts:
         self.mid_button_hover_font = pg.font.Font(main_font_path, 25)
         self.small_button_font = pg.font.Font(main_font_path, 15)
         self.small_button_hover_font = pg.font.Font(main_font_path, 20)
+        self.big_button_font = pg.font.Font(main_font_path, 30)
+        self.big_button_hover_font = pg.font.Font(main_font_path, 35)
 
 
 class Button:
-    def __init__(self, center: tuple[int, int], text: str, action: VisualState,
+    def __init__(self, center: tuple[int, int], text: str, action: VisualState | None,
                  normal_font: pg.font.Font, hover_font: pg.font.Font) -> None:
         self.text_surface: pg.Surface = normal_font.render(text, False, "white")
         self.button_rect = self.text_surface.get_rect(center=center)
         self.hover_text_surface: pg.Surface = hover_font.render(text, False, "red")
         self.hover_rect = self.hover_text_surface.get_rect(center=center)
-        self.action: VisualState = action
+        self.action: VisualState | None = action
 
-    def draw_button(self, screen: pg.Surface, mouse_pos: tuple[int, int]) -> None:
-        hovered = self.button_rect.collidepoint(mouse_pos)
-        if hovered is False:
-            screen.blit(self.text_surface, self.button_rect)
+    def draw_button(self, screen: pg.Surface, mouse_pos: tuple[int, int],
+                    hovered_state: bool = True) -> None:
+        if hovered_state:
+            hovered = self.button_rect.collidepoint(mouse_pos)
+            if hovered is False:
+                screen.blit(self.text_surface, self.button_rect)
+            else:
+                screen.blit(self.hover_text_surface, self.hover_rect)
         else:
-            screen.blit(self.hover_text_surface, self.hover_rect)
+            screen.blit(self.text_surface, self.button_rect)
