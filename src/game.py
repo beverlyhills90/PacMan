@@ -19,7 +19,6 @@ class Game:
         self,
         config: Config,
         level_grid: Grid,
-        pacgums: set[Pos],
         super_pacgums: set[Pos],
         lives: int,
         time_left: int = 90,
@@ -31,7 +30,7 @@ class Game:
         self.level_grid: Grid = level_grid
         self.player: Player = new_player(self.level_grid, speed)
         self.ghosts: list[Ghost] = new_ghosts(self.level_grid, speed)
-        self.pacgums: set[Pos] = pacgums
+        self.pacgums: set[Pos] = set([(1, 0)])
         self.super_pacgums = super_pacgums
         self.score: int = 0
         self.lives: int = lives
@@ -43,12 +42,16 @@ class Game:
             return
         self._tick_timer(dt)
         self.player.update(dt, self.level_grid, intent)
-        self._eat_pucgum()
+        self._eat_pacgum()
 
         for g in self.ghosts:
             g.update(dt, self.level_grid, self.player.tile, self.player.facing)
         self._check_collisions()
         self._check_level_end()
+        if self.status == "level_won":
+            self._next_level()
+        if self.status == "victory":
+            return
 
     def snapshot(self) -> GameState:
         player_moving = True
@@ -91,9 +94,11 @@ class Game:
         self.level_grid = build_grid_for_level(level=self.config.levels[index])
         self.player = new_player(self.level_grid, self.speed)
         self.ghosts = new_ghosts(self.level_grid, self.speed)
+        self.pacgums = set([(10, 10)])
 
-    def _eat_pucgum(self) -> None:
-        pass
+    def _eat_pacgum(self) -> None:
+        if self.time_left <= 80:
+            self.pacgums.pop()
 
     def _respawn(self) -> None:
         if self.lives <= 0:
@@ -107,7 +112,8 @@ class Game:
         pass
 
     def _check_level_end(self) -> None:
-        pass
+        if len(self.pacgums) == 0:
+            self.status = "level_won"
 
     def _next_level(self) -> None:
         if self.level_index <= len(self.config.levels):
