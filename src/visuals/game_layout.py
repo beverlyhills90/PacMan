@@ -1,5 +1,4 @@
 from shared_types import Grid
-from .errors import VisulisationError
 
 
 class GameLayout():
@@ -38,4 +37,10 @@ class GameLayout():
         x_tile, y_tile = tiles
         x = x_tile * self.tile_size + self.get_offset_x()
         y = y_tile * self.tile_size + self.get_offset_y()
+        return (x, y)
+
+    def get_hud_coordinates(self) -> tuple[int, int]:
+        hud_height = self.screen_h - self.get_offset_y() - (self.tile_size * self.grid_h)
+        x = self.get_offset_x() + (self.tile_size // 2)
+        y = self.screen_h - (hud_height // 2) - (self.tile_size // 2)
         return (x, y)
