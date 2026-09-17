@@ -14,8 +14,7 @@ class HudView():
             button.draw_button(self.screen, mouse_pos, False)
 
     def create_buttons(self, snapshot: GameState) -> list[Button]:
-        button_list: list[Button
-        ] = []
+        button_list: list[Button] = []
         button_names = [f"Score:{snapshot.score}",
                         f"Lives:{snapshot.lives}", f"Level:{snapshot.level}"]
         button_centers = [(100, 750), (250, 750), (400, 750)]
