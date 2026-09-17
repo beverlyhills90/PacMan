@@ -49,7 +49,7 @@ class Visualiser():
 
         while (True):
             snapshot = self.game.snapshot()
-            print(self.state)
+            print(snapshot.status)
             if snapshot.status == "level_won":
                 self.set_new_level()
             if snapshot.status == "victory":
