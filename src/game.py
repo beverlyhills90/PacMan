@@ -13,6 +13,8 @@ from shared_types import (
     Pos,
 )
 
+SCORES_CONST = {"Ghost": 400, "PucGum": 50, "SuperPacGum": 100}
+
 
 class Game:
     def __init__(
@@ -40,6 +42,8 @@ class Game:
         self.level_timeout: float = 3
 
     def update(self, dt: float, intent: Direction | None) -> None:
+        if self.status == "dead":
+            self._respawn()
         if self.status != "playing":
             return
         self._tick_timer(dt)
@@ -108,7 +112,12 @@ class Game:
         self.lives -= 1
 
     def _check_collisions(self) -> None:
-        pass
+        for g in self.ghosts:
+            if self.player.tile == g.tile:
+                if g.mode == "frightened":
+                    g.eat(respawn_left=2)
+                else:
+                    self._die()
 
     def _check_level_end(self) -> None:
         if len(self.pacgums) == 0:
@@ -121,6 +130,13 @@ class Game:
         self.level_index += 1
         self._start_level(self.level_index)
         self.status = "playing"
+
+    def _die(self):
+        self.lives -= 1
+        if self.lives <= 0:
+            self.status = "game_over"
+        else:
+            self.status = "dead"
 
     def _eat_at(self, tile: Pos) -> None:
         pass
