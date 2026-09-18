@@ -23,7 +23,8 @@ class Gum():
 
         self.path_sprite: Path = Path(__file__).resolve().parent / "sprites" / "pacgums"
         self.gum_sprite: pg.Surface = pg.transform.scale(pg.image.load(
-            f"{self.path_sprite}/pacgum.png"), (game_layout.tile_size, game_layout.tile_size))
+            f"{self.path_sprite}/pacgum.png").convert_alpha(),
+            (game_layout.tile_size, game_layout.tile_size))
 
     def draw_pacgum(self, pos: Pos) -> None:
         x, y = self.game_layout.tiles_to_coordinates(pos)
@@ -35,8 +36,8 @@ class SuperGum(Animation):
         super().__init__(screen, game_layout)
         self.path_sprite: Path = Path(__file__).resolve().parent / "sprites" / "pacgums"
         self.super_gum_sprites: list[pg.Surface] = [pg.transform.scale(pg.image.load(
-            f"{self.path_sprite}/super_pacgum_{i}.png"),
-            (game_layout.tile_size, game_layout.tile_size)) for i in range(2)]
+            f"{self.path_sprite}/super_pacgum_{i}.png").convert_alpha(),
+            (game_layout.tile_size, game_layout.tile_size)) for i in range(SUPER_GUM_N)]
 
     def draw_super_pacgum(self, pos: Pos, dt: float) -> None:
         x, y = self.game_layout.tiles_to_coordinates(pos)
