@@ -31,7 +31,7 @@ def argument_parser() -> Namespace:
     parser.add_argument(
         "--config",
         help="path to config file",
-        default=Path("/home/ypopovyc/Desktop/pacman/src/config.json"),
+        default=Path(__file__).resolve().parent / "config.json",
         type=Path,
     )
     args: Namespace = parser.parse_args()

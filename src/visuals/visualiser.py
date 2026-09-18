@@ -88,7 +88,7 @@ class Visualiser():
 
         elif self.state == "playing":
 
-            self.maze_view.draw_maze()
+            self.maze_view.draw_maze(snapshot, dt)
             self.entity_view.draw_entities(snapshot, dt)
             self.hud_view.draw_hud(snapshot, mouse_pos)
 
@@ -100,7 +100,7 @@ class Visualiser():
             self.highscore_view.draw_highscore(mouse_pos)
 
         elif self.state == "victory_screen":
-            self.maze_view.draw_maze()
+            self.maze_view.draw_maze(snapshot, dt)
             self.entity_view.draw_entities(snapshot, dt)
             self.hud_view.draw_hud(snapshot, mouse_pos)
 
