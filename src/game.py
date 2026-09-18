@@ -103,8 +103,10 @@ class Game:
     def _eat_pacgum(self) -> None:
         if self.player.tile in self.pacgums:
             self.pacgums.remove(self.player.tile)
+            self.score += SCORES_CONST["PucGum"]
         if self.player.tile in self.super_pacgums:
             self.super_pacgums.remove(self.player.tile)
+            self.score += SCORES_CONST["SuperPacGum"]
             for g in self.ghosts:
                 g.frighten(3.5)
 
@@ -119,7 +121,8 @@ class Game:
         for g in self.ghosts:
             if self.player.tile == g.tile:
                 if g.mode == "frightened":
-                    g.eat(respawn_left=2)
+                    g.eat(respawn_left=3)
+                    self.score += SCORES_CONST["Ghost"]
                 else:
                     self._die()
 
