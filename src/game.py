@@ -41,6 +41,10 @@ class Game:
         self.transition_left = 1
 
     def update(self, dt: float, intent: Direction | None) -> None:
+        if self.status == "countdown":
+            if self.transition_left == 0:
+                self.status = "playing"
+            return
         if self.status != "playing":
             return
         self._tick_timer(dt)
