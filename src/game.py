@@ -37,12 +37,10 @@ class Game:
         self.score: int = 0
         self.lives: int = lives
         self.time_left: float = float(self.config.level_max_time)
-        self.status: GameStatus = "playing"
-        self.level_timeout: float = 3
+        self.status: GameStatus = "countdown"
+        self.transition_left = 1
 
     def update(self, dt: float, intent: Direction | None) -> None:
-        if self.status == "dead":
-            self._respawn()
         if self.status != "playing":
             return
         self._tick_timer(dt)
@@ -103,8 +101,12 @@ class Game:
         self.time_left = self.config.level_max_time
 
     def _eat_pacgum(self) -> None:
-        if self.time_left <= 80:
-            self.pacgums.clear()
+        if self.player.tile in self.pacgums:
+            self.pacgums.remove(self.player.tile)
+        if self.player.tile in self.super_pacgums:
+            self.super_pacgums.remove(self.player.tile)
+            for g in self.ghosts:
+                g.frighten(3.5)
 
     def _respawn(self) -> None:
         if self.lives <= 0:
@@ -124,6 +126,7 @@ class Game:
     def _check_level_end(self) -> None:
         if len(self.pacgums) == 0:
             self.status = "level_won"
+            self.transition_left = 1
 
     def next_level(self) -> None:
         if self.level_index == len(self.config.levels) - 1:
@@ -139,6 +142,7 @@ class Game:
             self.status = "game_over"
         else:
             self.status = "dead"
+            self.transition_left = 1
 
     def _eat_at(self, tile: Pos) -> None:
         pass
