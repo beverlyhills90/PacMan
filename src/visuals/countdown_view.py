@@ -9,7 +9,8 @@ COUNDOWN_NAMES: list[str] = ["count_1", "count_2", "count_3", "count_go"]
 
 class Countdown(Animation):
     def __init__(self, screen: pg.Surface, game_layout: GameLayout) -> None:
-        super().__init__(screen, game_layout)
+        super().__init__(screen)
+        self.game_layout = game_layout
         sprites_path: Path = Path(__file__).resolve().parent / "sprites" / "count"
         self.count_sprites: dict[str, list[pg.Surface]] = {
             name: [pg.transform.scale(

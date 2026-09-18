@@ -10,8 +10,11 @@ class Animation(ABC):
         self.current_frame: int = 0
         self.animation_elapsed: float = 0
 
-    def update_frame(self, frames: int, sprites_n: int) -> None:
-        self.current_frame = (self.current_frame + frames) % sprites_n
+    def update_frame(self, frames: int, sprites_n: int, looped: bool = True) -> None:
+        if looped:
+            self.current_frame = (self.current_frame + frames) % sprites_n
+        else:
+            self.current_frame = (self.current_frame + frames)
 
     def update_time(self, dt: float) -> None:
         self.animation_elapsed = self.animation_elapsed + dt * 1000
