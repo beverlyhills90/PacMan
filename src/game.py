@@ -20,7 +20,6 @@ class Game:
     def __init__(
         self,
         config: Config,
-        super_pacgums: set[Pos],
         lives: int = 3,
         speed: float = 8,
     ) -> None:
@@ -30,7 +29,10 @@ class Game:
         self.level_grid: Grid = build_grid_for_level(self.config.levels[0])
         self.player: Player = new_player(self.level_grid, speed)
         self.ghosts: list[Ghost] = new_ghosts(self.level_grid, speed)
-        self.pacgums: set[Pos] = set([(1, 0)])
+        super_pacgums, pacgums = place_pacgums(
+            self.level_grid, self.player.tile
+        )
+        self.pacgums: set[Pos] = pacgums
         self.super_pacgums = super_pacgums
         self.score: int = 0
         self.lives: int = lives
@@ -93,7 +95,11 @@ class Game:
         self.level_grid = build_grid_for_level(level=self.config.levels[index])
         self.player = new_player(self.level_grid, self.speed)
         self.ghosts = new_ghosts(self.level_grid, self.speed)
-        self.pacgums = set([(10, 10)])
+        super_pacgums, pacgums = place_pacgums(
+            self.level_grid, self.player.tile
+        )
+        self.pacgums = pacgums
+        self.super_pacgums = super_pacgums
         self.time_left = self.config.level_max_time
 
     def _eat_pacgum(self) -> None:
