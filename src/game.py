@@ -29,7 +29,7 @@ class Game:
         self.level_grid: Grid = build_grid_for_level(self.config.levels[0])
         self.player: Player = new_player(self.level_grid, speed)
         self.ghosts: list[Ghost] = new_ghosts(self.level_grid, speed)
-        super_pacgums, pacgums = place_pacgums(
+        pacgums, super_pacgums = place_pacgums(
             self.level_grid, self.player.tile
         )
         self.pacgums: set[Pos] = pacgums
@@ -95,7 +95,7 @@ class Game:
         self.level_grid = build_grid_for_level(level=self.config.levels[index])
         self.player = new_player(self.level_grid, self.speed)
         self.ghosts = new_ghosts(self.level_grid, self.speed)
-        super_pacgums, pacgums = place_pacgums(
+        pacgums, super_pacgums = place_pacgums(
             self.level_grid, self.player.tile
         )
         self.pacgums = pacgums
