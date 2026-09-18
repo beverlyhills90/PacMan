@@ -33,7 +33,9 @@ class Gum():
 
 class SuperGum(Animation):
     def __init__(self, screen: pg.Surface, game_layout: GameLayout) -> None:
-        super().__init__(screen, game_layout)
+        super().__init__(screen)
+        self.game_layout: GameLayout = game_layout
+
         self.path_sprite: Path = Path(__file__).resolve().parent / "sprites" / "pacgums"
         self.super_gum_sprites: list[pg.Surface] = [pg.transform.scale(pg.image.load(
             f"{self.path_sprite}/super_pacgum_{i}.png").convert_alpha(),

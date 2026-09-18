@@ -24,6 +24,10 @@ def main() -> None:
         visualiser.main_loop()
     except ParsingError as e:
         print(e, file=stderr)
+    except FileNotFoundError as e:
+        print(e, file=stderr)
+    except pg.error as e:
+        print(e, file=stderr)
 
 
 def argument_parser() -> Namespace:
