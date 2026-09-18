@@ -2,30 +2,15 @@ import pygame as pg
 from shared_types import Grid, PacmanView, GhostView, GameState, Direction
 from .game_layout import GameLayout
 from .errors import VisulisationError
+from .abs_classes import Animation
 from pathlib import Path
-from abc import ABC
 
 DIRECTIONS: tuple[Direction, ...] = ("right", "down", "left", "up")
 PACMAN_SPRITES_N = 4
 GHOSTS_SPRITES_N = 2
 
 
-class Entity(ABC):
-    def __init__(self, screen: pg.Surface, game_layout: GameLayout,) -> None:
-        super().__init__()
-        self.screen: pg.Surface = screen
-        self.game_layout: GameLayout = game_layout
-        self.current_frame: int = 0
-        self.animation_elapsed: float = 0
-
-    def update_frame(self, frames: int, sprites_n: int) -> None:
-        self.current_frame = (self.current_frame + frames) % sprites_n
-
-    def update_time(self, dt: float) -> None:
-        self.animation_elapsed = self.animation_elapsed + dt * 1000
-
-
-class Pacman(Entity):
+class Pacman(Animation):
     def __init__(self, screen: pg.Surface, game_layout: GameLayout, size: int) -> None:
         super().__init__(screen, game_layout)
         main_path = Path(__file__).resolve().parent / "sprites" / "pacman"
@@ -55,7 +40,7 @@ class Pacman(Entity):
         self.screen.blit(sprite, (x, y))
 
 
-class Ghost(Entity):
+class Ghost(Animation):
     def __init__(self, screen: pg.Surface, game_layout: GameLayout, size: int, name: str) -> None:
         super().__init__(screen, game_layout)
         main_path = Path(__file__).resolve().parent / "sprites" / "ghosts"
