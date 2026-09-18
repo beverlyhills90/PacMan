@@ -12,7 +12,8 @@ GHOSTS_SPRITES_N = 2
 
 class Pacman(Animation):
     def __init__(self, screen: pg.Surface, game_layout: GameLayout, size: int) -> None:
-        super().__init__(screen, game_layout)
+        super().__init__(screen)
+        self.game_layout: GameLayout = game_layout
         main_path = Path(__file__).resolve().parent / "sprites" / "pacman"
         self.pacman_sprites: dict[str, list[pg.Surface]] = {
             direction: [pg.transform.scale(pg.image.load(
@@ -42,7 +43,8 @@ class Pacman(Animation):
 
 class Ghost(Animation):
     def __init__(self, screen: pg.Surface, game_layout: GameLayout, size: int, name: str) -> None:
-        super().__init__(screen, game_layout)
+        super().__init__(screen)
+        self.game_layout: GameLayout = game_layout
         main_path = Path(__file__).resolve().parent / "sprites" / "ghosts"
         self.name: str = name
         self.ghost_sprites: dict[str, list[pg.Surface]] = {

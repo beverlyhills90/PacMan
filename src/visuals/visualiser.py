@@ -75,7 +75,7 @@ class Visualiser():
         if snapshot.status == "level_won":
             self.set_new_level()
 
-        if snapshot.status == "victory":
+        if snapshot.status == "dead":
             self.state = "victory_screen"
 
     def visual(self, dt: float) -> None:
@@ -104,7 +104,7 @@ class Visualiser():
             self.entity_view.draw_entities(snapshot, dt)
             self.hud_view.draw_hud(snapshot, mouse_pos)
 
-            self.victory_view.draw_victory(mouse_pos)
+            self.victory_view.draw_victory(mouse_pos, dt)
 
     def set_new_level(self) -> None:
         snapshot = self.game.snapshot()

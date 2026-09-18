@@ -4,10 +4,9 @@ from .game_layout import GameLayout
 
 
 class Animation(ABC):
-    def __init__(self, screen: pg.Surface, game_layout: GameLayout,) -> None:
+    def __init__(self, screen: pg.Surface) -> None:
         super().__init__()
         self.screen: pg.Surface = screen
-        self.game_layout: GameLayout = game_layout
         self.current_frame: int = 0
         self.animation_elapsed: float = 0
 
