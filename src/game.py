@@ -1,3 +1,5 @@
+import math
+
 from core.ghosts import Ghost, new_ghosts
 from core.maze_adapter import build_grid_for_level
 from core.player import Player, new_player
@@ -12,8 +14,6 @@ from shared_types import (
     PacmanView,
     Pos,
 )
-
-SCORES_CONST = {"Ghost": 400, "PucGum": 50, "SuperPacGum": 100}
 
 
 class Game:
@@ -38,11 +38,16 @@ class Game:
         self.lives: int = lives
         self.time_left: float = float(self.config.level_max_time)
         self.status: GameStatus = "countdown"
+        self.SCORES_CONST = {
+            "Ghost": self.config.points_per_ghost,
+            "PucGum": self.config.points_per_super_pacgum,
+            "SuperPacGum": self.config.points_per_pacgum,
+        }
         self.transition_left = 1
 
     def update(self, dt: float, intent: Direction | None) -> None:
         if self.status == "countdown":
-            if self.transition_left == 0:
+            if self.transition_left <= 0:
                 self.status = "playing"
             return
         if self.status != "playing":
@@ -107,14 +112,14 @@ class Game:
     def _eat_pacgum(self) -> None:
         if self.player.tile in self.pacgums:
             self.pacgums.remove(self.player.tile)
-            self.score += SCORES_CONST["PucGum"]
+            self.score += self.SCORES_CONST["PucGum"]
         if self.player.tile in self.super_pacgums:
             self.super_pacgums.remove(self.player.tile)
-            self.score += SCORES_CONST["SuperPacGum"]
+            self.score += self.SCORES_CONST["SuperPacGum"]
             for g in self.ghosts:
                 g.frighten(3.5)
 
-    def _respawn(self) -> None:
+    def respawn(self) -> None:
         if self.lives <= 0:
             return
         self.player.reset()
@@ -123,12 +128,15 @@ class Game:
 
     def _check_collisions(self) -> None:
         for g in self.ghosts:
-            if self.player.tile == g.tile:
+            if math.dist(self.player.screen_pos(), g.screen_pos()) < 0.5:
                 if g.mode == "frightened":
                     g.eat(respawn_left=3)
-                    self.score += SCORES_CONST["Ghost"]
+                    self.score += self.SCORES_CONST["Ghost"]
+                elif g.mode == "eaten":
+                    continue
                 else:
                     self._die()
+                    return
 
     def _check_level_end(self) -> None:
         if len(self.pacgums) == 0:
@@ -150,6 +158,3 @@ class Game:
         else:
             self.status = "dead"
             self.transition_left = 1
-
-    def _eat_at(self, tile: Pos) -> None:
-        pass
