@@ -43,13 +43,8 @@ class Game:
             "PucGum": self.config.points_per_super_pacgum,
             "SuperPacGum": self.config.points_per_pacgum,
         }
-        self.transition_left = 1
 
     def update(self, dt: float, intent: Direction | None) -> None:
-        if self.status == "countdown":
-            if self.transition_left <= 0:
-                self.status = "playing"
-            return
         if self.status != "playing":
             return
         self._tick_timer(dt)
@@ -149,7 +144,7 @@ class Game:
             return
         self.level_index += 1
         self._start_level(self.level_index)
-        self.status = "playing"
+        self.status = "countdown"
 
     def _die(self):
         self.lives -= 1
