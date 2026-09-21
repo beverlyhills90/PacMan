@@ -20,7 +20,6 @@ class Game:
     def __init__(
         self,
         config: Config,
-        lives: int = 3,
         speed: float = 8,
     ) -> None:
         self.speed = speed
@@ -35,7 +34,7 @@ class Game:
         self.pacgums: set[Pos] = pacgums
         self.super_pacgums = super_pacgums
         self.score: int = 0
-        self.lives: int = lives
+        self.lives: int = self.config.lives
         self.time_left: float = float(self.config.level_max_time)
         self.status: GameStatus = "countdown"
         self.SCORES_CONST = {
