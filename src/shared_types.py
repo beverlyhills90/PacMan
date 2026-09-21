@@ -22,7 +22,9 @@ class GhostExeption(WorldExeption):
 
 Direction = Literal["up", "down", "left", "right"]
 GhostMode = Literal["chase", "frightened", "eaten"]
-GameStatus = Literal["playing", "level_won", "dead", "game_over", "victory"]
+GameStatus = Literal[
+    "playing", "level_won", "dead", "game_over", "victory", "countdown"
+]
 GhsotsNames = Literal["blinky", "pinky", "inky", "clyde"]
 VisualState = Literal["menu", "start", "playing", "exit", "highscore", "victory_screen"]
 Pos = tuple[int, int]  # (col, row)

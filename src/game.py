@@ -1,3 +1,5 @@
+import math
+
 from core.ghosts import Ghost, new_ghosts
 from core.maze_adapter import build_grid_for_level
 from core.player import Player, new_player
@@ -13,14 +15,11 @@ from shared_types import (
     Pos,
 )
 
-SCORES_CONST = {"Ghost": 400, "PucGum": 50, "SuperPacGum": 100}
-
 
 class Game:
     def __init__(
         self,
         config: Config,
-        super_pacgums: set[Pos],
         lives: int = 3,
         speed: float = 8,
     ) -> None:
@@ -30,17 +29,22 @@ class Game:
         self.level_grid: Grid = build_grid_for_level(self.config.levels[0])
         self.player: Player = new_player(self.level_grid, speed)
         self.ghosts: list[Ghost] = new_ghosts(self.level_grid, speed)
-        self.pacgums: set[Pos] = set([(1, 0)])
+        pacgums, super_pacgums = place_pacgums(
+            self.level_grid, self.player.tile
+        )
+        self.pacgums: set[Pos] = pacgums
         self.super_pacgums = super_pacgums
         self.score: int = 0
         self.lives: int = lives
         self.time_left: float = float(self.config.level_max_time)
-        self.status: GameStatus = "playing"
-        self.level_timeout: float = 3
+        self.status: GameStatus = "countdown"
+        self.SCORES_CONST = {
+            "Ghost": self.config.points_per_ghost,
+            "PucGum": self.config.points_per_super_pacgum,
+            "SuperPacGum": self.config.points_per_pacgum,
+        }
 
     def update(self, dt: float, intent: Direction | None) -> None:
-        if self.status == "dead":
-            self._respawn()
         if self.status != "playing":
             return
         self._tick_timer(dt)
@@ -93,14 +97,24 @@ class Game:
         self.level_grid = build_grid_for_level(level=self.config.levels[index])
         self.player = new_player(self.level_grid, self.speed)
         self.ghosts = new_ghosts(self.level_grid, self.speed)
-        self.pacgums = set([(10, 10)])
+        pacgums, super_pacgums = place_pacgums(
+            self.level_grid, self.player.tile
+        )
+        self.pacgums = pacgums
+        self.super_pacgums = super_pacgums
         self.time_left = self.config.level_max_time
 
     def _eat_pacgum(self) -> None:
-        if self.time_left <= 80:
-            self.pacgums.clear()
+        if self.player.tile in self.pacgums:
+            self.pacgums.remove(self.player.tile)
+            self.score += self.SCORES_CONST["PucGum"]
+        if self.player.tile in self.super_pacgums:
+            self.super_pacgums.remove(self.player.tile)
+            self.score += self.SCORES_CONST["SuperPacGum"]
+            for g in self.ghosts:
+                g.frighten(3.5)
 
-    def _respawn(self) -> None:
+    def respawn(self) -> None:
         if self.lives <= 0:
             return
         self.player.reset()
@@ -109,15 +123,20 @@ class Game:
 
     def _check_collisions(self) -> None:
         for g in self.ghosts:
-            if self.player.tile == g.tile:
+            if math.dist(self.player.screen_pos(), g.screen_pos()) < 0.5:
                 if g.mode == "frightened":
-                    g.eat(respawn_left=2)
+                    g.eat(respawn_left=3)
+                    self.score += self.SCORES_CONST["Ghost"]
+                elif g.mode == "eaten":
+                    continue
                 else:
                     self._die()
+                    return
 
     def _check_level_end(self) -> None:
         if len(self.pacgums) == 0:
             self.status = "level_won"
+            self.transition_left = 1
 
     def next_level(self) -> None:
         if self.level_index == len(self.config.levels) - 1:
@@ -125,7 +144,7 @@ class Game:
             return
         self.level_index += 1
         self._start_level(self.level_index)
-        self.status = "playing"
+        self.status = "countdown"
 
     def _die(self):
         self.lives -= 1
@@ -133,6 +152,4 @@ class Game:
             self.status = "game_over"
         else:
             self.status = "dead"
-
-    def _eat_at(self, tile: Pos) -> None:
-        pass
+            self.transition_left = 1

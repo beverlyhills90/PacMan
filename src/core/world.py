@@ -10,8 +10,23 @@ from shared_types import (
 )
 
 
-def place_pacgums(grid, start, corners) -> tuple[set[Pos], set[Pos]]:
-    return ()
+def place_pacgums(grid: Grid, start: Pos) -> tuple[set[Pos], set[Pos]]:
+    super_set: set[Pos] = set()
+    left_up_pos = (0, 0)
+    right_up_pos = (len(grid[0]), 0)
+    left_down_pos = (0, len(grid))
+    right_down_pos = (len(grid[0]), len(grid))
+    super_set.add(find_target(grid, left_up_pos))
+    super_set.add(find_target(grid, right_up_pos))
+    super_set.add(find_target(grid, left_down_pos))
+    super_set.add(find_target(grid, right_down_pos))
+    pacgums = set()
+    for row in range(len(grid)):
+        for col in range(len(grid[0])):
+            if (col, row) not in super_set and (col, row) != start:
+                if grid[row][col] != "wall":
+                    pacgums.add((col, row))
+    return (pacgums, super_set)
 
 
 def tile_at(grid: Grid, pos: Pos) -> Tile:
