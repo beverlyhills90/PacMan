@@ -39,8 +39,8 @@ class Game:
         self.status: GameStatus = "countdown"
         self.SCORES_CONST = {
             "Ghost": self.config.points_per_ghost,
-            "PucGum": self.config.points_per_super_pacgum,
-            "SuperPacGum": self.config.points_per_pacgum,
+            "PucGum": self.config.points_per_pacgum,
+            "SuperPacGum": self.config.points_per_super_pacgum,
         }
 
     def update(self, dt: float, intent: Direction | None) -> None:
