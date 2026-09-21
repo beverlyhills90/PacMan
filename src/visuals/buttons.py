@@ -23,6 +23,7 @@ class MenuButton:
         self.hover_text_surface: pg.Surface = hover_font.render(text, False, "red")
         self.hover_rect = self.hover_text_surface.get_rect(center=center)
         self.action: VisualState | None = action
+        self.width = self.text_surface.get_height()
 
     def draw_button(self, screen: pg.Surface, mouse_pos: tuple[int, int],
                     hovered_state: bool = True) -> None:

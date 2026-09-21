@@ -6,6 +6,8 @@ from pathlib import Path
 from .abs_classes import Animation
 
 SUPER_GUM_N = 2
+SUPER_GUM_SEQUENCY = (0, 1, 0)
+SUPER_GUM_FRAME_DUR = 180
 
 
 class WallConnection(IntFlag):
@@ -45,10 +47,10 @@ class SuperGum(Animation):
         x, y = self.game_layout.tiles_to_coordinates(pos)
         self.update_time(dt)
         frames = 0
-        while self.animation_elapsed >= 100:
+        while self.animation_elapsed >= SUPER_GUM_FRAME_DUR:
             frames += 1
-            self.animation_elapsed -= self.animation_elapsed
-        self.update_frame(frames, SUPER_GUM_N)
+            self.animation_elapsed -= SUPER_GUM_FRAME_DUR
+        self.update_frame(frames, SUPER_GUM_SEQUENCY)
         self.screen.blit(self.super_gum_sprites[self.current_frame], (x, y))
 
 

@@ -44,3 +44,9 @@ class GameLayout():
         x = self.get_offset_x() + (self.tile_size // 2)
         y = self.screen_h - (hud_height // 2) - (self.tile_size // 2)
         return (x, y)
+
+    def get_group_width(self, elements_width: list[float], gap: float) -> float:
+        group_width: float = gap
+        for element in elements_width:
+            group_width += element
+        return group_width

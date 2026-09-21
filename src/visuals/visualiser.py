@@ -13,6 +13,7 @@ from .entity_view import EntityView
 from .highscore_view import HighscoreView
 from .victory_view import VictoryView
 from .hud_view import HudView
+from .countdown_view import Countdown
 
 from .buttons import Fonts
 
@@ -32,7 +33,7 @@ class Visualiser():
         self.maze_view: MazeView
         self.entity_view: EntityView
         self.hud_view: HudView
-        self.game: Game = Game(self.config, set(), 3, 8)
+        self.game: Game = Game(config)
 
         self.event_handler: EventHandler
 
@@ -40,9 +41,10 @@ class Visualiser():
         self.menu_view: MenuView = MenuView(self.screen, self.fonts)
         self.highscore_view: HighscoreView = HighscoreView(self.screen, self.fonts)
         self.victory_view = VictoryView(self.screen, self.fonts)
+        self.countdown_view = Countdown(self.screen, self.game)
         self.player: Player = player
 
-        self.state: VisualState = "menu"
+        self.state: VisualState = "victory_screen"
 
     def main_loop(self) -> None:
         clock = pg.time.Clock()
@@ -75,29 +77,31 @@ class Visualiser():
         if snapshot.status == "level_won":
             self.set_new_level()
 
-        if snapshot.status == "dead":
+        if snapshot.status == "game_over":
             self.state = "victory_screen"
+
+        if snapshot.status == "dead":
+            self.countdown_view.reset_animation()
 
     def visual(self, dt: float) -> None:
         mouse_pos = pg.mouse.get_pos()
         snapshot = self.game.snapshot()
-        print(snapshot.status)
 
         if self.state == "menu":
             self.menu_view.draw_menu(mouse_pos)
 
         elif self.state == "playing":
-
             self.maze_view.draw_maze(snapshot, dt)
             self.entity_view.draw_entities(snapshot, dt)
             self.hud_view.draw_hud(snapshot, mouse_pos)
+            self.countdown_view.draw_countdown(dt)
 
         elif self.state == "exit":
             pg.quit()
             sys.exit()
 
         elif self.state == "highscore":
-            self.highscore_view.draw_highscore(mouse_pos)
+            self.highscore_view.draw_highscore_menu(mouse_pos)
 
         elif self.state == "victory_screen":
             self.maze_view.draw_maze(snapshot, dt)
@@ -122,4 +126,5 @@ class Visualiser():
             self.screen, self.game, self.menu_view, self.highscore_view)
 
     def refresh_game(self) -> None:
-        self.game = Game(self.config, set(), 3, 90)
+        self.game = Game(self.config)
+        self.countdown_view = Countdown(self.screen, self.game)

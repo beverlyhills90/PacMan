@@ -7,7 +7,11 @@ from pathlib import Path
 
 DIRECTIONS: tuple[Direction, ...] = ("right", "down", "left", "up")
 PACMAN_SPRITES_N = 4
+PACMAN_SEQUENCE = (0, 1, 2, 3, 2, 1, 0)
+PACMAN_FRAME_DUR = 100
 GHOSTS_SPRITES_N = 2
+GHOST_FRAME_DUR = 80
+GHOST_SEQUENCE = (0, 1, 0)
 
 
 class Pacman(Animation):
@@ -30,10 +34,10 @@ class Pacman(Animation):
         moving = pacman_state.moving
         frames = 0
         if moving:
-            while self.animation_elapsed >= 100:
-                self.animation_elapsed -= self.animation_elapsed
+            while self.animation_elapsed >= PACMAN_FRAME_DUR:
+                self.animation_elapsed -= PACMAN_FRAME_DUR
                 frames += 1
-        self.update_frame(frames, PACMAN_SPRITES_N)
+        self.update_frame(frames, PACMAN_SEQUENCE)
         sprite = self.pacman_sprites[direction][self.current_frame]
         # hitbox_surface = pg.Surface(sprite.size, pg.SRCALPHA)
         # hitbox = pg.draw.rect(hitbox_surface, (0, 50, 0, 120),
@@ -58,10 +62,10 @@ class Ghost(Animation):
         direction = ghost.facing
         x, y = self.game_layout.tiles_to_coordinates(ghost.pos)
         frames = 0
-        while self.animation_elapsed >= 80:
+        while self.animation_elapsed >= GHOST_FRAME_DUR:
             frames += 1
-            self.animation_elapsed -= self.animation_elapsed
-        self.update_frame(frames, GHOSTS_SPRITES_N)
+            self.animation_elapsed -= GHOST_FRAME_DUR
+        self.update_frame(frames, GHOST_SEQUENCE)
         sprite = self.ghost_sprites[direction][self.current_frame]
         self.screen.blit(sprite, (x, y))
 
