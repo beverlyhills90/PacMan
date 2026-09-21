@@ -10,7 +10,7 @@ class HighscoreView:
 
         self.button_list: list[MenuButton] = self._create_buttons()
 
-    def draw_highscore(self, mouse_pos: tuple[int, int]) -> None:
+    def draw_highscore_menu(self, mouse_pos: tuple[int, int]) -> None:
         for button in self.button_list:
             button.draw_button(self.screen, mouse_pos)
 

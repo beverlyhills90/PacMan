@@ -7,7 +7,8 @@ from .highscore_view import HighscoreView
 
 
 class EventHandler():
-    def __init__(self, screen: pg.Surface, game: Game, menu_view: MenuView, highscore_view: HighscoreView) -> None:
+    def __init__(self, screen: pg.Surface, game: Game,
+                 menu_view: MenuView, highscore_view: HighscoreView) -> None:
         self.screen: pg.Surface = screen
         self.game: Game = game
         self.menu_view: MenuView = menu_view
