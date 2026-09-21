@@ -1,3 +1,4 @@
+import math
 import random
 from abc import ABC, abstractmethod
 from collections import deque
@@ -186,7 +187,11 @@ class Inky(Ghost):
     def chase_target(
         self, grid: Grid, pacman_tile: Pos, pacman_facing: Direction
     ) -> Pos:
-        return (0, 1)
+        pac_x, pac_y = pacman_tile
+        delta_x, delta_y = DELTA[pacman_facing]
+        target_x = pac_x - (delta_x * 8)
+        target_y = pac_y - (delta_y * 8)
+        return (target_x, target_y)
 
 
 class Clyde(Ghost):
@@ -196,7 +201,9 @@ class Clyde(Ghost):
     def chase_target(
         self, grid: Grid, pacman_tile: Pos, pacman_facing: Direction
     ) -> Pos:
-        return (0, 1)
+        if math.dist(pacman_tile, self.tile) <= 8:
+            return self.home
+        return pacman_tile
 
 
 def new_ghosts(grid: Grid, speed: float) -> list[Ghost]:
