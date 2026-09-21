@@ -200,7 +200,6 @@ class Clyde(Ghost):
 
 
 def new_ghosts(grid: Grid, speed: float) -> list[Ghost]:
-
     left_up_pos = (0, 0)
     right_up_pos = (len(grid[0]), 0)
     left_down_pos = (0, len(grid))
