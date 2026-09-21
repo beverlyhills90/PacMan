@@ -53,7 +53,7 @@ class Highscore(Animation):
         self.center_y = self.digit_sprites["1"][0].get_rect().centery
 
     def draw_highscore(self, temp_plug: str, dt: float) -> None:
-        print(self.digit_sprites["1"][0].width)
+        #print(self.digit_sprites["1"][0].width)
         frames = 0
         while self.animation_elapsed >= DIGIT_FRAME_DUR:
             self.animation_elapsed -= DIGIT_FRAME_DUR
@@ -83,7 +83,7 @@ class VictoryView:
             button.draw_button(self.screen, mouse_pos, False)
         for firework in FIREWORKS_NAMES:
             self.fireworks[firework].draw_firework(dt)
-        print(self.button_list[1].width)
+        #print(self.button_list[1].width)
         self.highscore.draw_highscore("777", dt)
 
     def create_buttons(self) -> list[MenuButton]:

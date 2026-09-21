@@ -33,7 +33,7 @@ class Visualiser():
         self.maze_view: MazeView
         self.entity_view: EntityView
         self.hud_view: HudView
-        self.game: Game = Game(config)
+        self.game: Game = Game(config, 3, 1)
 
         self.event_handler: EventHandler
 
@@ -52,6 +52,7 @@ class Visualiser():
         self.set_new_level()
 
         while (True):
+            print(self.game.status)
             dt: float = clock.tick(60) / 1000
             self.screen.fill('black')
             new_state = self.event_handler.event_handling(dt, self.state)
@@ -59,6 +60,7 @@ class Visualiser():
             if new_state is not None:
                 if new_state == "menu":
                     self.refresh_game()
+                    self.set_new_level()
                 self.state = new_state
 
             if self.state == "start":
@@ -75,17 +77,21 @@ class Visualiser():
         snapshot = self.game.snapshot()
 
         if snapshot.status == "level_won":
+            self.game.next_level()
             self.set_new_level()
+            self.countdown_view.reset_animation()
 
         if snapshot.status == "game_over":
             self.state = "victory_screen"
 
         if snapshot.status == "dead":
+            self.game.respawn()
             self.countdown_view.reset_animation()
 
     def visual(self, dt: float) -> None:
         mouse_pos = pg.mouse.get_pos()
         snapshot = self.game.snapshot()
+        # print(self.game.status)
 
         if self.state == "menu":
             self.menu_view.draw_menu(mouse_pos)
