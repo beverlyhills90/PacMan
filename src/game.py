@@ -114,11 +114,14 @@ class Game:
                 g.frighten(3.5)
 
     def respawn(self) -> None:
+        if self.status != "dead":
+            return
         if self.lives <= 0:
             return
         self.player.reset()
         for g in self.ghosts:
             g.reset()
+        self.status = "countdown"
 
     def _check_collisions(self) -> None:
         for g in self.ghosts:
@@ -145,7 +148,11 @@ class Game:
         self._start_level(self.level_index)
         self.status = "countdown"
 
-    def _die(self):
+    def end_countdown(self) -> None:
+        if self.status == "countdown":
+            self.status = "playing"
+
+    def _die(self) -> None:
         self.lives -= 1
         if self.lives <= 0:
             self.status = "game_over"
