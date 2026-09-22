@@ -6,6 +6,7 @@ from core.player import Player, new_player
 from core.world import place_pacgums
 from parsing import Config
 from shared_types import (
+    CheatMode,
     Direction,
     GameState,
     GameStatus,
@@ -20,10 +21,10 @@ class Game:
     def __init__(
         self,
         config: Config,
-        lives: int = 3,
         speed: float = 8,
     ) -> None:
-        self.speed = speed
+        self.speed: float = speed
+        self.ghosts_speed = speed
         self.config: Config = config
         self.level_index: int = 0
         self.level_grid: Grid = build_grid_for_level(self.config.levels[0])
@@ -32,16 +33,21 @@ class Game:
         pacgums, super_pacgums = place_pacgums(
             self.level_grid, self.player.tile
         )
+        self.cheat_buf: dict[CheatMode, bool] = {
+            "inftime": False,
+            "inflives": False,
+            "slow_ghosts": False,
+        }
         self.pacgums: set[Pos] = pacgums
         self.super_pacgums = super_pacgums
         self.score: int = 0
-        self.lives: int = lives
+        self.lives: int = self.config.lives
         self.time_left: float = float(self.config.level_max_time)
         self.status: GameStatus = "countdown"
         self.SCORES_CONST = {
             "Ghost": self.config.points_per_ghost,
-            "PucGum": self.config.points_per_super_pacgum,
-            "SuperPacGum": self.config.points_per_pacgum,
+            "PucGum": self.config.points_per_pacgum,
+            "SuperPacGum": self.config.points_per_super_pacgum,
         }
 
     def update(self, dt: float, intent: Direction | None) -> None:
@@ -53,6 +59,7 @@ class Game:
 
         for g in self.ghosts:
             g.update(dt, self.level_grid, self.player.tile, self.player.facing)
+
         self._check_collisions()
         self._check_level_end()
 
@@ -85,18 +92,29 @@ class Game:
         )
         return game_state
 
-    def cheat(self, code: str) -> None:
-        pass
+    def cheat(self, code: CheatMode) -> None:
+        if code == "inflives":
+            self.cheat_buf["inflives"] = not self.cheat_buf["inflives"]
+        if code == "inftime":
+            self.cheat_buf["inftime"] = not self.cheat_buf["inftime"]
+        if code == "slow_ghosts":
+            self._slow_ghost()
+        if code == "level_skip":
+            if self.status == "playing":
+                self.status = "level_won"
+        if code == "pluslive":
+            self.lives += 1
 
     def _tick_timer(self, dt: float) -> None:
-        self.time_left -= dt
+        if not self.cheat_buf["inftime"]:
+            self.time_left -= dt
         if self.time_left <= 0:
             self.status = "game_over"
 
     def _start_level(self, index: int) -> None:
         self.level_grid = build_grid_for_level(level=self.config.levels[index])
         self.player = new_player(self.level_grid, self.speed)
-        self.ghosts = new_ghosts(self.level_grid, self.speed)
+        self.ghosts = new_ghosts(self.level_grid, self.ghosts_speed)
         pacgums, super_pacgums = place_pacgums(
             self.level_grid, self.player.tile
         )
@@ -115,11 +133,14 @@ class Game:
                 g.frighten(3.5)
 
     def respawn(self) -> None:
+        if self.status != "dead":
+            return
         if self.lives <= 0:
             return
         self.player.reset()
         for g in self.ghosts:
             g.reset()
+        self.status = "countdown"
 
     def _check_collisions(self) -> None:
         for g in self.ghosts:
@@ -130,13 +151,13 @@ class Game:
                 elif g.mode == "eaten":
                     continue
                 else:
-                    self._die()
+                    if not self.cheat_buf["inflives"]:
+                        self._die()
                     return
 
     def _check_level_end(self) -> None:
         if len(self.pacgums) == 0:
             self.status = "level_won"
-            self.transition_left = 1
 
     def next_level(self) -> None:
         if self.level_index == len(self.config.levels) - 1:
@@ -146,10 +167,22 @@ class Game:
         self._start_level(self.level_index)
         self.status = "countdown"
 
-    def _die(self):
+    def end_countdown(self) -> None:
+        if self.status == "countdown":
+            self.status = "playing"
+
+    def _die(self) -> None:
         self.lives -= 1
         if self.lives <= 0:
             self.status = "game_over"
         else:
             self.status = "dead"
-            self.transition_left = 1
+
+    def _slow_ghost(self) -> None:
+        self.cheat_buf["slow_ghosts"] = not self.cheat_buf["slow_ghosts"]
+        if self.cheat_buf["slow_ghosts"]:
+            self.ghosts_speed = 0.2
+        else:
+            self.ghosts_speed = self.speed
+        for g in self.ghosts:
+            g.speed = self.ghosts_speed

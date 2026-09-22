@@ -29,7 +29,7 @@ class Player:
             self._next_direction is not None
             and OPPOSITE[self._next_direction] == self.direction
         ):
-            self.tile = neighbor(self.tile, self.direction)  # type: ignore
+            self.tile = neighbor(self.tile, self.direction)
             self.direction = self._next_direction
             self.facing = self.direction
             self._progress = 1 - self._progress

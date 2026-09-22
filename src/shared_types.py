@@ -22,6 +22,13 @@ class GhostExeption(WorldExeption):
 
 Direction = Literal["up", "down", "left", "right"]
 GhostMode = Literal["chase", "frightened", "eaten"]
+CheatMode = Literal[
+    "level_skip",
+    "inflives",
+    "slow_ghosts",
+    "inftime",
+    "pluslive",
+]
 GameStatus = Literal[
     "playing", "level_won", "dead", "game_over", "victory", "countdown"
 ]
