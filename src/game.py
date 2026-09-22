@@ -52,6 +52,7 @@ class Game:
             "PucGum": self.config.points_per_pacgum,
             "SuperPacGum": self.config.points_per_super_pacgum,
         }
+        self.pause_state = False
         self.nickname = nickname
 
     def update(self, dt: float, intent: Direction | None) -> None:
@@ -196,3 +197,11 @@ class Game:
             self.ghosts_speed = self.speed
         for g in self.ghosts:
             g.speed = self.ghosts_speed
+
+    def pause(self) -> None:
+        if not self.pause_state:
+            self.pause_state = not self.pause_state
+            self.status = "pause"
+        else:
+            self.pause_state = not self.pause_state
+            self.status = "playing"
