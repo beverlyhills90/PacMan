@@ -57,6 +57,7 @@ class Game:
         self.nickname: str = nickname
 
     def update(self, dt: float, intent: Direction | None) -> None:
+        print(self.time_left)
         if self.status != "playing":
             return
         self._tick_timer(dt)
