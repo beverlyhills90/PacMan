@@ -2,12 +2,13 @@ from argparse import ArgumentParser, Namespace
 from pathlib import Path
 from sys import stderr
 
+import pygame as pg
+
 from core.maze_adapter import build_grid_for_level
-from parsing import ParsingError, validation
-from visuals.visualiser import Visualiser
 from core.player import Player
 from core.world import find_start
-import pygame as pg
+from parsing import ParsingError, validation
+from visuals.visualiser import Visualiser
 
 
 def main() -> None:

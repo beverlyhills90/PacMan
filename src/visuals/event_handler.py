@@ -1,20 +1,30 @@
-import pygame as pg
 import sys
-from shared_types import VisualState, Direction
+
+import pygame as pg
+
 from game import Game
-from .menu_view import MenuView
+from shared_types import Direction, VisualState
+
 from .highscore_view import HighscoreView
+from .menu_view import MenuView
 
 
-class EventHandler():
-    def __init__(self, screen: pg.Surface, game: Game,
-                 menu_view: MenuView, highscore_view: HighscoreView) -> None:
+class EventHandler:
+    def __init__(
+        self,
+        screen: pg.Surface,
+        game: Game,
+        menu_view: MenuView,
+        highscore_view: HighscoreView,
+    ) -> None:
         self.screen: pg.Surface = screen
         self.game: Game = game
         self.menu_view: MenuView = menu_view
         self.highscore_view: HighscoreView = highscore_view
 
-    def event_handling(self, dt: float, state: VisualState) -> VisualState | None:
+    def event_handling(
+        self, dt: float, state: VisualState
+    ) -> VisualState | None:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
@@ -42,6 +52,8 @@ class EventHandler():
             intent = "left"
         if keys[pg.K_RIGHT]:
             intent = "right"
+        if keys[pg.K_ESCAPE]:
+            self.game.pause()
         if cheats[pg.K_l]:
             self.game.cheat("level_skip")
         if cheats[pg.K_i]:
@@ -58,13 +70,13 @@ class EventHandler():
     def menu_events(self, event: pg.Event) -> VisualState | None:
         mouse_pos = event.pos
         if event.button == 1:
-            return (self.menu_view.handle_input(mouse_pos))
+            return self.menu_view.handle_input(mouse_pos)
         return None
 
     def highscore_events(self, event: pg.Event) -> VisualState | None:
         mouse_pos = event.pos
         if event.button == 1:
-            return (self.highscore_view.handle_input(mouse_pos))
+            return self.highscore_view.handle_input(mouse_pos)
         return None
 
     def victory_events(self) -> VisualState | None:
