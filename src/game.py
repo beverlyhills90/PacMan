@@ -1,9 +1,11 @@
 import math
+from json import JSONDecodeError
 
 from core.ghosts import Ghost, new_ghosts
 from core.maze_adapter import build_grid_for_level
 from core.player import Player, new_player
 from core.world import place_pacgums
+from highscore import TopTen
 from parsing import Config
 from shared_types import (
     CheatMode,
@@ -21,6 +23,7 @@ class Game:
     def __init__(
         self,
         config: Config,
+        nickname: str,
         speed: float = 8,
     ) -> None:
         self.speed: float = speed
@@ -49,6 +52,7 @@ class Game:
             "PucGum": self.config.points_per_pacgum,
             "SuperPacGum": self.config.points_per_super_pacgum,
         }
+        self.nickname = nickname
 
     def update(self, dt: float, intent: Direction | None) -> None:
         if self.status != "playing":
@@ -56,10 +60,8 @@ class Game:
         self._tick_timer(dt)
         self.player.update(dt, self.level_grid, intent)
         self._eat_pacgum()
-
         for g in self.ghosts:
             g.update(dt, self.level_grid, self.player.tile, self.player.facing)
-
         self._check_collisions()
         self._check_level_end()
 
@@ -162,6 +164,14 @@ class Game:
     def next_level(self) -> None:
         if self.level_index == len(self.config.levels) - 1:
             self.status = "victory"
+            try:
+                TopTen.save(
+                    self.config.highscore_filename, self.score, self.nickname
+                )
+            except OSError as e:
+                print(f"[Error] saiving {e.errno} {e}")
+            except JSONDecodeError as e:
+                print(f"[Error] saiving {e.msg}")
             return
         self.level_index += 1
         self._start_level(self.level_index)
