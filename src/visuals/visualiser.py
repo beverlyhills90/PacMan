@@ -14,6 +14,8 @@ from .highscore_view import HighscoreView
 from .victory_view import VictoryView
 from .hud_view import HudView
 from .countdown_view import Countdown
+from .controls_view import ControlsView
+from .sprites_storage import SpritesContainer
 
 from .buttons import Fonts
 
@@ -29,6 +31,8 @@ class Visualiser():
         self.height: int = 800
         self.screen = pg.display.set_mode((self.width, self.height))
 
+        self.sprites = SpritesContainer()
+
         self.game_layout: GameLayout
         self.maze_view: MazeView
         self.entity_view: EntityView
@@ -42,6 +46,7 @@ class Visualiser():
         self.highscore_view: HighscoreView = HighscoreView(self.screen, self.fonts)
         self.victory_view = VictoryView(self.screen, self.fonts)
         self.countdown_view = Countdown(self.screen, self.game)
+        self.controls_view = ControlsView(self.screen, self.sprites)
         self.player: Player = player
 
         self.state: VisualState = "victory_screen"
@@ -118,6 +123,9 @@ class Visualiser():
             self.hud_view.draw_hud(snapshot, mouse_pos)
 
             self.victory_view.draw_victory(mouse_pos, dt)
+
+        elif self.state == "controls":
+            self.controls_view.draw_control_menu()
 
     def set_new_level(self) -> None:
         snapshot = self.game.snapshot()

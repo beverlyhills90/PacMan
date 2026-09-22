@@ -1,10 +1,11 @@
 import pygame as pg
 from shared_types import VisualState
 from .buttons import MenuButton, Fonts
+from .sprites_storage import SpritesContainer, MenuSprites
 
 
 class MenuView():
-    def __init__(self, screen: pg.Surface, fonts: Fonts) -> None:
+    def __init__(self, screen: pg.Surface, fonts: Fonts, ) -> None:
         self.screen = screen
         self.fonts = fonts
 
@@ -31,7 +32,11 @@ class MenuView():
                                       self.fonts.mid_button_font, self.fonts.mid_button_hover_font)
         button_list.append(highscore_button)
 
-        exit_button = MenuButton((400, 400), "Exit", "exit",
+        controls_button = MenuButton((400, 400), "Controls", "controls",
+                                     self.fonts.mid_button_font, self.fonts.mid_button_hover_font)
+        button_list.append(controls_button)
+
+        exit_button = MenuButton((400, 500), "Exit", "exit",
                                  self.fonts.mid_button_font, self.fonts.mid_button_hover_font)
         button_list.append(exit_button)
 
