@@ -178,7 +178,7 @@ class Game:
         else:
             self.status = "dead"
 
-    def _slow_ghost(self):
+    def _slow_ghost(self) -> None:
         self.cheat_buf["slow_ghosts"] = not self.cheat_buf["slow_ghosts"]
         if self.cheat_buf["slow_ghosts"]:
             self.ghosts_speed = 0.2
