@@ -31,14 +31,14 @@ class Countdown(Animation):
             frame += 1
             self.animation_elapsed -= 125
         self.update_frame(frame, COUNDOWN_SEQUENCY)
-        #print(self.current_frame)
+        # print(self.current_frame)
         sprite = self.count_sprites[cur_count][self.current_frame]
         self.screen.blit(sprite, self.count_rect)
 
     def update_count(self, dt: float) -> str | None:
         self.total_time_ellapsed += dt * 1000
         if self.total_time_ellapsed >= 4000:
-            self.game.status = "playing"
+            self.game.end_countdown()
             return None
         cur_number = self.total_time_ellapsed // 1000
         return COUNDOWN_NAMES[int(cur_number)]
@@ -47,4 +47,3 @@ class Countdown(Animation):
         self.current_frame = 0
         self.total_time_ellapsed = 0
         self.animation_elapsed = 0
-        self.game.status = "countdown"

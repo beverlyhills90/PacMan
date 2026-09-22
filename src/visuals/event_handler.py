@@ -1,6 +1,6 @@
 import pygame as pg
 import sys
-from shared_types import VisualState
+from shared_types import VisualState, Direction
 from game import Game
 from .menu_view import MenuView
 from .highscore_view import HighscoreView
@@ -32,7 +32,8 @@ class EventHandler():
 
     def game_events(self, dt: float) -> VisualState | None:
         keys = pg.key.get_pressed()
-        intent = None
+        cheats = pg.key.get_just_released()
+        intent: Direction | None = None
         if keys[pg.K_UP]:
             intent = "up"
         if keys[pg.K_DOWN]:
@@ -41,6 +42,16 @@ class EventHandler():
             intent = "left"
         if keys[pg.K_RIGHT]:
             intent = "right"
+        if cheats[pg.K_l]:
+            self.game.cheat("level_skip")
+        if cheats[pg.K_i]:
+            self.game.cheat("inflives")
+        if cheats[pg.K_1]:
+            self.game.cheat("pluslive")
+        if cheats[pg.K_0]:
+            self.game.cheat("slow_ghosts")
+        if cheats[pg.K_t]:
+            self.game.cheat("inftime")
         self.game.update(dt, intent)
         return None
 

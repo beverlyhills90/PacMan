@@ -33,7 +33,7 @@ class Visualiser():
         self.maze_view: MazeView
         self.entity_view: EntityView
         self.hud_view: HudView
-        self.game: Game = Game(config, 3, 1)
+        self.game: Game = Game(config)
 
         self.event_handler: EventHandler
 
@@ -82,6 +82,9 @@ class Visualiser():
             self.countdown_view.reset_animation()
 
         if snapshot.status == "game_over":
+            self.state = "victory_screen"
+
+        if snapshot.status == "victory":
             self.state = "victory_screen"
 
         if snapshot.status == "dead":
