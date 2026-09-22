@@ -1,7 +1,6 @@
 import pygame as pg
 from shared_types import VisualState
 from .buttons import MenuButton, Fonts
-from .sprites_storage import SpritesContainer, MenuSprites
 
 
 class MenuView():
