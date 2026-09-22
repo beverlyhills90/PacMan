@@ -16,7 +16,7 @@ class Fonts:
 
 
 class MenuButton:
-    def __init__(self, center: tuple[int, int], text: str, action: VisualState | None,
+    def __init__(self, center: tuple[float, float], text: str, action: VisualState | None,
                  normal_font: pg.font.Font, hover_font: pg.font.Font) -> None:
         self.text_surface: pg.Surface = normal_font.render(text, False, "white")
         self.button_rect = self.text_surface.get_rect(center=center)
@@ -25,7 +25,7 @@ class MenuButton:
         self.action: VisualState | None = action
         self.width = self.text_surface.get_height()
 
-    def draw_button(self, screen: pg.Surface, mouse_pos: tuple[int, int],
+    def draw_button(self, screen: pg.Surface, mouse_pos: tuple[float, float],
                     hovered_state: bool = True) -> None:
         if hovered_state:
             hovered = self.button_rect.collidepoint(mouse_pos)
