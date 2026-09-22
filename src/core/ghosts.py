@@ -120,7 +120,7 @@ class Ghost(ABC):
         if len(candidats) == 1:
             return candidats[0]
         visited = {self.tile}
-        q = deque([])
+        q = deque([])  # type: ignore
         for d in candidats:
             p = neighbor(self.tile, d)
             if p == target:
