@@ -52,7 +52,7 @@ class EventHandler:
             intent = "left"
         if keys[pg.K_RIGHT]:
             intent = "right"
-        if keys[pg.K_ESCAPE]:
+        if cheats[pg.K_ESCAPE]:
             self.game.pause()
         if cheats[pg.K_l]:
             self.game.cheat("level_skip")
