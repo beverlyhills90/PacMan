@@ -30,7 +30,7 @@ CheatMode = Literal[
     "pluslive",
 ]
 GameStatus = Literal[
-    "playing", "level_won", "dead", "game_over", "victory", "countdown"
+    "playing", "level_won", "dead", "game_over", "victory", "countdown", "pause"
 ]
 GhsotsNames = Literal["blinky", "pinky", "inky", "clyde"]
 VisualState = Literal["menu", "start", "playing", "exit", "highscore", "victory_screen"]
