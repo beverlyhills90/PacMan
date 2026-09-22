@@ -107,7 +107,7 @@ class Visualiser():
             sys.exit()
 
         elif self.state == "highscore":
-            self.highscore_view.draw_highscore_menu(mouse_pos)
+            self.highscore_view.draw_highscore_menu(mouse_pos, dt)
 
         elif self.state == "victory_screen":
             self.maze_view.draw_maze(snapshot, dt)

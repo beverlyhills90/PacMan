@@ -1,18 +1,20 @@
 import pygame as pg
 from .buttons import MenuButton, Fonts
 from shared_types import VisualState
+from .abs_classes import get_centered_x, Highscore
 
 
 class HighscoreView:
     def __init__(self, screen: pg.Surface, fonts: Fonts) -> None:
         self.screen: pg.Surface = screen
         self.fonts: Fonts = fonts
-
+        self.highscore = Highscore(screen)
         self.button_list: list[MenuButton] = self._create_buttons()
 
-    def draw_highscore_menu(self, mouse_pos: tuple[int, int]) -> None:
+    def draw_highscore_menu(self, mouse_pos: tuple[int, int], dt: float) -> None:
         for button in self.button_list:
             button.draw_button(self.screen, mouse_pos)
+        self.draw_highscore([("Yaroo", 300), ("lolkek", 1500), ("test", 1000000)], dt)
 
     def handle_input(self, mouse_pos: tuple[int, int]) -> VisualState | None:
         for button in self.button_list:
@@ -28,3 +30,13 @@ class HighscoreView:
         button_list.append(back_button)
 
         return button_list
+
+    def draw_highscore(self, highscore: list[tuple[str, int]], dt: float) -> None:
+        y = 100
+        for name, score in highscore:
+            name_surface = self.fonts.mid_button_font.render(name, False, "white")
+            x = get_centered_x(name_surface.width, self.screen.width)
+            name_rect = name_surface.get_rect(bottomleft=(x, y))
+            self.screen.blit(name_surface, name_rect)
+            self.highscore.draw_highscore(score, dt, x + name_surface.width, y)
+            y += 70
