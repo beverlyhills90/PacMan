@@ -60,7 +60,7 @@ All of them are toggles except _level skip_ and _extra life_, which are single a
 
 | Key | Cheat                                                                       |
 | --- | --------------------------------------------------------------------------- |
-| `I` | invincibility — ghosts no longer kill, eating frightened ghosts still works |
+| `G` | invincibility — ghosts no longer kill, eating frightened ghosts still works |
 | `T` | infinite time — the level timer stops counting down                         |
 | `0` | slow ghosts                                                                 |
 | `1` | +1 life                                                                     |
