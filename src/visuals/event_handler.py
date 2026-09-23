@@ -1,8 +1,10 @@
-import pygame as pg
 import sys
-from shared_types import VisualState, Direction
-from game import Game
-from .menu_view import MenuView
+
+import pygame as pg
+
+from src.game import Game
+from src.shared_types import Direction, VisualState
+
 from .highscore_view import HighscoreView
 from .controls_view import ControlsView
 
@@ -17,7 +19,9 @@ class EventHandler():
         self.highscore_view: HighscoreView = highscore_view
         self.controls_view: ControlsView = controls_view
 
-    def event_handling(self, dt: float, state: VisualState) -> VisualState | None:
+    def event_handling(
+        self, dt: float, state: VisualState
+    ) -> VisualState | None:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
@@ -47,6 +51,8 @@ class EventHandler():
             intent = "left"
         if keys[pg.K_RIGHT]:
             intent = "right"
+        if cheats[pg.K_ESCAPE]:
+            self.game.pause()
         if cheats[pg.K_l]:
             self.game.cheat("level_skip")
         if cheats[pg.K_g]:
@@ -63,13 +69,13 @@ class EventHandler():
     def menu_events(self, event: pg.Event) -> VisualState | None:
         mouse_pos = event.pos
         if event.button == 1:
-            return (self.menu_view.handle_input(mouse_pos))
+            return self.menu_view.handle_input(mouse_pos)
         return None
 
     def highscore_events(self, event: pg.Event) -> VisualState | None:
         mouse_pos = event.pos
         if event.button == 1:
-            return (self.highscore_view.handle_input(mouse_pos))
+            return self.highscore_view.handle_input(mouse_pos)
         return None
 
     def _control_menu_events(self, event: pg.Event) -> VisualState | None:

@@ -2,8 +2,8 @@ from typing import cast
 
 import pytest
 
-from core.world import can_move, find_start
-from shared_types import Direction, Grid, Pos, WorldExeption
+from src.core.world import can_move, find_start
+from src.shared_types import Direction, Grid, Pos, WorldExeption
 
 U = [
     "#####",

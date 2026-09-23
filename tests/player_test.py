@@ -1,8 +1,8 @@
 from typing import cast
 
-from core.player import Player
-from core.world import tile_at
-from shared_types import Grid
+from src.core.player import Player
+from src.core.world import tile_at
+from src.shared_types import Grid
 
 U_large = [
     "#########",

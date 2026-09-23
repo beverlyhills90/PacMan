@@ -1,5 +1,5 @@
 import pygame as pg
-from shared_types import VisualState
+from src.shared_types import VisualState
 from .buttons import MenuButton, Fonts
 
 

@@ -1,11 +1,13 @@
 import math
+from json import JSONDecodeError
 
-from core.ghosts import Ghost, new_ghosts
-from core.maze_adapter import build_grid_for_level
-from core.player import Player, new_player
-from core.world import place_pacgums
-from parsing import Config
-from shared_types import (
+from src.core.ghosts import Ghost, new_ghosts
+from src.core.maze_adapter import build_grid_for_level
+from src.core.player import Player, new_player
+from src.core.world import place_pacgums
+from src.highscore import TopTen
+from src.parsing import Config
+from src.shared_types import (
     CheatMode,
     Direction,
     GameState,
@@ -16,20 +18,28 @@ from shared_types import (
     Pos,
 )
 
+DIFFICULTY_LEVEL = {1: 0.5, 2: 0.7, 3: 0.9}
+
 
 class Game:
     def __init__(
         self,
         config: Config,
+        nickname: str,
         speed: float = 8,
     ) -> None:
-        self.speed: float = speed
-        self.ghosts_speed = speed
         self.config: Config = config
+        self.speed: float = speed
+        self.ghosts_speed = (
+            speed * DIFFICULTY_LEVEL[self.config.difficulty_level]
+        )
         self.level_index: int = 0
         self.level_grid: Grid = build_grid_for_level(self.config.levels[0])
         self.player: Player = new_player(self.level_grid, speed)
-        self.ghosts: list[Ghost] = new_ghosts(self.level_grid, speed)
+        self.ghosts: list[Ghost] = new_ghosts(
+            self.level_grid,
+            self.ghosts_speed,
+        )
         pacgums, super_pacgums = place_pacgums(
             self.level_grid, self.player.tile
         )
@@ -49,17 +59,19 @@ class Game:
             "PucGum": self.config.points_per_pacgum,
             "SuperPacGum": self.config.points_per_super_pacgum,
         }
+        self.pause_state: bool = False
+        self.prev_status: GameStatus = self.status
+        self.nickname: str = nickname
 
     def update(self, dt: float, intent: Direction | None) -> None:
+        # print(self.time_left)
         if self.status != "playing":
             return
         self._tick_timer(dt)
         self.player.update(dt, self.level_grid, intent)
         self._eat_pacgum()
-
         for g in self.ghosts:
             g.update(dt, self.level_grid, self.player.tile, self.player.facing)
-
         self._check_collisions()
         self._check_level_end()
 
@@ -89,6 +101,7 @@ class Game:
             self.status,
             self.lives,
             self.level_index + 1,
+            round(self.time_left),
         )
         return game_state
 
@@ -162,6 +175,14 @@ class Game:
     def next_level(self) -> None:
         if self.level_index == len(self.config.levels) - 1:
             self.status = "victory"
+            try:
+                TopTen.save(
+                    self.config.highscore_filename, self.score, self.nickname
+                )
+            except OSError as e:
+                print(f"[Error] saiving {e.errno} {e}")
+            except JSONDecodeError as e:
+                print(f"[Error] saiving {e.msg}")
             return
         self.level_index += 1
         self._start_level(self.level_index)
@@ -186,3 +207,12 @@ class Game:
             self.ghosts_speed = self.speed
         for g in self.ghosts:
             g.speed = self.ghosts_speed
+
+    def pause(self) -> None:
+        if not self.pause_state:
+            self.pause_state = not self.pause_state
+            self.prev_status = self.status
+            self.status = "pause"
+        else:
+            self.pause_state = not self.pause_state
+            self.status = self.prev_status

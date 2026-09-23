@@ -1,11 +1,15 @@
 import pygame as pg
-from .buttons import HudButton, Fonts
+
+from src.shared_types import GameState
+
+from .buttons import Fonts, HudButton
 from .game_layout import GameLayout
-from shared_types import GameState
 
 
-class HudView():
-    def __init__(self, screen: pg.Surface, fonts: Fonts, game_layout: GameLayout) -> None:
+class HudView:
+    def __init__(
+        self, screen: pg.Surface, fonts: Fonts, game_layout: GameLayout
+    ) -> None:
         self.screen: pg.Surface = screen
         self.fonts: Fonts = fonts
         self.game_layout = game_layout
