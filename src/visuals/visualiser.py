@@ -55,7 +55,7 @@ class Visualiser:
         self.controls_view = ControlsView(self.screen, self.fonts)
         self.player: Player = player
 
-        self.state: VisualState = "victory_screen"
+        self.state: VisualState = "menu"
 
     def main_loop(self) -> None:
         clock = pg.time.Clock()
@@ -110,27 +110,33 @@ class Visualiser:
         if self.state == "menu":
             self.menu_view.draw_menu(mouse_pos)
 
-        elif self.state == "playing":
+        if self.state == "playing":
             self.maze_view.draw_maze(snapshot, dt)
             self.entity_view.draw_entities(snapshot, dt, self.game.cheat_buf)
             self.hud_view.draw_hud(snapshot, mouse_pos)
             self.countdown_view.draw_countdown(dt)
 
-        elif self.state == "exit":
+        if snapshot.status == "pause":
+            print("aaaa")
+            pause_surface = pg.Surface((800, 800), pg.SRCALPHA)
+            pause_surface.fill((0, 0, 0, 100))
+            self.screen.blit(pause_surface)
+
+        if self.state == "exit":
             pg.quit()
             sys.exit()
 
-        elif self.state == "highscore":
+        if self.state == "highscore":
             self.highscore_view.draw_highscore_menu(mouse_pos, dt)
 
-        elif self.state == "victory_screen":
+        if self.state == "victory_screen":
             self.maze_view.draw_maze(snapshot, dt)
             self.entity_view.draw_entities(snapshot, dt, self.game.cheat_buf)
             self.hud_view.draw_hud(snapshot, mouse_pos)
 
             self.victory_view.draw_victory(mouse_pos, dt)
 
-        elif self.state == "controls":
+        if self.state == "controls":
             self.controls_view.draw_control_menu(mouse_pos)
 
     def set_new_level(self) -> None:
