@@ -1,0 +1,7 @@
+.venv
+__pycache__
+*.pyc
+docs/project-management
+.DS_Store
+.pytest_cache
+AGENTS.md
