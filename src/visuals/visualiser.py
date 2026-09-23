@@ -35,7 +35,7 @@ class Visualiser:
         self.maze_view: MazeView
         self.entity_view: EntityView
         self.hud_view: HudView
-        self.game: Game = Game(config, "123name")
+        self.game: Game = Game(config, "")
         self.sounds: Sounds = Sounds()
 
         self.event_handler: EventHandler
@@ -63,7 +63,6 @@ class Visualiser:
         self.set_new_level()
 
         while True:
-            # print(self.game.status)
             dt: float = clock.tick(60) / 1000
             self.screen.fill("black")
             new_state = self.event_handler.event_handling(dt, self.state)
@@ -106,8 +105,6 @@ class Visualiser:
     def visual(self, dt: float) -> None:
         mouse_pos = pg.mouse.get_pos()
         snapshot = self.game.snapshot()
-        print(self.game.status)
-        print(self.state)
 
         if self.state == "name_input":
             self.name_input.draw_imput_screen(mouse_pos)
@@ -172,6 +169,5 @@ class Visualiser:
         )
 
     def refresh_game(self) -> None:
-        print(self.name)
         self.game = Game(self.config, "".join(self.name))
         self.countdown_view = Countdown(self.screen, self.game)

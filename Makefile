@@ -9,10 +9,10 @@ install:
 	$(UV) sync
 
 run:
-	$(UV) run python -m src
+	$(UV) run pac-man.py config.json
 
 debug:
-	$(PYTHON) -m pdb main.py
+	$(PYTHON) -m pdb pac-man.py config.json
 
 clean:
 	rm -rf __pycache__ .mypy_cache .pytest_cache .ruff_cache
