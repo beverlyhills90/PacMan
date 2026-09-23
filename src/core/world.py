@@ -1,6 +1,6 @@
 from collections import deque
 
-from shared_types import (
+from src.shared_types import (
     DELTA,
     Direction,
     Grid,

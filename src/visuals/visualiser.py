@@ -1,10 +1,6 @@
-import pygame as pg
 import sys
 
-from shared_types import Grid, VisualState
-from game import Game
-from core.player import Player
-from parsing import Config
+import pygame as pg
 
 from .menu_view import MenuView
 from .game_layout import GameLayout
@@ -15,13 +11,24 @@ from .victory_view import VictoryView
 from .hud_view import HudView
 from .countdown_view import Countdown
 from .controls_view import ControlsView
+from src.core.player import Player
+from src.game import Game
+from src.parsing import Config
+from src.shared_types import Grid, VisualState
 
 from .buttons import Fonts
-
+from .countdown_view import Countdown
+from .entity_view import EntityView
 from .event_handler import EventHandler
+from .game_layout import GameLayout
+from .highscore_view import HighscoreView
+from .hud_view import HudView
+from .maze_view import MazeView
+from .menu_view import MenuView
+from .victory_view import VictoryView
 
 
-class Visualiser():
+class Visualiser:
     def __init__(self, player: Player, config: Config) -> None:
         self.grid: Grid
         self.config: Config = config
@@ -34,13 +41,15 @@ class Visualiser():
         self.maze_view: MazeView
         self.entity_view: EntityView
         self.hud_view: HudView
-        self.game: Game = Game(config)
+        self.game: Game = Game(config, "123name")
 
         self.event_handler: EventHandler
 
         self.fonts = Fonts()
         self.menu_view: MenuView = MenuView(self.screen, self.fonts)
-        self.highscore_view: HighscoreView = HighscoreView(self.screen, self.fonts)
+        self.highscore_view: HighscoreView = HighscoreView(
+            self.screen, self.fonts
+        )
         self.victory_view = VictoryView(self.screen, self.fonts)
         self.countdown_view = Countdown(self.screen, self.game)
         self.controls_view = ControlsView(self.screen, self.fonts)
@@ -53,10 +62,10 @@ class Visualiser():
         pg.display.set_caption("Pacman")
         self.set_new_level()
 
-        while (True):
-            print(self.game.status)
+        while True:
+            # print(self.game.status)
             dt: float = clock.tick(60) / 1000
-            self.screen.fill('black')
+            self.screen.fill("black")
             new_state = self.event_handler.event_handling(dt, self.state)
 
             if new_state is not None:
@@ -128,8 +137,7 @@ class Visualiser():
         snapshot = self.game.snapshot()
         self.grid = snapshot.grid
 
-        self.game_layout = GameLayout(self.grid,
-                                      self.width, self.height)
+        self.game_layout = GameLayout(self.grid, self.width, self.height)
         self.game_layout.get_tile_size()
 
         self.maze_view = MazeView(self.grid, self.game_layout, self.screen)
@@ -140,5 +148,5 @@ class Visualiser():
             self.screen, self.game, self.menu_view, self.highscore_view, self.controls_view)
 
     def refresh_game(self) -> None:
-        self.game = Game(self.config)
+        self.game = Game(self.config, "123name")
         self.countdown_view = Countdown(self.screen, self.game)

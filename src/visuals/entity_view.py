@@ -1,5 +1,5 @@
 import pygame as pg
-from shared_types import Grid, PacmanView, GhostView, GameState, Direction, CheatMode
+from src.shared_types import Grid, PacmanView, GhostView, GameState, Direction
 from .game_layout import GameLayout
 from .errors import VisulisationError
 from .abs_classes import Animation
