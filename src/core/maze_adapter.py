@@ -3,8 +3,7 @@ from typing import Any, cast
 
 from mazegenerator import MazeGenerator
 
-from parsing import Level
-from shared_types import Grid
+from src.shared_types import Grid, Level
 
 NORTH = 1
 EAST = 2

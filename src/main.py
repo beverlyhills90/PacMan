@@ -2,12 +2,13 @@ from argparse import ArgumentParser, Namespace
 from pathlib import Path
 from sys import stderr
 
-from core.maze_adapter import build_grid_for_level
-from parsing import ParsingError, validation
-from visuals.visualiser import Visualiser
-from core.player import Player
-from core.world import find_start
 import pygame as pg
+
+from src.core.maze_adapter import build_grid_for_level
+from src.core.player import Player
+from src.core.world import find_start
+from src.parsing import ParsingError, validation
+from src.visuals.visualiser import Visualiser
 
 
 def main() -> None:
@@ -33,14 +34,11 @@ def main() -> None:
 def argument_parser() -> Namespace:
     parser = ArgumentParser("pacman")
     parser.add_argument(
-        "--config",
+        "config",
         help="path to config file",
-        default=Path(__file__).resolve().parent / "config.json",
         type=Path,
     )
+    # default=Path(__file__).resolve().parent.parent / "config.json",
+
     args: Namespace = parser.parse_args()
     return args
-
-
-if __name__ == "__main__":
-    main()

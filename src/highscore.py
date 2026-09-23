@@ -10,7 +10,7 @@ class HighscorePlayer(BaseModel):
 
     @field_validator("nickname", mode="before")
     @classmethod
-    def highscore_filename_validator(cls, value: str) -> str:
+    def nickname_validator(cls, value: str) -> str:
         if len(value) > 10:
             return value[:10]
         return value
