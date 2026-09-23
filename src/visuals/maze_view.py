@@ -7,7 +7,7 @@ from .abs_classes import Animation
 
 SUPER_GUM_N = 2
 SUPER_GUM_SEQUENCY = (0, 1, 0)
-SUPER_GUM_FRAME_DUR = 180
+SUPER_GUM_FRAME_DUR = 540
 
 
 class WallConnection(IntFlag):
