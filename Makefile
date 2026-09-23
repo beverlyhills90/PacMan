@@ -24,7 +24,10 @@ test:
 lint:
 	uv run mypy . --exclude .venv --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
 	uv run flake8 . --exclude=.venv
-	
+
+build:
+	$(UV) run pyinstaller pacman.spec --clean --noconfirm
+
 format:
 	ruff format .
 	ruff check --fix .

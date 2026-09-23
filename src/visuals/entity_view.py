@@ -70,19 +70,40 @@ class Pacman(Animation):
 
 
 class Ghost(Animation):
-    def __init__(self, screen: pg.Surface, game_layout: GameLayout, size: int, name: str, scared_color: str) -> None:
+    def __init__(
+        self,
+        screen: pg.Surface,
+        game_layout: GameLayout,
+        size: int,
+        name: str,
+        scared_color: str,
+    ) -> None:
         super().__init__(screen)
         self.game_layout: GameLayout = game_layout
         self.scared_color: str = scared_color
         main_path = Path(__file__).resolve().parent / "sprites" / "ghosts"
         self.name: str = name
         self.ghost_sprites: dict[str, list[pg.Surface]] = {
-            direction: [pg.transform.scale(pg.image.load(
-                f"{main_path}/ghost_{name}_{direction}_{frame}.png").convert_alpha(),
-                (size, size)) for frame in range(GHOSTS_SPRITES_N)] for direction in DIRECTIONS}
-        self.ghost_scared_sprites: list[pg.Surface] = [pg.transform.scale(pg.image.load(
-            f"{main_path}/frightened_{scared_color}_{i}.png").convert_alpha(),
-            (size, size)) for i in range(2)]
+            direction: [
+                pg.transform.scale(
+                    pg.image.load(
+                        f"{main_path}/ghost_{name}_{direction}_{frame}.png"
+                    ).convert_alpha(),
+                    (size, size),
+                )
+                for frame in range(GHOSTS_SPRITES_N)
+            ]
+            for direction in DIRECTIONS
+        }
+        self.ghost_scared_sprites: list[pg.Surface] = [
+            pg.transform.scale(
+                pg.image.load(
+                    f"{main_path}/frightened_{scared_color}_{i}.png"
+                ).convert_alpha(),
+                (size, size),
+            )
+            for i in range(2)
+        ]
 
     def draw_ghost(self, snapshot: GameState, dt: float) -> None:
         self.update_time(dt)
@@ -141,7 +162,12 @@ class EntityView:
         ghost_names: list[str] = ["blinky", "pinky", "inky", "clyde"]
         ghost_scared: list[str] = ["blue", "white", "blue", "white"]
         for name, color in zip(ghost_names, ghost_scared):
-            ghost = Ghost(self.screen, self.game_layout,
-                          self.game_layout.tile_size, name, color)
+            ghost = Ghost(
+                self.screen,
+                self.game_layout,
+                self.game_layout.tile_size,
+                name,
+                color,
+            )
             ghost_list.append(ghost)
         return ghost_list

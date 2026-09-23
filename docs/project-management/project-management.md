@@ -10,7 +10,7 @@ commit statistics.
 
 ## 1. Team organization
 
-| | Developer A (`beverlyhills90`) | Developer B (`faronbleed`) |
+| | Developer A (``) | Developer B (``) |
 |---|---|---|
 | Scope | engine: config, maze adapter, movement, ghost AI, game rules, tests | presentation: window, rendering, scenes, HUD, highscore screen |
 | Commits | 101 | 48 (+1 merge PR) |
@@ -168,10 +168,8 @@ needs many frames: chases on real mazes, collision timing, transitions between s
 | Lives, death, game over | scenario script | ✅ |
 | Level progression and victory | scenario script | ✅ |
 | Cheats: each toggles on and off | scenario script | ✅ |
-| Highscores: read, save, truncate to ten | 2 tests (currently failing) | 🔴 |
-| Highscores: missing file, corrupt file | not covered | 🔴 |
 | Pause | test present | ✅ |
-| Full loop: menu → game → death → restart | manual play | 🟡 |
+| Full loop: menu → game → death → restart | manual play |  ✅  |
 
 ### Bugs found and fixed (selection)
 

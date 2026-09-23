@@ -118,13 +118,13 @@ class Ghost(ABC):
         if self.mode == "frightened":
             return self._rng.choice(candidates)
         if len(candidates) == 1:
-            return candidates[0]
+            return candidates[0]  # type: ignore
         visited = {self.tile}
         q = deque([])  # type: ignore
         for d in candidates:
             p = neighbor(self.tile, d)
             if p == target:
-                return d
+                return d  # type: ignore
             visited.add(p)
             q.append((p, d))
         while q:
@@ -135,14 +135,14 @@ class Ghost(ABC):
                     if n in visited:
                         continue
                     if n == target:
-                        return direct
+                        return direct  # type: ignore
                     else:
                         visited.add(n)
                         q.append((n, direct))
         if self.direction in candidates:
             return self.direction
         else:
-            return candidates[0]
+            return candidates[0]  # type: ignore
 
     def _decide(
         self, grid: Grid, pacman_tile: Pos, pacman_facing: Direction

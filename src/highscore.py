@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field, ValidationError, field_validator
 
 
 class HighscorePlayer(BaseModel):
-    nickname: str = Field(min_length=2, max_length=10)
+    nickname: str = Field(min_length=2, max_length=12)
     score: int = Field(ge=0)
 
     @field_validator("nickname", mode="before")

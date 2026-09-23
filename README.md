@@ -1,4 +1,3 @@
-_This project has been created as part of the 42 curriculum by \<login1\>, \<login2\>._
 
 
 # Pac-Man
@@ -34,7 +33,7 @@ Two things make this project different from a plain Pac-Man clone:
 
 ```bash
 make install                                    # uv sync: venv + dependencies
-uv run python src/main.py --config src/config.json
+uv run pac-man.py config.json
 ```
 
 Other targets:
@@ -44,6 +43,7 @@ make test      # pytest
 make lint      # mypy + flake8
 make format    # ruff
 make clean     # remove caches
+make build     #build for itach.io
 ```
 
 ### Controls
@@ -93,6 +93,7 @@ code generator. Specifically:
   with a reference implementation (for example, 480 ghost chases to compare greedy
   targeting against BFS, and 75 000 simulated frames to validate player movement);
 - drafting the documents in `docs/project-management/` and this README.
+- Generating sprites for entity
 
 All game code was written by the team. The assistant did not commit source code.
 

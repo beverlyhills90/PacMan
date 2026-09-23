@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pygame as pg
 
-from src.shared_types import Pos, GameState
+from src.shared_types import GameState, Pos
 
 from .abs_classes import Animation, Highscore, get_centered_x
 from .buttons import Fonts, MenuButton
@@ -68,8 +68,13 @@ class VictoryView:
         self.score_x: float
         self.score_y: float
 
-    def draw_victory(self, mouse_pos: tuple[int, int], dt: float,
-                     snapshot: GameState, lost: bool = False) -> None:
+    def draw_victory(
+        self,
+        mouse_pos: tuple[int, int],
+        dt: float,
+        snapshot: GameState,
+        lost: bool = False,
+    ) -> None:
         self.victory_surface.fill((0, 0, 0, 170))
         self.screen.blit(self.victory_surface)
         if lost is False:
@@ -80,7 +85,9 @@ class VictoryView:
         else:
             for button in self.lost_button_list:
                 button.draw_button(self.screen, mouse_pos, False)
-        self.highscore.draw_highscore(snapshot.score, dt, self.score_x + 50, self.score_y)
+        self.highscore.draw_highscore(
+            snapshot.score, dt, self.score_x + 50, self.score_y
+        )
 
     def create_buttons(self, lost: bool = False) -> list[MenuButton]:
         button_list: list[MenuButton] = []
