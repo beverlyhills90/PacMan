@@ -1,12 +1,14 @@
 import pygame as pg
 from src.shared_types import VisualState
 from .buttons import MenuButton, Fonts
+from src.core.sound import Sounds
 
 
 class MenuView():
-    def __init__(self, screen: pg.Surface, fonts: Fonts, ) -> None:
+    def __init__(self, screen: pg.Surface, fonts: Fonts, sounds: Sounds) -> None:
         self.screen = screen
         self.fonts = fonts
+        self.sounds: Sounds = sounds
 
         self.button_list: list[MenuButton] = self.create_buttons()
 
@@ -17,6 +19,7 @@ class MenuView():
     def handle_input(self, mouse_pos: tuple[int, int]) -> VisualState | None:
         for button in self.button_list:
             if button.button_rect.collidepoint(mouse_pos) is True:
+                self.sounds.play_sound("eat_pac_gum")
                 return button.action
         return None
 
