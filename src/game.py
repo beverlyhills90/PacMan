@@ -101,6 +101,7 @@ class Game:
             self.status,
             self.lives,
             self.level_index + 1,
+            round(self.time_left),
         )
         return game_state
 
