@@ -42,7 +42,6 @@ class Countdown(Animation):
             frame += 1
             self.animation_elapsed -= 125
         self.update_frame(frame, COUNDOWN_SEQUENCY)
-        # print(self.current_frame)
         sprite = self.count_sprites[cur_count][self.current_frame]
         self.screen.blit(sprite, self.count_rect)
 

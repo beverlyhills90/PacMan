@@ -1,7 +1,7 @@
 import pygame as pg
 
-from shared_types import VisualState
 from src.core.sound import Sounds
+from src.shared_types import VisualState
 
 from .buttons import Fonts, MenuButton
 
