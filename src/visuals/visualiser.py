@@ -104,8 +104,8 @@ class Visualiser:
     def visual(self, dt: float) -> None:
         mouse_pos = pg.mouse.get_pos()
         snapshot = self.game.snapshot()
-        print(self.game.nickname)
-        # print(self.game.status)
+        print(self.game.status)
+        print(self.state)
 
         if self.state == "name_input":
             self.name_input.draw_imput_screen(mouse_pos)
@@ -136,13 +136,13 @@ class Visualiser:
             self.entity_view.draw_entities(snapshot, dt)
             self.hud_view.draw_hud(snapshot, mouse_pos)
 
-            self.victory_view.draw_victory(mouse_pos, dt)
-        if self.state == "lost_scren":
+            self.victory_view.draw_victory(mouse_pos, dt, snapshot)
+        if self.state == "lost_screen":
             self.maze_view.draw_maze(snapshot, dt)
             self.entity_view.draw_entities(snapshot, dt)
             self.hud_view.draw_hud(snapshot, mouse_pos)
 
-            self.victory_view.draw_victory(mouse_pos, dt, True)
+            self.victory_view.draw_victory(mouse_pos, dt, snapshot, True)
 
         if self.state == "controls":
             self.controls_view.draw_control_menu(mouse_pos)

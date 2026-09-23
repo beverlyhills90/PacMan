@@ -3,7 +3,7 @@ from abc import ABC
 from pathlib import Path
 
 
-SCORE_DIST = 24
+SCORE_DIST = 32
 
 DIGIT_FRAMES: int = 4
 DIGIT_SEQUENCE = (0, 1, 2, 3, 2, 1)
