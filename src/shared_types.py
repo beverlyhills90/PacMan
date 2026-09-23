@@ -33,9 +33,7 @@ GameStatus = Literal[
     "playing", "level_won", "dead", "game_over", "victory", "countdown", "pause"
 ]
 GhsotsNames = Literal["blinky", "pinky", "inky", "clyde"]
-VisualState = Literal[
-    "menu", "start", "playing", "exit", "highscore", "victory_screen"
-]
+VisualState = Literal["menu", "start", "playing", "exit", "highscore", "victory_screen", "controls"]
 Pos = tuple[int, int]  # (col, row)
 
 DELTA: dict[Direction, tuple[int, int]] = {

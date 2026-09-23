@@ -23,13 +23,8 @@ class HudView:
 
     def create_buttons(self, snapshot: GameState) -> list[HudButton]:
         button_list: list[HudButton] = []
-        button_names = [
-            f"Score:{snapshot.score}",
-            f"Lives:{snapshot.lives}",
-            f"Level:{snapshot.level}",
-            "Time:",
-        ]
-        # print(self.game_layout.get_offset_x())
+        button_names = [f"Score:{snapshot.score}",
+                        f"Lives:{snapshot.lives}", f"Level:{snapshot.level}", "Time:"]
         button_centers = [(self.x + self.offset * i, self.y) for i in range(4)]
         for name, center in zip(button_names, button_centers):
             button = HudButton(center, name, self.fonts.small_button_font)
