@@ -8,6 +8,7 @@ dependencies = [
     "pydantic>=2.13.5",
     "mazegenerator",
     "pygame-ce>=2.5.8",
+    "just-playback>=1.0.0",
 ]
 
 
