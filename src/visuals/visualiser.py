@@ -103,7 +103,7 @@ class Visualiser():
 
         elif self.state == "playing":
             self.maze_view.draw_maze(snapshot, dt)
-            self.entity_view.draw_entities(snapshot, dt)
+            self.entity_view.draw_entities(snapshot, dt, self.game.cheat_buf)
             self.hud_view.draw_hud(snapshot, mouse_pos)
             self.countdown_view.draw_countdown(dt)
 
@@ -116,7 +116,7 @@ class Visualiser():
 
         elif self.state == "victory_screen":
             self.maze_view.draw_maze(snapshot, dt)
-            self.entity_view.draw_entities(snapshot, dt)
+            self.entity_view.draw_entities(snapshot, dt, self.game.cheat_buf)
             self.hud_view.draw_hud(snapshot, mouse_pos)
 
             self.victory_view.draw_victory(mouse_pos, dt)
