@@ -1,4 +1,6 @@
+import io
 import random
+from contextlib import redirect_stdout
 from typing import Any, cast
 
 from mazegenerator import MazeGenerator
@@ -35,7 +37,9 @@ def _generate(width: int, height: int, seed: int | None) -> list[list[int]]:
     if seed is None:
         seed2 = random.randint(1, 2**31 - 1)
     try:
-        maze = MazeGenerator(size=(width, height), seed=seed2)
+        f = io.StringIO()
+        with redirect_stdout(f):
+            maze = MazeGenerator(size=(width, height), seed=seed2)
     except Exception as e:
         raise MazeError(f"Maze generator failed: {e}")
     return cast(list[list[int]], maze.maze)
