@@ -4,11 +4,11 @@ from sys import stderr
 
 import pygame as pg
 
-from core.maze_adapter import build_grid_for_level
-from core.player import Player
-from core.world import find_start
-from parsing import ParsingError, validation
-from visuals.visualiser import Visualiser
+from src.core.maze_adapter import build_grid_for_level
+from src.core.player import Player
+from src.core.world import find_start
+from src.parsing import ParsingError, validation
+from src.visuals.visualiser import Visualiser
 
 
 def main() -> None:
@@ -36,12 +36,8 @@ def argument_parser() -> Namespace:
     parser.add_argument(
         "--config",
         help="path to config file",
-        default=Path(__file__).resolve().parent / "config.json",
+        default=Path(__file__).resolve().parent.parent / "config.json",
         type=Path,
     )
     args: Namespace = parser.parse_args()
     return args
-
-
-if __name__ == "__main__":
-    main()

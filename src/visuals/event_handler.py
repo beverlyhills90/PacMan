@@ -2,8 +2,8 @@ import sys
 
 import pygame as pg
 
-from game import Game
-from shared_types import Direction, VisualState
+from src.game import Game
+from src.shared_types import Direction, VisualState
 
 from .highscore_view import HighscoreView
 from .menu_view import MenuView

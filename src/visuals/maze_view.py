@@ -1,4 +1,4 @@
-from shared_types import Grid, GameState, Pos
+from src.shared_types import Grid, GameState, Pos
 from .game_layout import GameLayout
 import pygame as pg
 from enum import IntFlag
@@ -60,8 +60,9 @@ class MazeView():
         self.game_layout: GameLayout = game_layout
         self.screen: pg.Surface = screen
         self.size = game_layout.tile_size
+        self.path_sprite: Path = Path(__file__).resolve().parent / "sprites" / "tiles"
         self.wall_sprites: list[pg.Surface] = [pg.transform.scale(pg.image.load(
-            f"visuals/sprites/tiles/wall_{i:02d}.png").convert_alpha(),
+            f"{self.path_sprite}/wall_{i:02d}.png").convert_alpha(),
             (self.size, self.size)) for i in range(16)]
         self.gum: Gum = Gum(screen, game_layout)
         self.super_gum: SuperGum = SuperGum(screen, game_layout)

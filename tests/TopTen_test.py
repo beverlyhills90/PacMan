@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from highscore import TopTen
+from src.highscore import TopTen
 
 
 def test_read_from_file() -> None:

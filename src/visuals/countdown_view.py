@@ -1,6 +1,6 @@
 from pathlib import Path
 from .abs_classes import Animation
-from game import Game
+from src.game import Game
 import pygame as pg
 
 COUNDOWN_FRAMES_N: int = 8

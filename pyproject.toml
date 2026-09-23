@@ -21,7 +21,7 @@ extraPaths = ["src"]
 typeCheckingMode = "standard"
 
 [tool.mypy]
-mypy_path = "src"
+mypy_path = "."
 explicit_package_bases = true
 
 [tool.ruff]
@@ -52,5 +52,5 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
-pythonpath = ["src"]
+pythonpath = ["."]
 testpaths = ["tests"]
