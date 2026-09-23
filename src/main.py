@@ -34,10 +34,11 @@ def main() -> None:
 def argument_parser() -> Namespace:
     parser = ArgumentParser("pacman")
     parser.add_argument(
-        "--config",
+        "config",
         help="path to config file",
-        default=Path(__file__).resolve().parent.parent / "config.json",
         type=Path,
     )
+    # default=Path(__file__).resolve().parent.parent / "config.json",
+
     args: Namespace = parser.parse_args()
     return args
