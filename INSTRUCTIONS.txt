@@ -1,0 +1,106 @@
+PAC-MAN
+=======
+
+A remake of the 1980 arcade classic, made as part of the 42 curriculum.
+Eat every pacgum in the maze before the timer runs out, and avoid the four
+ghosts. There are 10 levels; your score carries over from one level to the
+next.
+
+
+HOW TO RUN
+----------
+
+The game needs no Python installation. Keep the whole "pacman" folder
+together: the "pacman" program will not start without the "_internal"
+folder next to it.
+
+Open a terminal in the "pacman" folder and run:
+
+    ./pacman _internal/config.json
+
+The argument is the configuration file. You can pass any other JSON file
+built the same way (see CONFIGURATION below).
+
+macOS: if the system blocks the program because it is from an unidentified
+developer, right-click "pacman" -> Open, or allow it in
+System Settings -> Privacy & Security.
+
+
+CONTROLS
+--------
+
+    Arrow keys    move Pac-Man
+    Esc           pause / resume
+    Mouse         navigate the menus
+    Keyboard      type your name at the end of a game, Enter to confirm
+
+
+RULES
+-----
+
+    - Pacgum ................ points_per_pacgum (10 by default)
+    - Super-pacgum .......... points_per_super_pacgum (50); the ghosts
+                              become frightened and can be eaten for a
+                              few seconds
+    - Frightened ghost ...... points_per_ghost (200); it goes back to its
+                              corner and comes back later
+    - Touching a ghost ...... you lose a life and restart in the centre
+    - Timer at zero ......... game over
+    - No lives left ......... game over
+    - All levels cleared .... victory
+
+At the end of a game you enter a name (up to 10 letters, digits or spaces)
+and your score goes into the top-10 highscore table.
+
+
+CHEATS (for evaluation)
+-----------------------
+
+Press these during a game:
+
+    G    invincibility on/off - ghosts can no longer kill you
+    T    infinite time on/off - the level timer stops
+    0    slow ghosts on/off
+    1    +1 life
+    L    skip the current level
+
+
+CONFIGURATION
+-------------
+
+The configuration is a JSON file. Lines that start with "#" are comments.
+A missing or invalid value is replaced by its default, and the game prints
+a warning; it never crashes because of the config.
+
+    Key                        Default           Range
+    highscore_filename         highscores.json   any file path
+    lives                      3                 1 - 10
+    difficulty_level           2                 1 - 3 (ghost speed)
+    points_per_pacgum          10                5 - 20
+    points_per_super_pacgum    50                25 - 100
+    points_per_ghost           200               100 - 500
+    level_max_time             90                30 - 180 (seconds)
+    levels                     10 levels         at least 10 entries
+
+Each entry in "levels" has:
+
+    width, height   maze size in cells, 10 - 50 (default 20)
+    seed            42 for the first level, null (random) for the others
+
+Example:
+
+    # General game settings
+    {
+        "lives": 3,
+        "difficulty_level": 1,
+        "level_max_time": 90,
+    # first level: fixed seed, the rest: random
+        "levels": [
+            { "width": 21, "height": 21, "seed": 42 },
+            { "width": 23, "height": 21, "seed": null }
+        ]
+    }
+
+If there are fewer than 10 levels, default levels are added.
+
+The highscore file is created in the folder you start the game from.

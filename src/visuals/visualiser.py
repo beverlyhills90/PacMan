@@ -2,24 +2,24 @@ import sys
 
 import pygame as pg
 
-from .menu_view import MenuView
-from .game_layout import GameLayout
-from .maze_view import MazeView
-from .entity_view import EntityView
-from .highscore_view import HighscoreView
-from .victory_view import VictoryView
-from .hud_view import HudView
-from .countdown_view import Countdown
-from .controls_view import ControlsView
-from .event_handler import EventHandler
-from .name_input import InputName
-from .buttons import Fonts
 from src.core.player import Player
+from src.core.sound import Sounds
 from src.game import Game
 from src.parsing import Config
-from src.core.sound import Sounds
-
 from src.shared_types import Grid, VisualState
+
+from .buttons import Fonts
+from .controls_view import ControlsView
+from .countdown_view import Countdown
+from .entity_view import EntityView
+from .event_handler import EventHandler
+from .game_layout import GameLayout
+from .highscore_view import HighscoreView
+from .hud_view import HudView
+from .maze_view import MazeView
+from .menu_view import MenuView
+from .name_input import InputName
+from .victory_view import VictoryView
 
 
 class Visualiser:
@@ -41,7 +41,9 @@ class Visualiser:
         self.event_handler: EventHandler
 
         self.fonts = Fonts()
-        self.menu_view: MenuView = MenuView(self.screen, self.fonts, self.sounds)
+        self.menu_view: MenuView = MenuView(
+            self.screen, self.fonts, self.sounds
+        )
         self.highscore_view: HighscoreView = HighscoreView(
             self.screen, self.fonts, config.highscore_filename
         )
@@ -157,11 +159,17 @@ class Visualiser:
         self.maze_view = MazeView(self.grid, self.game_layout, self.screen)
         self.entity_view = EntityView(self.grid, self.game_layout, self.screen)
         self.hud_view = HudView(self.screen, self.fonts, self.game_layout)
-        self.highscore_view = HighscoreView(self.screen, self.fonts,
-                                            self.config.highscore_filename)
+        self.highscore_view = HighscoreView(
+            self.screen, self.fonts, self.config.highscore_filename
+        )
         self.event_handler = EventHandler(
-            self.screen, self.game, self.menu_view, self.highscore_view,
-            self.controls_view, self.name_input)
+            self.screen,
+            self.game,
+            self.menu_view,
+            self.highscore_view,
+            self.controls_view,
+            self.name_input,
+        )
 
     def refresh_game(self) -> None:
         print(self.name)

@@ -1,7 +1,7 @@
-import pygame as pg
 from abc import ABC
 from pathlib import Path
 
+import pygame as pg
 
 SCORE_DIST = 32
 
@@ -19,9 +19,11 @@ class Animation(ABC):
 
     def update_frame(self, step: int, sequence: tuple[int, ...] | None) -> None:
         if sequence:
-            self.current_frame = sequence[(self.current_frame + step) % len(sequence)]
+            self.current_frame = sequence[
+                (self.current_frame + step) % len(sequence)
+            ]
         else:
-            self.current_frame = (self.current_frame + step)
+            self.current_frame = self.current_frame + step
 
     def update_time(self, dt: float) -> None:
         self.animation_elapsed = self.animation_elapsed + dt * 1000
@@ -37,10 +39,15 @@ class Highscore(Animation):
     def __init__(self, screen: pg.Surface) -> None:
         super().__init__(screen)
         main_path = Path(__file__).resolve().parent / "sprites" / "highscore_32"
-        self.digit_sprites: dict[str, list[pg.Surface]] = {str(name): [pg.image.load(
-            f"{main_path}/digit_{name}_{frame}.png").convert_alpha()
-            for frame in range(DIGIT_FRAMES)]
-            for name in range(10)}
+        self.digit_sprites: dict[str, list[pg.Surface]] = {
+            str(name): [
+                pg.image.load(
+                    f"{main_path}/digit_{name}_{frame}.png"
+                ).convert_alpha()
+                for frame in range(DIGIT_FRAMES)
+            ]
+            for name in range(10)
+        }
 
         self.center_y = self.digit_sprites["1"][0].get_rect().centery
 

@@ -1,7 +1,10 @@
 from pathlib import Path
-from .abs_classes import Animation
-from src.game import Game
+
 import pygame as pg
+
+from src.game import Game
+
+from .abs_classes import Animation
 
 COUNDOWN_FRAMES_N: int = 8
 COUNDOWN_NAMES: list[str] = ["count_3", "count_2", "count_1", "count_go"]
@@ -12,13 +15,21 @@ class Countdown(Animation):
     def __init__(self, screen: pg.Surface, game: Game) -> None:
         super().__init__(screen)
         self.game = game
-        sprites_path: Path = Path(__file__).resolve().parent / "sprites" / "count"
+        sprites_path: Path = (
+            Path(__file__).resolve().parent / "sprites" / "count"
+        )
         self.count_sprites: dict[str, list[pg.Surface]] = {
             name: [
-                pg.image.load(f"{sprites_path}/{name}_{frame:02d}.png").convert_alpha()
-                for frame in range(COUNDOWN_FRAMES_N)] for name in COUNDOWN_NAMES}
+                pg.image.load(
+                    f"{sprites_path}/{name}_{frame:02d}.png"
+                ).convert_alpha()
+                for frame in range(COUNDOWN_FRAMES_N)
+            ]
+            for name in COUNDOWN_NAMES
+        }
         self.count_rect = self.count_sprites["count_1"][0].get_rect(
-            center=self.screen.get_rect().center)
+            center=self.screen.get_rect().center
+        )
         self.total_time_ellapsed: float = 0
 
     def draw_countdown(self, dt: float) -> None:

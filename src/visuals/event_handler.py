@@ -5,16 +5,22 @@ import pygame as pg
 from src.game import Game
 from src.shared_types import Direction, VisualState
 
-from .highscore_view import HighscoreView
 from .controls_view import ControlsView
+from .highscore_view import HighscoreView
 from .menu_view import MenuView
 from .name_input import InputName
 
 
-class EventHandler():
-    def __init__(self, screen: pg.Surface, game: Game,
-                 menu_view: MenuView, highscore_view: HighscoreView,
-                 controls_view: ControlsView, name_input: InputName) -> None:
+class EventHandler:
+    def __init__(
+        self,
+        screen: pg.Surface,
+        game: Game,
+        menu_view: MenuView,
+        highscore_view: HighscoreView,
+        controls_view: ControlsView,
+        name_input: InputName,
+    ) -> None:
         self.screen: pg.Surface = screen
         self.game: Game = game
         self.menu_view: MenuView = menu_view
@@ -33,7 +39,9 @@ class EventHandler():
                 return self.menu_events(event)
             if state == "highscore" and event.type == pg.MOUSEBUTTONUP:
                 return self.highscore_events(event)
-            if state == "victory_screen" and event.type == pg.KEYDOWN:
+            if (
+                state == "victory_screen" or state == "lost_screen"
+            ) and event.type == pg.KEYDOWN:
                 return self.victory_events()
             if state == "controls" and event.type == pg.MOUSEBUTTONUP:
                 return self._control_menu_events(event)
