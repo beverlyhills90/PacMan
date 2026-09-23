@@ -13,6 +13,8 @@ SOUTH = 4
 WEST = 8
 CLOSED = 15
 
+_rng = random.Random()
+
 
 class MazeError(Exception):
     def __init__(self, msg: str = "unknown MazeError") -> None:
@@ -35,7 +37,7 @@ def build_grid_for_level(level: Level) -> Grid:
 def _generate(width: int, height: int, seed: int | None) -> list[list[int]]:
     seed2: Any = seed
     if seed is None:
-        seed2 = random.randint(1, 2**31 - 1)
+        seed2 = _rng.randint(1, 2**31 - 1)
     try:
         f = io.StringIO()
         with redirect_stdout(f):

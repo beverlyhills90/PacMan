@@ -36,14 +36,18 @@ make install                                    # uv sync: venv + dependencies
 uv run pac-man.py config.json
 ```
 
+```bash
+make install                                    # uv sync: venv + dependencies
+source .venv/bin/activate
+python3 pac-man.py config.json
+```
+
 Other targets:
 
 ```bash
-make test      # pytest
 make lint      # mypy + flake8
 make format    # ruff
 make clean     # remove caches
-make build     #build for itach.io
 ```
 
 ### Controls
@@ -68,9 +72,10 @@ All of them are toggles except _level skip_ and _extra life_, which are single a
 
 ### Packaged build
 
-TODO: a standalone build (PyInstaller) and its public page will be added during the
-packaging phase; this section will then describe how to download and run it without a
-Python installation.
+```bash
+make build     #build for itach.io
+```
+
 
 ## Resources
 
