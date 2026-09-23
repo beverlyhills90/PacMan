@@ -7,17 +7,20 @@ from src.shared_types import Direction, VisualState
 
 from .highscore_view import HighscoreView
 from .controls_view import ControlsView
+from .menu_view import MenuView
+from .name_input import InputName
 
 
 class EventHandler():
     def __init__(self, screen: pg.Surface, game: Game,
                  menu_view: MenuView, highscore_view: HighscoreView,
-                 controls_view: ControlsView) -> None:
+                 controls_view: ControlsView, name_input: InputName) -> None:
         self.screen: pg.Surface = screen
         self.game: Game = game
         self.menu_view: MenuView = menu_view
         self.highscore_view: HighscoreView = highscore_view
         self.controls_view: ControlsView = controls_view
+        self.name_input: InputName = name_input
 
     def event_handling(
         self, dt: float, state: VisualState
@@ -34,6 +37,8 @@ class EventHandler():
                 return self.victory_events()
             if state == "controls" and event.type == pg.MOUSEBUTTONUP:
                 return self._control_menu_events(event)
+            if state == "name_input" and event.type == pg.KEYDOWN:
+                return self.name_input.handle_input(event)
 
         if state == "playing":
             return self.game_events(dt)

@@ -2,10 +2,22 @@ import sys
 
 import pygame as pg
 
+from .menu_view import MenuView
+from .game_layout import GameLayout
+from .maze_view import MazeView
+from .entity_view import EntityView
+from .highscore_view import HighscoreView
+from .victory_view import VictoryView
+from .hud_view import HudView
+from .countdown_view import Countdown
+from .controls_view import ControlsView
+from .event_handler import EventHandler
+from .name_input import InputName
+from .buttons import Fonts
 from src.core.player import Player
 from src.game import Game
 from src.parsing import Config
-from src.shared_types import Grid, VisualState
+from src.core.sound import Sounds
 
 from .buttons import Fonts
 from .controls_view import ControlsView
@@ -18,6 +30,7 @@ from .hud_view import HudView
 from .maze_view import MazeView
 from .menu_view import MenuView
 from .victory_view import VictoryView
+from src.shared_types import Grid, VisualState
 
 
 class Visualiser:
@@ -34,20 +47,24 @@ class Visualiser:
         self.entity_view: EntityView
         self.hud_view: HudView
         self.game: Game = Game(config, "123name")
+        self.sounds: Sounds = Sounds()
 
         self.event_handler: EventHandler
 
         self.fonts = Fonts()
-        self.menu_view: MenuView = MenuView(self.screen, self.fonts)
+        self.menu_view: MenuView = MenuView(self.screen, self.fonts, self.sounds)
         self.highscore_view: HighscoreView = HighscoreView(
             self.screen, self.fonts, config.highscore_filename
         )
+        self.name_input: InputName = InputName(self.screen, self.fonts)
         self.victory_view = VictoryView(self.screen, self.fonts)
         self.countdown_view = Countdown(self.screen, self.game)
         self.controls_view = ControlsView(self.screen, self.fonts)
-        self.player: Player = player
 
-        self.state: VisualState = "menu"
+        self.player: Player = player
+        self.name: list[str] = []
+
+        self.state: VisualState = "name_input"
 
     def main_loop(self) -> None:
         clock = pg.time.Clock()
@@ -62,6 +79,7 @@ class Visualiser:
 
             if new_state is not None:
                 if new_state == "menu":
+                    self.name = self.name_input.name
                     self.refresh_game()
                     self.set_new_level()
                 self.state = new_state
@@ -85,7 +103,7 @@ class Visualiser:
             self.countdown_view.reset_animation()
 
         if snapshot.status == "game_over":
-            self.state = "victory_screen"
+            self.state = "lost_screen"
 
         if snapshot.status == "victory":
             self.state = "victory_screen"
@@ -97,7 +115,11 @@ class Visualiser:
     def visual(self, dt: float) -> None:
         mouse_pos = pg.mouse.get_pos()
         snapshot = self.game.snapshot()
+        print(self.game.nickname)
         # print(self.game.status)
+
+        if self.state == "name_input":
+            self.name_input.draw_imput_screen(mouse_pos)
 
         if self.state == "menu":
             self.menu_view.draw_menu(mouse_pos)
@@ -109,7 +131,6 @@ class Visualiser:
             self.countdown_view.draw_countdown(dt)
 
         if snapshot.status == "pause":
-            print("aaaa")
             pause_surface = pg.Surface((800, 800), pg.SRCALPHA)
             pause_surface.fill((0, 0, 0, 100))
             self.screen.blit(pause_surface)
@@ -127,6 +148,12 @@ class Visualiser:
             self.hud_view.draw_hud(snapshot, mouse_pos)
 
             self.victory_view.draw_victory(mouse_pos, dt)
+        if self.state == "lost_scren":
+            self.maze_view.draw_maze(snapshot, dt)
+            self.entity_view.draw_entities(snapshot, dt, self.game.cheat_buf)
+            self.hud_view.draw_hud(snapshot, mouse_pos)
+
+            self.victory_view.draw_victory(mouse_pos, dt, True)
 
         if self.state == "controls":
             self.controls_view.draw_control_menu(mouse_pos)
@@ -141,15 +168,13 @@ class Visualiser:
         self.maze_view = MazeView(self.grid, self.game_layout, self.screen)
         self.entity_view = EntityView(self.grid, self.game_layout, self.screen)
         self.hud_view = HudView(self.screen, self.fonts, self.game_layout)
-
+        self.highscore_view = HighscoreView(self.screen, self.fonts,
+                                            self.config.highscore_filename)
         self.event_handler = EventHandler(
-            self.screen,
-            self.game,
-            self.menu_view,
-            self.highscore_view,
-            self.controls_view,
-        )
+            self.screen, self.game, self.menu_view, self.highscore_view,
+            self.controls_view, self.name_input)
 
     def refresh_game(self) -> None:
-        self.game = Game(self.config, "123name")
+        print(self.name)
+        self.game = Game(self.config, "".join(self.name))
         self.countdown_view = Countdown(self.screen, self.game)

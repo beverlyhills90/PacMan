@@ -7,12 +7,14 @@ from .abs_classes import Highscore, get_centered_x
 
 from src.highscore import TopTen
 from .buttons import Fonts, MenuButton
+from src.core.sound import Sounds
 
 
 class HighscoreView:
     def __init__(self, screen: pg.Surface, fonts: Fonts, highscore_path: Path) -> None:
         self.screen: pg.Surface = screen
         self.fonts: Fonts = fonts
+        self.sound: Sounds = Sounds()
 
         self.highscore_list: list[tuple[str, int]] | str = self._get_top_ten(highscore_path)
         if isinstance(self.highscore_list, str):
@@ -36,6 +38,7 @@ class HighscoreView:
     def handle_input(self, mouse_pos: tuple[int, int]) -> VisualState | None:
         for button in self.button_list:
             if button.button_rect.collidepoint(mouse_pos) is True:
+                self.sound.play_sound("eat_pac_gum")
                 return button.action
         return None
 

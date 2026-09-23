@@ -53,7 +53,8 @@ class VictoryView:
     def __init__(self, screen: pg.Surface, fonts: Fonts) -> None:
         self.screen: pg.Surface = screen
         self.fonts: Fonts = fonts
-        self.button_list: list[MenuButton] = self.create_buttons()
+        self.victory_button_list: list[MenuButton] = self.create_buttons()
+        self.lost_button_list: list[MenuButton] = self.create_buttons(True)
         self.victory_surface: pg.Surface = pg.Surface(
             (screen.width, screen.height), pg.SRCALPHA
         )
@@ -67,25 +68,39 @@ class VictoryView:
         self.score_x: float
         self.score_y: float
 
-    def draw_victory(self, mouse_pos: tuple[int, int], dt: float) -> None:
+    def draw_victory(self, mouse_pos: tuple[int, int], dt: float, lost: bool = False) -> None:
         self.victory_surface.fill((0, 0, 0, 170))
         self.screen.blit(self.victory_surface)
-        for button in self.button_list:
-            button.draw_button(self.screen, mouse_pos, False)
-        for firework in FIREWORKS_NAMES:
-            self.fireworks[firework].draw_firework(dt)
+        if lost is False:
+            for button in self.victory_button_list:
+                button.draw_button(self.screen, mouse_pos, False)
+            for firework in FIREWORKS_NAMES:
+                self.fireworks[firework].draw_firework(dt)
+        else:
+            for button in self.lost_button_list:
+                button.draw_button(self.screen, mouse_pos, False)
         self.highscore.draw_highscore(777, dt, self.score_x, self.score_y)
 
-    def create_buttons(self) -> list[MenuButton]:
+    def create_buttons(self, lost: bool = False) -> list[MenuButton]:
         button_list: list[MenuButton] = []
-        button = MenuButton(
-            (400, 200),
-            "YOU  WON",
-            None,
-            self.fonts.big_button_font,
-            self.fonts.big_button_hover_font,
-        )
-        button_list.append(button)
+        if lost is True:
+            button = MenuButton(
+                (400, 200),
+                "YOU  LOST",
+                None,
+                self.fonts.big_button_font,
+                self.fonts.big_button_hover_font,
+            )
+            button_list.append(button)
+        else:
+            button = MenuButton(
+                (400, 200),
+                "YOU  WON",
+                None,
+                self.fonts.big_button_font,
+                self.fonts.big_button_hover_font,
+            )
+            button_list.append(button)
         score_rect = self.fonts.mid_button_font.render(
             "YOUR SCORE", False, "white"
         ).get_rect()
