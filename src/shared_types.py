@@ -32,7 +32,7 @@ CheatMode = Literal[
 GameStatus = Literal[
     "playing", "level_won", "dead", "game_over", "victory", "countdown", "pause"
 ]
-GhsotsNames = Literal["blinky", "pinky", "inky", "clyde"]
+GhostNames = Literal["blinky", "pinky", "inky", "clyde"]
 VisualState = Literal["name_input", "menu", "start", "playing", "exit",
                       "highscore", "victory_screen", "controls", "lost_screen"]
 Pos = tuple[int, int]  # (col, row)
