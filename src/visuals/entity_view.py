@@ -15,6 +15,7 @@ PACMAN_FRAME_DUR = 100
 GHOSTS_SPRITES_N = 2
 GHOST_FRAME_DUR = 80
 GHOST_SEQUENCE = (0, 1, 0)
+BLINK_PERIOD = 0.3
 
 
 class Pacman(Animation):
@@ -108,8 +109,16 @@ class Ghost(Animation):
     def draw_ghost(self, snapshot: GameState, dt: float) -> None:
         self.update_time(dt)
         ghost = self.find_ghost(snapshot)
-        if ghost.mode == "frightened":
+        if (
+            ghost.mode == "frightened"
+            and snapshot.ghosts[0].frightened_left >= 2
+        ):
             self._draw_scare_ghost(ghost)
+        elif (
+            ghost.mode == "frightened"
+            and snapshot.ghosts[0].frightened_left < 2
+        ):
+            self.__draw_scare_ghost_blink(ghost)
         else:
             direction = ghost.facing
             x, y = self.game_layout.tiles_to_coordinates(ghost.pos)
@@ -120,6 +129,19 @@ class Ghost(Animation):
             self.update_frame(frames, GHOST_SEQUENCE)
             sprite = self.ghost_sprites[direction][self.current_frame]
             self.screen.blit(sprite, (x, y))
+
+    def __draw_scare_ghost_blink(self, ghost: GhostView) -> None:
+        x, y = self.game_layout.tiles_to_coordinates(ghost.pos)
+        frames = 0
+        while self.animation_elapsed >= GHOST_FRAME_DUR:
+            frames += 1
+            self.animation_elapsed -= GHOST_FRAME_DUR
+        self.update_frame(frames, GHOST_SEQUENCE)
+        if int(ghost.frightened_left / BLINK_PERIOD) % 2 == 0:
+            sprite = self.ghost_scared_sprites[self.current_frame]
+        else:
+            sprite = self.ghost_sprites[ghost.facing][self.current_frame]
+        self.screen.blit(sprite, (x, y))
 
     def _draw_scare_ghost(self, ghost: GhostView) -> None:
         x, y = self.game_layout.tiles_to_coordinates(ghost.pos)

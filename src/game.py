@@ -190,7 +190,7 @@ class Game:
             self.super_pacgums.remove(self.player.tile)
             self.score += self.points["SuperPacGum"]
             for g in self.ghosts:
-                g.frighten(3.5)
+                g.frighten(4)
 
     def respawn(self) -> None:
         """Put Pac-Man and the ghosts back on their starting tiles.
