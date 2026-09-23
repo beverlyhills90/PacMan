@@ -53,7 +53,7 @@ class Visualiser:
         self.set_new_level()
 
         while True:
-            print(self.game.status)
+            #print(self.game.status)
             dt: float = clock.tick(60) / 1000
             self.screen.fill("black")
             new_state = self.event_handler.event_handling(dt, self.state)
