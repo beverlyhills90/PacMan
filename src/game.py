@@ -4,6 +4,7 @@ from json import JSONDecodeError
 from src.core.ghosts import Ghost, new_ghosts
 from src.core.maze_adapter import build_grid_for_level
 from src.core.player import Player, new_player
+from src.core.sound import Sounds
 from src.core.world import place_pacgums
 from src.highscore import TopTen
 from src.parsing import Config
@@ -62,6 +63,7 @@ class Game:
         self.pause_state: bool = False
         self.prev_status: GameStatus = self.status
         self.nickname: str = nickname
+        self.sounds = Sounds()
 
     def update(self, dt: float, intent: Direction | None) -> None:
         # print(self.time_left)
@@ -138,6 +140,7 @@ class Game:
     def _eat_pacgum(self) -> None:
         if self.player.tile in self.pacgums:
             self.pacgums.remove(self.player.tile)
+            self.sounds.play_sound("eat_pac_gum")
             self.score += self.SCORES_CONST["PucGum"]
         if self.player.tile in self.super_pacgums:
             self.super_pacgums.remove(self.player.tile)
@@ -160,6 +163,7 @@ class Game:
             if math.dist(self.player.screen_pos(), g.screen_pos()) < 0.5:
                 if g.mode == "frightened":
                     g.eat(respawn_left=3)
+                    self.sounds.play_sound("eat_ghost")
                     self.score += self.SCORES_CONST["Ghost"]
                 elif g.mode == "eaten":
                     continue
@@ -198,6 +202,7 @@ class Game:
             self.status = "game_over"
         else:
             self.status = "dead"
+            self.sounds.play_sound("game_lost")
 
     def _slow_ghost(self) -> None:
         self.cheat_buf["slow_ghosts"] = not self.cheat_buf["slow_ghosts"]
