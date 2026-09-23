@@ -19,17 +19,6 @@ from src.game import Game
 from src.parsing import Config
 from src.core.sound import Sounds
 
-from .buttons import Fonts
-from .controls_view import ControlsView
-from .countdown_view import Countdown
-from .entity_view import EntityView
-from .event_handler import EventHandler
-from .game_layout import GameLayout
-from .highscore_view import HighscoreView
-from .hud_view import HudView
-from .maze_view import MazeView
-from .menu_view import MenuView
-from .victory_view import VictoryView
 from src.shared_types import Grid, VisualState
 
 
@@ -150,7 +139,7 @@ class Visualiser:
             self.victory_view.draw_victory(mouse_pos, dt)
         if self.state == "lost_scren":
             self.maze_view.draw_maze(snapshot, dt)
-            self.entity_view.draw_entities(snapshot, dt, self.game.cheat_buf)
+            self.entity_view.draw_entities(snapshot, dt)
             self.hud_view.draw_hud(snapshot, mouse_pos)
 
             self.victory_view.draw_victory(mouse_pos, dt, True)
