@@ -1,9 +1,12 @@
-import pygame as pg
-from src.shared_types import Grid, PacmanView, GhostView, GameState, Direction
-from .game_layout import GameLayout
-from .errors import VisulisationError
-from .abs_classes import Animation
 from pathlib import Path
+
+import pygame as pg
+
+from src.shared_types import Direction, GameState, GhostView, Grid, PacmanView
+
+from .abs_classes import Animation
+from .errors import VisulisationError
+from .game_layout import GameLayout
 
 DIRECTIONS: tuple[Direction, ...] = ("right", "down", "left", "up")
 PACMAN_SPRITES_N = 4
@@ -15,22 +18,38 @@ GHOST_SEQUENCE = (0, 1, 0)
 
 
 class Pacman(Animation):
-    def __init__(self, screen: pg.Surface, game_layout: GameLayout, size: int) -> None:
+    def __init__(
+        self, screen: pg.Surface, game_layout: GameLayout, size: int
+    ) -> None:
         super().__init__(screen)
         self.game_layout: GameLayout = game_layout
         main_path = Path(__file__).resolve().parent / "sprites" / "pacman"
         self.pacman_sprites: dict[str, list[pg.Surface]] = {
-            direction: [pg.transform.scale(pg.image.load(
-                f"{main_path}/pacman_{direction}_{frame}.png").convert_alpha(),
-                (size, size))
-                for frame in range(PACMAN_SPRITES_N)]
+            direction: [
+                pg.transform.scale(
+                    pg.image.load(
+                        f"{main_path}/pacman_{direction}_{frame}.png"
+                    ).convert_alpha(),
+                    (size, size),
+                )
+                for frame in range(PACMAN_SPRITES_N)
+            ]
             for direction in DIRECTIONS
         }
-        self.dim_pacman_sprites: dict[str, list[pg.Surface]] = {direction: [
-            pacman_sprite.copy()
-            for pacman_sprite in self.pacman_sprites[direction]]for direction in DIRECTIONS}
+        self.dim_pacman_sprites: dict[str, list[pg.Surface]] = {
+            direction: [
+                pacman_sprite.copy()
+                for pacman_sprite in self.pacman_sprites[direction]
+            ]
+            for direction in DIRECTIONS
+        }
 
-    def draw_pacman(self, pacman_state: PacmanView, dt: float, cheat_buf: dict[CheatMode, bool]) -> None:
+    def draw_pacman(
+        self,
+        pacman_state: PacmanView,
+        dt: float,
+        god_mode: bool,
+    ) -> None:
         self.update_time(dt)
         x, y = self.game_layout.tiles_to_coordinates(pacman_state.pos)
         direction = pacman_state.facing
@@ -41,7 +60,7 @@ class Pacman(Animation):
                 self.animation_elapsed -= PACMAN_FRAME_DUR
                 frames += 1
         self.update_frame(frames, PACMAN_SEQUENCE)
-        if cheat_buf["inflives"] is True:
+        if god_mode is True:
             sprite = self.dim_pacman_sprites[direction][self.current_frame]
             sprite.set_alpha(120)
         else:
@@ -51,15 +70,25 @@ class Pacman(Animation):
 
 
 class Ghost(Animation):
-    def __init__(self, screen: pg.Surface, game_layout: GameLayout, size: int, name: str) -> None:
+    def __init__(
+        self, screen: pg.Surface, game_layout: GameLayout, size: int, name: str
+    ) -> None:
         super().__init__(screen)
         self.game_layout: GameLayout = game_layout
         main_path = Path(__file__).resolve().parent / "sprites" / "ghosts"
         self.name: str = name
         self.ghost_sprites: dict[str, list[pg.Surface]] = {
-            direction: [pg.transform.scale(pg.image.load(
-                f"{main_path}/ghost_{name}_{direction}_{frame}.png").convert_alpha(),
-                (size, size)) for frame in range(GHOSTS_SPRITES_N)] for direction in DIRECTIONS}
+            direction: [
+                pg.transform.scale(
+                    pg.image.load(
+                        f"{main_path}/ghost_{name}_{direction}_{frame}.png"
+                    ).convert_alpha(),
+                    (size, size),
+                )
+                for frame in range(GHOSTS_SPRITES_N)
+            ]
+            for direction in DIRECTIONS
+        }
 
     def draw_ghost(self, snapshot: GameState, dt: float) -> None:
         self.update_time(dt)
@@ -78,20 +107,25 @@ class Ghost(Animation):
         for ghost_view in snapshot.ghosts:
             if ghost_view.name == self.name:
                 return ghost_view
-        raise VisulisationError("Couldnt find ghost: how could it happen, mystery.....")
+        raise VisulisationError(
+            "Couldnt find ghost: how could it happen, mystery....."
+        )
 
 
-class EntityView():
-    def __init__(self, grid: Grid, game_layout: GameLayout, screen: pg.Surface) -> None:
+class EntityView:
+    def __init__(
+        self, grid: Grid, game_layout: GameLayout, screen: pg.Surface
+    ) -> None:
         self.grid: Grid = grid
         self.game_layout: GameLayout = game_layout
         self.screen: pg.Surface = screen
-        self.pacman: Pacman = Pacman(screen, game_layout, self.game_layout.tile_size)
+        self.pacman: Pacman = Pacman(
+            screen, game_layout, self.game_layout.tile_size
+        )
         self.ghosts: list[Ghost] = self.create_ghosts()
 
-    def draw_entities(self, snapshot: GameState, dt: float,
-                      cheat_buf: dict[CheatMode, bool]) -> None:
-        self.pacman.draw_pacman(snapshot.player, dt, cheat_buf)
+    def draw_entities(self, snapshot: GameState, dt: float) -> None:
+        self.pacman.draw_pacman(snapshot.player, dt, snapshot.god_mode)
         for ghost in self.ghosts:
             ghost.draw_ghost(snapshot, dt)
 
@@ -99,6 +133,8 @@ class EntityView():
         ghost_list: list[Ghost] = []
         ghost_names: list[str] = ["blinky", "pinky", "inky", "clyde"]
         for name in ghost_names:
-            ghost = Ghost(self.screen, self.game_layout, self.game_layout.tile_size, name)
+            ghost = Ghost(
+                self.screen, self.game_layout, self.game_layout.tile_size, name
+            )
             ghost_list.append(ghost)
         return ghost_list

@@ -2,21 +2,13 @@ import sys
 
 import pygame as pg
 
-from .menu_view import MenuView
-from .game_layout import GameLayout
-from .maze_view import MazeView
-from .entity_view import EntityView
-from .highscore_view import HighscoreView
-from .victory_view import VictoryView
-from .hud_view import HudView
-from .countdown_view import Countdown
-from .controls_view import ControlsView
 from src.core.player import Player
 from src.game import Game
 from src.parsing import Config
 from src.shared_types import Grid, VisualState
 
 from .buttons import Fonts
+from .controls_view import ControlsView
 from .countdown_view import Countdown
 from .entity_view import EntityView
 from .event_handler import EventHandler
@@ -112,7 +104,7 @@ class Visualiser:
 
         if self.state == "playing":
             self.maze_view.draw_maze(snapshot, dt)
-            self.entity_view.draw_entities(snapshot, dt, self.game.cheat_buf)
+            self.entity_view.draw_entities(snapshot, dt)
             self.hud_view.draw_hud(snapshot, mouse_pos)
             self.countdown_view.draw_countdown(dt)
 
@@ -131,7 +123,7 @@ class Visualiser:
 
         if self.state == "victory_screen":
             self.maze_view.draw_maze(snapshot, dt)
-            self.entity_view.draw_entities(snapshot, dt, self.game.cheat_buf)
+            self.entity_view.draw_entities(snapshot, dt)
             self.hud_view.draw_hud(snapshot, mouse_pos)
 
             self.victory_view.draw_victory(mouse_pos, dt)
@@ -151,7 +143,12 @@ class Visualiser:
         self.hud_view = HudView(self.screen, self.fonts, self.game_layout)
 
         self.event_handler = EventHandler(
-            self.screen, self.game, self.menu_view, self.highscore_view, self.controls_view)
+            self.screen,
+            self.game,
+            self.menu_view,
+            self.highscore_view,
+            self.controls_view,
+        )
 
     def refresh_game(self) -> None:
         self.game = Game(self.config, "123name")

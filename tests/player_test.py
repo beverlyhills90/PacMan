@@ -73,7 +73,7 @@ def test_player_reset() -> None:
     assert p._progress == 0.0
 
 
-def test_scree_pos() -> None:
+def test_screen_pos() -> None:
     p = Player((1, 1), 2.0)
     assert p.screen_pos() == (1.0, 1.0)
     p.direction = "right"
