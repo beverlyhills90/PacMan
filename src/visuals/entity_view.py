@@ -26,8 +26,11 @@ class Pacman(Animation):
                 for frame in range(PACMAN_SPRITES_N)]
             for direction in DIRECTIONS
         }
+        self.dim_pacman_sprites: dict[str, list[pg.Surface]] = {direction: [
+            pacman_sprite.copy()
+            for pacman_sprite in self.pacman_sprites[direction]]for direction in DIRECTIONS}
 
-    def draw_pacman(self, pacman_state: PacmanView, dt: float) -> None:
+    def draw_pacman(self, pacman_state: PacmanView, dt: float, cheat_buf: dict[CheatMode, bool]) -> None:
         self.update_time(dt)
         x, y = self.game_layout.tiles_to_coordinates(pacman_state.pos)
         direction = pacman_state.facing
@@ -38,10 +41,12 @@ class Pacman(Animation):
                 self.animation_elapsed -= PACMAN_FRAME_DUR
                 frames += 1
         self.update_frame(frames, PACMAN_SEQUENCE)
-        sprite = self.pacman_sprites[direction][self.current_frame]
-        # hitbox_surface = pg.Surface(sprite.size, pg.SRCALPHA)
-        # hitbox = pg.draw.rect(hitbox_surface, (0, 50, 0, 120),
-        #                      sprite.get_rect(), border_radius=5)
+        if cheat_buf["inflives"] is True:
+            sprite = self.dim_pacman_sprites[direction][self.current_frame]
+            sprite.set_alpha(120)
+        else:
+            sprite = self.pacman_sprites[direction][self.current_frame]
+
         self.screen.blit(sprite, (x, y))
 
 
@@ -84,8 +89,9 @@ class EntityView():
         self.pacman: Pacman = Pacman(screen, game_layout, self.game_layout.tile_size)
         self.ghosts: list[Ghost] = self.create_ghosts()
 
-    def draw_entities(self, snapshot: GameState, dt: float) -> None:
-        self.pacman.draw_pacman(snapshot.player, dt)
+    def draw_entities(self, snapshot: GameState, dt: float,
+                      cheat_buf: dict[CheatMode, bool]) -> None:
+        self.pacman.draw_pacman(snapshot.player, dt, cheat_buf)
         for ghost in self.ghosts:
             ghost.draw_ghost(snapshot, dt)
 
