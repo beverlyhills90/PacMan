@@ -14,23 +14,14 @@ from shared_types import Level
 
 
 class ParsingError(Exception):
-    """Represent an error raised while loading or parsing configuration."""
-
     def __init__(self, message: str) -> None:
-        """Initialize the parsing error.
-
-        Args:
-            message: Human-readable description of the parsing failure.
-        """
         super().__init__(message)
 
 
 class Config(BaseModel):
-    """Store and validate the runtime configuration for the game."""
-
     highscore_filename: Path = Field(default=Path("highscores.json"))
     lives: Any = Field(default=3)
-    pacgum: Any = Field(default=42)
+    difficulty_level: Any = Field(default=2)
     points_per_pacgum: Any = Field(default=10)
     points_per_super_pacgum: Any = Field(default=50)
     points_per_ghost: Any = Field(default=200)
@@ -40,14 +31,6 @@ class Config(BaseModel):
     @field_validator("highscore_filename", mode="before")
     @classmethod
     def highscore_filename_validator(cls, value: Any) -> Path:
-        """Convert a valid highscore filename to a path.
-
-        Args:
-            value: Raw highscore filename from the configuration.
-
-        Returns:
-            The configured path, or the default path for an invalid value.
-        """
         if not isinstance(value, (str, Path)):
             print("Highscore filename not valid,set to default\n")
             return Path("highscores.json")
@@ -55,11 +38,6 @@ class Config(BaseModel):
 
     @model_validator(mode="after")
     def levels_validator(self) -> "Config":
-        """Validate levels and fill the list with required defaults.
-
-        Returns:
-            The configuration with normalized levels and level settings.
-        """
         if type(self.levels) is not list:
             print(
                 f"Config warning: levels: {self.levels} is not list. "
@@ -80,27 +58,10 @@ class Config(BaseModel):
 
         self.check_size()
         self.check_seed()
-        self.validate_pacgums()
 
         return self
 
-    def validate_pacgums(self):
-        """Ensure the pacgum count fits within every configured level.
-
-        Returns:
-            The configuration after applying a safe pacgum default if needed.
-        """
-        for level in self.levels:
-            max_pacgums = level.width * level.height
-            if max_pacgums < self.pacgum:
-                print(f"Max pacgum amount for current level is {max_pacgums!r},"
-                      f" got {self.pacgum}. Reseting to default: '42'")
-                self.pacgum = 42
-                return self
-            return self
-
     def validate_levels(self) -> None:
-        """Discard invalid level entries and retain validated level models."""
         correct_list: list[Level] = []
         for level in self.levels:
             try:
@@ -114,11 +75,6 @@ class Config(BaseModel):
         self.levels = correct_list
 
     def create_levels(self, missing_levels: int) -> None:
-        """Append default levels until the required total is reached.
-
-        Args:
-            missing_levels: Number of default levels to append.
-        """
         i = 10 - missing_levels
         while i < 10:
             level: Level = Level()
@@ -128,7 +84,6 @@ class Config(BaseModel):
             i += 1
 
     def check_size(self) -> None:
-        """Replace invalid level dimensions with safe default values."""
         for level in self.levels[:]:
             if type(level.height) is not int:
                 print(
@@ -156,7 +111,6 @@ class Config(BaseModel):
                 level.width = 20
 
     def check_seed(self) -> None:
-        """Enforce a fixed first-level seed and random later-level seeds."""
         if type(self.levels[0].seed) is not int:
             print(
                 "Config warning: the first level 'seed' must be an integer; "
@@ -179,11 +133,6 @@ class Config(BaseModel):
 
     @model_validator(mode="after")
     def config_validator(self) -> "Config":
-        """Validate scalar configuration values and apply safe defaults.
-
-        Returns:
-            The configuration with normalized scalar values.
-        """
         if type(self.lives) is not int:
             print(
                 "Config warning: 'lives' must be an integer; "
@@ -197,18 +146,18 @@ class Config(BaseModel):
             )
             self.lives = 3
 
-        if type(self.pacgum) is not int:
+        if type(self.difficulty_level) is not int:
             print(
-                "Config warning: 'pacgum' must be an integer; "
-                "using default value 42."
+                "Config warning: 'difficulty_level' must be an integer; "
+                "using default value 2."
             )
-            self.pacgum = 42
-        elif self.pacgum < 20 or self.pacgum > 80:
+            self.difficulty_level = 2
+        elif self.difficulty_level < 1 or self.difficulty_level > 3:
             print(
-                f"Config warning: 'pacgum' must be between 20 and 80; "
-                f"got {self.pacgum!r}, using default value 42."
+                f"Config warning: 'difficulty_level' must be between 1 and 3; "
+                f"got {self.difficulty_level!r}, using default value 2."
             )
-            self.pacgum = 42
+            self.difficulty_level = 2
 
         if type(self.points_per_super_pacgum) is not int:
             print(
@@ -273,20 +222,6 @@ class Config(BaseModel):
 
 
 def validation(config_path: Path) -> Config:
-    """Load, parse, and validate a JSON configuration file.
-
-    Whole-line comments beginning with ``#`` are removed before JSON parsing.
-
-    Args:
-        config_path: Path to the UTF-8 encoded configuration file.
-
-    Returns:
-        A validated runtime configuration.
-
-    Raises:
-        ParsingError: If the file cannot be read, decoded as UTF-8, or parsed
-            as JSON.
-    """
     try:
         raw_congfig = config_path.read_text("utf-8")
         wipe_coments: list[str] = []
