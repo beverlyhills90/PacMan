@@ -48,7 +48,7 @@ class Visualiser:
         self.fonts = Fonts()
         self.menu_view: MenuView = MenuView(self.screen, self.fonts)
         self.highscore_view: HighscoreView = HighscoreView(
-            self.screen, self.fonts
+            self.screen, self.fonts, config.highscore_filename
         )
         self.victory_view = VictoryView(self.screen, self.fonts)
         self.countdown_view = Countdown(self.screen, self.game)
