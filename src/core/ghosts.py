@@ -10,16 +10,16 @@ from src.shared_types import (
     OPPOSITE,
     Direction,
     GhostMode,
-    GhsotsNames,
+    GhostNames,
     Grid,
     Pos,
 )
 
 
 class Ghost(ABC):
-    def __init__(self, home: Pos, name: GhsotsNames, speed: float) -> None:
+    def __init__(self, home: Pos, name: GhostNames, speed: float) -> None:
         self.home: Pos = home
-        self.name: GhsotsNames = name
+        self.name: GhostNames = name
         self.speed: float = speed
         self.tile: Pos = self.home
         self.direction: Direction = "right"
@@ -109,19 +109,19 @@ class Ghost(ABC):
         return self.home
 
     def _choose_direction(self, grid: Grid, target: Pos) -> Direction:
-        candidats = []
+        candidates = []
         for d in get_args(Direction):
             if can_move(grid, self.tile, d) and d != OPPOSITE[self.direction]:
-                candidats.append(d)
-        if not candidats:
-            candidats.append(OPPOSITE[self.direction])
+                candidates.append(d)
+        if not candidates:
+            candidates.append(OPPOSITE[self.direction])
         if self.mode == "frightened":
-            return self._rng.choice(candidats)
-        if len(candidats) == 1:
-            return candidats[0]
+            return self._rng.choice(candidates)
+        if len(candidates) == 1:
+            return candidates[0]
         visited = {self.tile}
         q = deque([])  # type: ignore
-        for d in candidats:
+        for d in candidates:
             p = neighbor(self.tile, d)
             if p == target:
                 return d
@@ -139,10 +139,10 @@ class Ghost(ABC):
                     else:
                         visited.add(n)
                         q.append((n, direct))
-        if self.direction in candidats:
+        if self.direction in candidates:
             return self.direction
         else:
-            return candidats[0]
+            return candidates[0]
 
     def _decide(
         self, grid: Grid, pacman_tile: Pos, pacman_facing: Direction

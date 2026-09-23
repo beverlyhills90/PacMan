@@ -10,13 +10,13 @@ class Level(BaseModel):
     seed: Any = Field(default=None)
 
 
-class WorldExeption(Exception):
-    def __init__(self, msg: str = "Unkonwn World Exeption") -> None:
+class WorldException(Exception):
+    def __init__(self, msg: str = "Unknown world exception") -> None:
         super().__init__(msg)
 
 
-class GhostExeption(WorldExeption):
-    def __init__(self, msg: str = "Unkonwn Ghost Exeption") -> None:
+class GhostException(WorldException):
+    def __init__(self, msg: str = "Unknown ghost exception") -> None:
         super().__init__(msg)
 
 
@@ -32,8 +32,16 @@ CheatMode = Literal[
 GameStatus = Literal[
     "playing", "level_won", "dead", "game_over", "victory", "countdown", "pause"
 ]
-GhsotsNames = Literal["blinky", "pinky", "inky", "clyde"]
-VisualState = Literal["menu", "start", "playing", "exit", "highscore", "victory_screen", "controls"]
+GhostNames = Literal["blinky", "pinky", "inky", "clyde"]
+VisualState = Literal[
+    "menu",
+    "start",
+    "playing",
+    "exit",
+    "highscore",
+    "victory_screen",
+    "controls",
+]
 Pos = tuple[int, int]  # (col, row)
 
 DELTA: dict[Direction, tuple[int, int]] = {
@@ -61,7 +69,7 @@ class PacmanView:
 
 @dataclass(frozen=True)
 class GhostView:
-    name: GhsotsNames
+    name: GhostNames
     pos: tuple[float, float]
     facing: Direction
     mode: GhostMode
@@ -80,3 +88,4 @@ class GameState:
     lives: int
     level: int
     time_left: float
+    god_mode: bool
