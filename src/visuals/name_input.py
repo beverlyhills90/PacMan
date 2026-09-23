@@ -21,7 +21,7 @@ class InputName():
     def handle_input(self, event: pg.Event) -> VisualState | None:
         if event.key == pg.K_BACKSPACE:
             self.name = self.name[:-1]
-        elif event.key == pg.K_RETURN:
+        elif event.key == pg.K_RETURN and len(self.name) >= 3:
             return "menu"
         elif str.isalnum(event.unicode) and len(self.name) <= 10:
             self.name.append(event.unicode)

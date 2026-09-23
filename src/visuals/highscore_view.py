@@ -59,7 +59,7 @@ class HighscoreView:
     def draw_highscore(
         self, highscore: list[tuple[str, int]], dt: float
     ) -> None:
-        y = 100
+        y = 102
         for name, score in highscore:
             name_surface = self.fonts.mid_button_font.render(
                 name, False, "white"
