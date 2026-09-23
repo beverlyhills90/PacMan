@@ -1,13 +1,13 @@
 import math
 from json import JSONDecodeError
 
-from core.ghosts import Ghost, new_ghosts
-from core.maze_adapter import build_grid_for_level
-from core.player import Player, new_player
-from core.world import place_pacgums
-from highscore import TopTen
-from parsing import Config
-from shared_types import (
+from src.core.ghosts import Ghost, new_ghosts
+from src.core.maze_adapter import build_grid_for_level
+from src.core.player import Player, new_player
+from src.core.world import place_pacgums
+from src.highscore import TopTen
+from src.parsing import Config
+from src.shared_types import (
     CheatMode,
     Direction,
     GameState,

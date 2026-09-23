@@ -10,7 +10,7 @@ from pydantic import (
     model_validator,
 )
 
-from shared_types import Level
+from src.shared_types import Level
 
 
 class ParsingError(Exception):

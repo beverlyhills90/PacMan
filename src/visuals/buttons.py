@@ -1,4 +1,4 @@
-from shared_types import VisualState
+from src.shared_types import VisualState
 import pygame as pg
 from pathlib import Path
 

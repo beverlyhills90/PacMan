@@ -1,6 +1,6 @@
 import pygame as pg
 
-from shared_types import VisualState
+from src.shared_types import VisualState
 
 from .abs_classes import Highscore, get_centered_x
 from .buttons import Fonts, MenuButton

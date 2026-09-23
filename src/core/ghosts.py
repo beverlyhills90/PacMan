@@ -4,8 +4,8 @@ from abc import ABC, abstractmethod
 from collections import deque
 from typing import get_args
 
-from core.world import can_move, find_target, neighbor
-from shared_types import (
+from src.core.world import can_move, find_target, neighbor
+from src.shared_types import (
     DELTA,
     OPPOSITE,
     Direction,

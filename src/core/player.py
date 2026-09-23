@@ -1,5 +1,5 @@
-from core.world import can_move, find_start, neighbor
-from shared_types import DELTA, OPPOSITE, Direction, Grid, Pos
+from src.core.world import can_move, find_start, neighbor
+from src.shared_types import DELTA, OPPOSITE, Direction, Grid, Pos
 
 
 class Player:

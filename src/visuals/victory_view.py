@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pygame as pg
 
-from shared_types import Pos
+from src.shared_types import Pos
 
 from .abs_classes import Animation, Highscore, get_centered_x
 from .buttons import Fonts, MenuButton
