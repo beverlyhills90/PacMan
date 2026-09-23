@@ -179,6 +179,7 @@ class Game:
     def next_level(self) -> None:
         if self.level_index == len(self.config.levels) - 1:
             self.status = "victory"
+            self.sounds.play_sound("victory")
             try:
                 TopTen.save(
                     self.config.highscore_filename, self.score, self.nickname
