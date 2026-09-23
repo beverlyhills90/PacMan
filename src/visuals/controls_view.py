@@ -1,5 +1,7 @@
 import pygame as pg
 from .buttons import MenuButton, Fonts
+from src.core.sound import Sounds
+
 
 CONTROL_LIST: list[str] = ["God Mode - G", "Skip Level - L",
                            "Plus Live - 1", "Slow Ghosts - 0",
@@ -10,6 +12,8 @@ class ControlsView():
     def __init__(self, screen: pg.Surface, fonts: Fonts) -> None:
         self.screen: pg.Surface = screen
         self.fonts = fonts
+        self.sounds: Sounds = Sounds()
+
         self.buttons: list[MenuButton] = self._create_buttons()
         self.controls: list[MenuButton] = self._create_controls()
 
@@ -22,6 +26,7 @@ class ControlsView():
     def handle_input(self, mouse_pos: tuple[int, int]):
         for button in self.buttons:
             if button.button_rect.collidepoint(mouse_pos) is True:
+                self.sounds.play_sound("eat_pac_gum")
                 return button.action
         return None
 

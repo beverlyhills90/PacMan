@@ -1,42 +1,111 @@
 import pygame as pg
-from .buttons import MenuButton, Fonts
-from shared_types import VisualState
-from .abs_classes import get_centered_x, Highscore
+from pathlib import Path
+from json import JSONDecodeError
+
+from src.shared_types import VisualState
+from .abs_classes import Highscore, get_centered_x
+
+from src.highscore import TopTen
+from .buttons import Fonts, MenuButton
+from src.core.sound import Sounds
 
 
 class HighscoreView:
-    def __init__(self, screen: pg.Surface, fonts: Fonts) -> None:
+    def __init__(self, screen: pg.Surface, fonts: Fonts, highscore_path: Path) -> None:
         self.screen: pg.Surface = screen
         self.fonts: Fonts = fonts
+        self.sound: Sounds = Sounds()
+
+        self.highscore_list: list[tuple[str, int]] | str = self._get_top_ten(highscore_path)
+        if isinstance(self.highscore_list, str):
+            self.error: list[MenuButton] = self._get_error_msg(self.highscore_list)
         self.highscore = Highscore(screen)
         self.button_list: list[MenuButton] = self._create_buttons()
 
-    def draw_highscore_menu(self, mouse_pos: tuple[int, int], dt: float) -> None:
+    def draw_highscore_menu(
+        self, mouse_pos: tuple[int, int], dt: float
+    ) -> None:
         for button in self.button_list:
             button.draw_button(self.screen, mouse_pos)
-        self.draw_highscore([("Yaroo", 300), ("lolkek", 1500), ("test", 1000000)], dt)
+        if isinstance(self.highscore_list, str):
+            for message in self.error:
+                message.draw_button(self.screen, mouse_pos, False)
+        else:
+            self.draw_highscore(
+                self.highscore_list, dt
+            )
 
     def handle_input(self, mouse_pos: tuple[int, int]) -> VisualState | None:
         for button in self.button_list:
             if button.button_rect.collidepoint(mouse_pos) is True:
+                self.sound.play_sound("eat_pac_gum")
                 return button.action
         return None
 
     def _create_buttons(self) -> list[MenuButton]:
         button_list: list[MenuButton] = []
 
-        back_button = MenuButton((50, 30), "Back", "menu",
-                                 self.fonts.small_button_font, self.fonts.small_button_hover_font)
+        back_button = MenuButton(
+            (50, 30),
+            "Back",
+            "menu",
+            self.fonts.small_button_font,
+            self.fonts.small_button_hover_font,
+        )
         button_list.append(back_button)
 
         return button_list
 
-    def draw_highscore(self, highscore: list[tuple[str, int]], dt: float) -> None:
+    def draw_highscore(
+        self, highscore: list[tuple[str, int]], dt: float
+    ) -> None:
         y = 100
         for name, score in highscore:
-            name_surface = self.fonts.mid_button_font.render(name, False, "white")
+            name_surface = self.fonts.mid_button_font.render(
+                name, False, "white"
+            )
             x = get_centered_x(name_surface.width, self.screen.width)
             name_rect = name_surface.get_rect(bottomleft=(x, y))
             self.screen.blit(name_surface, name_rect)
             self.highscore.draw_highscore(score, dt, x + name_surface.width, y)
             y += 70
+
+    def _get_error_msg(self, message: str) -> list[MenuButton]:
+        button_list: list[MenuButton] = []
+        message_list = message.split()
+        prev_string: list[str] = []
+        button_fitting: list[str] = []
+        i = 0
+        for word in message_list:
+            print(word)
+            button_fitting.append(word)
+            str_surface = self.fonts.small_button_font.render(
+                "".join(button_fitting), False, "white")
+            if str_surface.width > 300:
+                button = MenuButton((400, 200 + 50 * i), " ".join(prev_string), None,
+                                    self.fonts.small_button_font,
+                                    self.fonts.small_button_hover_font)
+                button_list.append(button)
+                prev_string.clear()
+                prev_string.append(button_fitting[-1])
+                button_fitting.clear()
+                button_fitting.append(prev_string[-1])
+                i += 1
+            else:
+                prev_string.append(word)
+        button = MenuButton((400, 200 + 50 * i), " ".join(prev_string), None,
+                            self.fonts.small_button_font,
+                            self.fonts.small_button_hover_font)
+        button_list.append(button)
+
+        return button_list
+
+    def _get_top_ten(self, file_path: Path) -> list[tuple[str, int]] | str:
+        try:
+            top_ten = TopTen.read_top_ten(file_path)
+            highscore_list: list[tuple[str, int]] = [
+                (player.nickname, player.score) for player in top_ten.players]
+            return highscore_list
+        except (OSError, JSONDecodeError) as e:
+            print(e)
+            return str(e)

@@ -1,12 +1,12 @@
 from collections import deque
 
-from shared_types import (
+from src.shared_types import (
     DELTA,
     Direction,
     Grid,
     Pos,
     Tile,
-    WorldExeption,
+    WorldException,
 )
 
 
@@ -91,4 +91,4 @@ def find_target(grid: Grid, target_pos: Pos) -> Pos:
                         )
                         visited.add((neighbor_col, neighbor_row))
 
-    raise WorldExeption("No floor tile in maze")
+    raise WorldException("No floor tile in maze")

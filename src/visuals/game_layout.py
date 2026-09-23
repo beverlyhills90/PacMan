@@ -1,4 +1,4 @@
-from shared_types import Grid
+from src.shared_types import Grid
 
 
 class GameLayout():
