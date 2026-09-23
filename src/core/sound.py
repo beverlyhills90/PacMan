@@ -3,7 +3,7 @@ from typing import Literal
 
 from just_playback import Playback
 
-Sound = Literal["eat_pac_gum", "eat_ghost", "game_lost"]
+Sound = Literal["eat_pac_gum", "eat_ghost", "game_lost", "victory"]
 
 
 class Sounds:
@@ -25,11 +25,15 @@ class Sounds:
         sound_path_04 = str(
             Path(__file__).resolve().parent / "sounds" / "fail_2.mp3"
         )
+        sound_path_05 = str(
+            Path(__file__).resolve().parent / "sounds" / "win.mp3"
+        )
         try:
             self.eat_pac_gum01 = Playback(path_to_file=sound_path_01)
             self.eat_pac_gum02 = Playback(path_to_file=sound_path_02)
             self.eat_ghost = Playback(path_to_file=sound_path_03)
             self.fail = Playback(path_to_file=sound_path_04)
+            self.win = Playback(path_to_file=sound_path_05)
         except Exception:
             pass
 
@@ -45,3 +49,5 @@ class Sounds:
             self.eat_ghost.play()
         if sound == "game_lost":
             self.fail.play()
+        if sound == "victory":
+            self.win.play()
