@@ -223,15 +223,15 @@ class Config(BaseModel):
 
 def validation(config_path: Path) -> Config:
     try:
-        raw_congfig = config_path.read_text("utf-8")
-        wipe_coments: list[str] = []
-        for line in raw_congfig.splitlines():
+        raw_config = config_path.read_text("utf-8")
+        wipe_comments: list[str] = []
+        for line in raw_config.splitlines():
             line = line.lstrip()
             if line.startswith("#") is False:
-                wipe_coments.append(line)
+                wipe_comments.append(line)
             else:
-                wipe_coments.append("")
-        clean_config = "\n".join(wipe_coments)
+                wipe_comments.append("")
+        clean_config = "\n".join(wipe_comments)
         json_config = json.loads(clean_config)
         if type(json_config) is not dict:
             print(

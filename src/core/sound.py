@@ -8,7 +8,7 @@ Sound = Literal["eat_pac_gum", "eat_ghost", "game_lost", "victory"]
 
 class Sounds:
     def __init__(self) -> None:
-        self.firssecondeat: bool = False
+        self.chomp_toggle: bool = False
         sound_path_01 = str(
             Path(__file__).resolve().parent
             / "sounds"
@@ -39,12 +39,12 @@ class Sounds:
 
     def play_sound(self, sound: Sound) -> None:
         if sound == "eat_pac_gum":
-            if not self.firssecondeat:
+            if not self.chomp_toggle:
                 self.eat_pac_gum02.play()
-                self.firssecondeat = not self.firssecondeat
+                self.chomp_toggle = not self.chomp_toggle
             else:
                 self.eat_pac_gum01.play()
-                self.firssecondeat = not self.firssecondeat
+                self.chomp_toggle = not self.chomp_toggle
         if sound == "eat_ghost":
             self.eat_ghost.play()
         if sound == "game_lost":

@@ -3,7 +3,7 @@ from typing import cast
 import pytest
 
 from src.core.world import can_move, find_start
-from src.shared_types import Direction, Grid, Pos, WorldExeption
+from src.shared_types import Direction, Grid, Pos, WorldException
 
 U = [
     "#####",
@@ -25,13 +25,13 @@ U_large = [
     "#########",
 ]
 
-GRID_WITH_FOOR = [
+GRID_WITH_FLOOR = [
     "###",
     "#.#",
     "###",
 ]
 
-GRID_WITHOUT_FOOR = [
+GRID_WITHOUT_FLOOR = [
     "###",
     "###",
     "###",
@@ -63,6 +63,6 @@ def test_can_move(pos: Pos, direction: Direction, expected: bool) -> None:
 def test_find_start() -> None:
     assert find_start(grid_from(U)) == (2,3)
     assert find_start(grid_from(U_large)) == (3, 4)
-    assert find_start(grid_from(GRID_WITH_FOOR)) == (1, 1)
-    with pytest.raises(WorldExeption):
-        assert find_start(grid_from(GRID_WITHOUT_FOOR)) == (1, 1)
+    assert find_start(grid_from(GRID_WITH_FLOOR)) == (1, 1)
+    with pytest.raises(WorldException):
+        assert find_start(grid_from(GRID_WITHOUT_FLOOR)) == (1, 1)
