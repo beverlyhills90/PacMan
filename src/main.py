@@ -12,6 +12,7 @@ def main() -> None:
     try:
         config = validation(config_path)
         grid = build_grid_for_level(config.levels[0])
+        print(config.difficulty_level)
     except ParsingError as e:
         print(e, file=stderr)
 

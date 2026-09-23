@@ -21,7 +21,7 @@ class ParsingError(Exception):
 class Config(BaseModel):
     highscore_filename: Path = Field(default=Path("highscores.json"))
     lives: Any = Field(default=3)
-    pacgum: Any = Field(default=42)
+    difficulty_level: Any = Field(default=2)
     points_per_pacgum: Any = Field(default=10)
     points_per_super_pacgum: Any = Field(default=50)
     points_per_ghost: Any = Field(default=200)
@@ -146,18 +146,18 @@ class Config(BaseModel):
             )
             self.lives = 3
 
-        if type(self.pacgum) is not int:
+        if type(self.difficulty_level) is not int:
             print(
-                "Config warning: 'pacgum' must be an integer; "
-                "using default value 42."
+                "Config warning: 'difficulty_level' must be an integer; "
+                "using default value 2."
             )
-            self.pacgum = 42
-        elif self.pacgum < 20 or self.pacgum > 80:
+            self.difficulty_level = 2
+        elif self.difficulty_level < 1 or self.difficulty_level > 3:
             print(
-                f"Config warning: 'pacgum' must be between 20 and 80; "
-                f"got {self.pacgum!r}, using default value 42."
+                f"Config warning: 'difficulty_level' must be between 1 and 3; "
+                f"got {self.difficulty_level!r}, using default value 2."
             )
-            self.pacgum = 42
+            self.difficulty_level = 2
 
         if type(self.points_per_super_pacgum) is not int:
             print(

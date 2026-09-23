@@ -18,6 +18,8 @@ from shared_types import (
     Pos,
 )
 
+DIFFICULTY_LEVEL = {1: 0.5, 2: 0.7, 3: 0.9}
+
 
 class Game:
     def __init__(
@@ -27,12 +29,17 @@ class Game:
         speed: float = 8,
     ) -> None:
         self.speed: float = speed
-        self.ghosts_speed = speed
+        self.ghosts_speed = (
+            speed * DIFFICULTY_LEVEL[self.config.difficulty_level]
+        )
         self.config: Config = config
         self.level_index: int = 0
         self.level_grid: Grid = build_grid_for_level(self.config.levels[0])
         self.player: Player = new_player(self.level_grid, speed)
-        self.ghosts: list[Ghost] = new_ghosts(self.level_grid, speed)
+        self.ghosts: list[Ghost] = new_ghosts(
+            self.level_grid,
+            self.ghosts_speed,
+        )
         pacgums, super_pacgums = place_pacgums(
             self.level_grid, self.player.tile
         )
