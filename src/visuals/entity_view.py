@@ -70,37 +70,44 @@ class Pacman(Animation):
 
 
 class Ghost(Animation):
-    def __init__(
-        self, screen: pg.Surface, game_layout: GameLayout, size: int, name: str
-    ) -> None:
+    def __init__(self, screen: pg.Surface, game_layout: GameLayout, size: int, name: str, scared_color: str) -> None:
         super().__init__(screen)
         self.game_layout: GameLayout = game_layout
+        self.scared_color: str = scared_color
         main_path = Path(__file__).resolve().parent / "sprites" / "ghosts"
         self.name: str = name
         self.ghost_sprites: dict[str, list[pg.Surface]] = {
-            direction: [
-                pg.transform.scale(
-                    pg.image.load(
-                        f"{main_path}/ghost_{name}_{direction}_{frame}.png"
-                    ).convert_alpha(),
-                    (size, size),
-                )
-                for frame in range(GHOSTS_SPRITES_N)
-            ]
-            for direction in DIRECTIONS
-        }
+            direction: [pg.transform.scale(pg.image.load(
+                f"{main_path}/ghost_{name}_{direction}_{frame}.png").convert_alpha(),
+                (size, size)) for frame in range(GHOSTS_SPRITES_N)] for direction in DIRECTIONS}
+        self.ghost_scared_sprites: list[pg.Surface] = [pg.transform.scale(pg.image.load(
+            f"{main_path}/frightened_{scared_color}_{i}.png").convert_alpha(),
+            (size, size)) for i in range(2)]
 
     def draw_ghost(self, snapshot: GameState, dt: float) -> None:
         self.update_time(dt)
         ghost = self.find_ghost(snapshot)
-        direction = ghost.facing
+        if ghost.mode == "frightened":
+            self._draw_scare_ghost(ghost)
+        else:
+            direction = ghost.facing
+            x, y = self.game_layout.tiles_to_coordinates(ghost.pos)
+            frames = 0
+            while self.animation_elapsed >= GHOST_FRAME_DUR:
+                frames += 1
+                self.animation_elapsed -= GHOST_FRAME_DUR
+            self.update_frame(frames, GHOST_SEQUENCE)
+            sprite = self.ghost_sprites[direction][self.current_frame]
+            self.screen.blit(sprite, (x, y))
+
+    def _draw_scare_ghost(self, ghost: GhostView) -> None:
         x, y = self.game_layout.tiles_to_coordinates(ghost.pos)
         frames = 0
         while self.animation_elapsed >= GHOST_FRAME_DUR:
             frames += 1
             self.animation_elapsed -= GHOST_FRAME_DUR
         self.update_frame(frames, GHOST_SEQUENCE)
-        sprite = self.ghost_sprites[direction][self.current_frame]
+        sprite = self.ghost_scared_sprites[self.current_frame]
         self.screen.blit(sprite, (x, y))
 
     def find_ghost(self, snapshot: GameState) -> GhostView:
@@ -132,9 +139,9 @@ class EntityView:
     def create_ghosts(self) -> list[Ghost]:
         ghost_list: list[Ghost] = []
         ghost_names: list[str] = ["blinky", "pinky", "inky", "clyde"]
-        for name in ghost_names:
-            ghost = Ghost(
-                self.screen, self.game_layout, self.game_layout.tile_size, name
-            )
+        ghost_scared: list[str] = ["blue", "white", "blue", "white"]
+        for name, color in zip(ghost_names, ghost_scared):
+            ghost = Ghost(self.screen, self.game_layout,
+                          self.game_layout.tile_size, name, color)
             ghost_list.append(ghost)
         return ghost_list
