@@ -1,5 +1,4 @@
 import math
-import sys
 from json import JSONDecodeError
 
 from src.core.ghosts import Ghost, new_ghosts
@@ -34,7 +33,6 @@ class Game:
     def __init__(
         self,
         config: Config,
-        nickname: str,
         speed: float = 8,
     ) -> None:
         """Build the first level and put the game in the countdown state.
@@ -77,7 +75,6 @@ class Game:
             "SuperPacGum": self.config.points_per_super_pacgum,
         }
         self.prev_status: GameStatus = self.status
-        self.nickname: str = nickname
         self.sounds = Sounds()
 
     def update(self, dt: float, intent: Direction | None) -> None:
@@ -192,6 +189,13 @@ class Game:
             for g in self.ghosts:
                 g.frighten(4)
 
+    def save_score(self, nickname: str):
+        """save score of the session into file,after nickname input"""
+        try:
+            TopTen.save(self.config.highscore_filename, self.score, nickname)
+        except (OSError, JSONDecodeError):
+            print("Can not save the result")
+
     def respawn(self) -> None:
         """Put Pac-Man and the ghosts back on their starting tiles.
 
@@ -239,14 +243,6 @@ class Game:
         if self.level_index == len(self.config.levels) - 1:
             self.status = "victory"
             self.sounds.play_sound("victory")
-            try:
-                TopTen.save(
-                    self.config.highscore_filename, self.score, self.nickname
-                )
-            except OSError as e:
-                print(f"[Error] saving {e.errno} {e}", file=sys.stderr)
-            except JSONDecodeError as e:
-                print(f"[Error] saving {e.msg}", file=sys.stderr)
             return
         self.level_index += 1
         self._start_level(self.level_index)
@@ -274,7 +270,9 @@ class Game:
         if self.cheat_buf["slow_ghosts"]:
             self.ghosts_speed = 0.2
         else:
-            self.ghosts_speed = self.speed
+            self.ghosts_speed = (
+                self.speed * DIFFICULTY_LEVEL[self.config.difficulty_level]
+            )
         for g in self.ghosts:
             g.speed = self.ghosts_speed
 

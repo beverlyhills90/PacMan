@@ -35,7 +35,7 @@ class Visualiser:
         self.maze_view: MazeView
         self.entity_view: EntityView
         self.hud_view: HudView
-        self.game: Game = Game(config, "")
+        self.game: Game = Game(config)
         self.sounds: Sounds = Sounds()
 
         self.event_handler: EventHandler
@@ -169,5 +169,5 @@ class Visualiser:
         )
 
     def refresh_game(self) -> None:
-        self.game = Game(self.config, "".join(self.name))
+        self.game = Game(self.config)
         self.countdown_view = Countdown(self.screen, self.game)
