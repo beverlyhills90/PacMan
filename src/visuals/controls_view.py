@@ -11,6 +11,17 @@ CONTROL_LIST: list[str] = [
     "Plus Live - 1",
     "Slow Ghosts - 0",
     "Infinite Time - T",
+    "Move - Arrow keys",
+    "Pause / Resume - Esc",
+    "Menus - Mouse",
+]
+
+RULES: list[str] = [
+    "RULES:  ",
+    "Eat all dots to win the level",
+    "Big dot = eat the ghosts",
+    "Ghost touch = lose a life",
+    "No lives or time = game over",
 ]
 
 
@@ -53,7 +64,17 @@ class ControlsView:
         i = 0
         for control in CONTROL_LIST:
             control_button = MenuButton(
-                (400, 200 + i * 50),
+                (400, 100 + i * 50),
+                control,
+                None,
+                self.fonts.mid_button_font,
+                self.fonts.mid_button_hover_font,
+            )
+            button_list.append(control_button)
+            i += 1
+        for control in RULES:
+            control_button = MenuButton(
+                (400, 100 + i * 50),
                 control,
                 None,
                 self.fonts.mid_button_font,
