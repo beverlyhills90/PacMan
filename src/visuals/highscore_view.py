@@ -82,7 +82,7 @@ class HighscoreView:
         button_fitting: list[str] = []
         i = 0
         for word in message_list:
-            print(word)
+            #print(word)
             button_fitting.append(word)
             str_surface = self.fonts.small_button_font.render(
                 "".join(button_fitting), False, "white"
