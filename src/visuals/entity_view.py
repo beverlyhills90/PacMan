@@ -20,6 +20,7 @@ BLINK_PERIOD = 0.3
 
 class Pacman(Animation):
     """Draws Pac-Man with his mouth animation."""
+
     def __init__(
         self, screen: pg.Surface, game_layout: GameLayout, size: int
     ) -> None:
@@ -83,6 +84,7 @@ class Pacman(Animation):
 
 class Ghost(Animation):
     """Draws one ghost: normal, frightened, or blinking near the end of fright."""
+
     def __init__(
         self,
         screen: pg.Surface,
@@ -127,15 +129,9 @@ class Ghost(Animation):
         """
         self.update_time(dt)
         ghost = self.find_ghost(snapshot)
-        if (
-            ghost.mode == "frightened"
-            and snapshot.ghosts[0].frightened_left >= 2
-        ):
+        if ghost.mode == "frightened" and ghost.frightened_left >= 2:
             self._draw_scare_ghost(ghost)
-        elif (
-            ghost.mode == "frightened"
-            and snapshot.ghosts[0].frightened_left < 2
-        ):
+        elif ghost.mode == "frightened" and ghost.frightened_left < 2:
             self.__draw_scare_ghost_blink(ghost)
         else:
             direction = ghost.facing
@@ -187,6 +183,7 @@ class Ghost(Animation):
 
 class EntityView:
     """Draws Pac-Man and the four ghosts."""
+
     def __init__(
         self, grid: Grid, game_layout: GameLayout, screen: pg.Surface
     ) -> None:
