@@ -50,7 +50,7 @@ class MenuView:
 
         controls_button = MenuButton(
             (400, 400),
-            "Controls",
+            "Instructions",
             "controls",
             self.fonts.mid_button_font,
             self.fonts.mid_button_hover_font,
