@@ -12,6 +12,7 @@ from .buttons import Fonts, MenuButton
 
 
 class HighscoreView:
+    """Highscore screen: the top 10, or the error if the file is unreadable."""
     def __init__(
         self, screen: pg.Surface, fonts: Fonts, highscore_path: Path
     ) -> None:
@@ -32,6 +33,7 @@ class HighscoreView:
     def draw_highscore_menu(
         self, mouse_pos: tuple[int, int], dt: float
     ) -> None:
+        """Draw the highscore table (or the error) and the Back button."""
         for button in self.button_list:
             button.draw_button(self.screen, mouse_pos)
         if isinstance(self.highscore_list, str):
@@ -41,9 +43,17 @@ class HighscoreView:
             self.draw_highscore(self.highscore_list, dt)
 
     def handle_input(self, mouse_pos: tuple[int, int]) -> VisualState | None:
+        """Handle a click on the screen.
+
+        Args:
+            mouse_pos: Position of the click.
+
+        Returns:
+            The screen to switch to, or None if no button was clicked.
+        """
         for button in self.button_list:
             if button.button_rect.collidepoint(mouse_pos) is True:
-                self.sound.play_sound("eat_pac_gum")
+                self.sound.play_sound("button")
                 return button.action
         return None
 
@@ -64,6 +74,12 @@ class HighscoreView:
     def draw_highscore(
         self, highscore: list[tuple[str, int]], dt: float
     ) -> None:
+        """Draw one row per entry: the name followed by its score.
+
+        Args:
+            highscore: (name, score) pairs, best first.
+            dt: Seconds elapsed since the previous frame.
+        """
         y = 102
         for name, score in highscore:
             name_surface = self.fonts.mid_button_font.render(

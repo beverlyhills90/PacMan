@@ -23,6 +23,7 @@ from .victory_view import VictoryView
 
 
 class Visualiser:
+    """Owns the window, the game and every screen, and runs the main loop."""
     def __init__(self, player: Player, config: Config) -> None:
         self.grid: Grid
         self.config: Config = config
@@ -58,6 +59,7 @@ class Visualiser:
         self.state: VisualState = "name_input"
 
     def main_loop(self) -> None:
+        """Run the game at 60 FPS until the window is closed."""
         clock = pg.time.Clock()
         pg.display.set_caption("Pacman")
         self.set_new_level()
@@ -85,6 +87,7 @@ class Visualiser:
             pg.display.flip()
 
     def game_logic(self) -> None:
+        """React to the game status: next level, respawn, win or loss."""
         snapshot = self.game.snapshot()
 
         if snapshot.status == "level_won":
@@ -103,6 +106,11 @@ class Visualiser:
             self.countdown_view.reset_animation()
 
     def visual(self, dt: float) -> None:
+        """Draw the current screen.
+
+        Args:
+            dt: Seconds elapsed since the previous frame.
+        """
         mouse_pos = pg.mouse.get_pos()
         snapshot = self.game.snapshot()
 
@@ -147,6 +155,7 @@ class Visualiser:
             self.controls_view.draw_control_menu(mouse_pos)
 
     def set_new_level(self) -> None:
+        """Rebuild the views that depend on the current maze."""
         snapshot = self.game.snapshot()
         self.grid = snapshot.grid
 
@@ -169,5 +178,6 @@ class Visualiser:
         )
 
     def refresh_game(self) -> None:
+        """Start a new game from level 1."""
         self.game = Game(self.config)
         self.countdown_view = Countdown(self.screen, self.game)

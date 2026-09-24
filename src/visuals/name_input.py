@@ -6,6 +6,7 @@ from .buttons import Fonts, MenuButton
 
 
 class InputName:
+    """Player name entry for the highscore table."""
     def __init__(self, screen: pg.Surface, fonts: Fonts) -> None:
         self.screen: pg.Surface = screen
         self.fonts: Fonts = fonts
@@ -19,6 +20,7 @@ class InputName:
         self.name: list[str] = []
 
     def draw_imput_screen(self, mouse_pos: tuple[float, float]) -> None:
+        """Draw the prompt and the name typed so far."""
         self.input_button.draw_button(self.screen, mouse_pos, False)
         name_surface = MenuButton(
             (400, 250),
@@ -30,6 +32,17 @@ class InputName:
         name_surface.draw_button(self.screen, mouse_pos, False)
 
     def handle_input(self, event: pg.Event) -> VisualState | None:
+        """Handle a key press while typing the name.
+
+        Letters and digits are added, Backspace deletes, and Enter
+        confirms once the name has at least 3 characters.
+
+        Args:
+            event: The KEYDOWN event.
+
+        Returns:
+            "menu" when the name is confirmed, otherwise None.
+        """
         if event.key == pg.K_BACKSPACE:
             self.name = self.name[:-1]
         elif event.key == pg.K_RETURN and len(self.name) >= 3:

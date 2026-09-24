@@ -7,6 +7,7 @@ from .game_layout import GameLayout
 
 
 class HudView:
+    """In-game HUD: score, lives, level and time left."""
     def __init__(
         self, screen: pg.Surface, fonts: Fonts, game_layout: GameLayout
     ) -> None:
@@ -17,11 +18,13 @@ class HudView:
         self.offset = 170
 
     def draw_hud(self, snapshot: GameState, mouse_pos: tuple[int, int]) -> None:
+        """Draw the HUD for the current frame."""
         button_list = self.create_buttons(snapshot)
         for button in button_list:
             button.draw_button(self.screen)
 
     def create_buttons(self, snapshot: GameState) -> list[HudButton]:
+        """Build the HUD labels from the snapshot."""
         button_list: list[HudButton] = []
         button_names = [
             f"Score:{snapshot.score}",

@@ -7,6 +7,7 @@ from .buttons import Fonts, MenuButton
 
 
 class MenuView:
+    """Main menu: Start Game, Highscore, Instructions and Exit."""
     def __init__(
         self, screen: pg.Surface, fonts: Fonts, sounds: Sounds
     ) -> None:
@@ -17,17 +18,27 @@ class MenuView:
         self.button_list: list[MenuButton] = self.create_buttons()
 
     def draw_menu(self, mouse_pos: tuple[int, int]) -> None:
+        """Draw the menu buttons."""
         for button in self.button_list:
             button.draw_button(self.screen, mouse_pos)
 
     def handle_input(self, mouse_pos: tuple[int, int]) -> VisualState | None:
+        """Handle a click on the menu.
+
+        Args:
+            mouse_pos: Position of the click.
+
+        Returns:
+            The screen to switch to, or None if no button was clicked.
+        """
         for button in self.button_list:
             if button.button_rect.collidepoint(mouse_pos) is True:
-                self.sounds.play_sound("eat_pac_gum")
+                self.sounds.play_sound("button")
                 return button.action
         return None
 
     def create_buttons(self) -> list[MenuButton]:
+        """Create the menu buttons."""
         button_list: list[MenuButton] = []
 
         start_buton = MenuButton(

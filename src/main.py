@@ -12,6 +12,11 @@ from src.visuals.visualiser import Visualiser
 
 
 def main() -> None:
+    """Load the configuration and run the game.
+
+    Configuration, file and pygame errors are printed on stderr
+    instead of raising.
+    """
     args = argument_parser()
     config_path = args.config
 
@@ -32,6 +37,11 @@ def main() -> None:
 
 
 def argument_parser() -> Namespace:
+    """Parse the command line: exactly one path to a config file.
+
+    Returns:
+        Parsed arguments, with the path in `config`.
+    """
     parser = ArgumentParser("pacman")
     parser.add_argument(
         "config",

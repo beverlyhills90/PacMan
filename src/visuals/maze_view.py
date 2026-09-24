@@ -14,6 +14,7 @@ SUPER_GUM_FRAME_DUR = 540
 
 
 class WallConnection(IntFlag):
+    """Bit mask of the neighbouring walls; selects the wall sprite."""
     EMPTY = 0
     UP = 1
     RIGHT = 2
@@ -22,6 +23,7 @@ class WallConnection(IntFlag):
 
 
 class Gum:
+    """Draws a pacgum."""
     def __init__(self, screen: pg.Surface, game_layout: GameLayout) -> None:
         self.game_layout: GameLayout = game_layout
         self.screen: pg.Surface = screen
@@ -35,11 +37,13 @@ class Gum:
         )
 
     def draw_pacgum(self, pos: Pos) -> None:
+        """Draw a pacgum on the given tile."""
         x, y = self.game_layout.tiles_to_coordinates(pos)
         self.screen.blit(self.gum_sprite, (x, y))
 
 
 class SuperGum(Animation):
+    """Draws an animated super-pacgum."""
     def __init__(self, screen: pg.Surface, game_layout: GameLayout) -> None:
         super().__init__(screen)
         self.game_layout: GameLayout = game_layout
@@ -58,6 +62,12 @@ class SuperGum(Animation):
         ]
 
     def draw_super_pacgum(self, pos: Pos, dt: float) -> None:
+        """Draw a super-pacgum on the given tile.
+
+        Args:
+            pos: Tile of the super-pacgum.
+            dt: Seconds elapsed since the previous frame.
+        """
         x, y = self.game_layout.tiles_to_coordinates(pos)
         self.update_time(dt)
         frames = 0
@@ -69,6 +79,7 @@ class SuperGum(Animation):
 
 
 class MazeView:
+    """Draws the maze walls, the pacgums and the super-pacgums."""
     def __init__(
         self, grid: Grid, game_layout: GameLayout, screen: pg.Surface
     ) -> None:
@@ -92,6 +103,14 @@ class MazeView:
         self.super_gum: SuperGum = SuperGum(screen, game_layout)
 
     def draw_maze(self, snapshot: GameState, dt: float) -> None:
+        """Draw the maze for the current frame.
+
+        Each wall tile uses the sprite matching its neighbouring walls.
+
+        Args:
+            snapshot: Current game state.
+            dt: Seconds elapsed since the previous frame.
+        """
         grid_h = self.game_layout.grid_h
         grid_w = self.game_layout.grid_w
         x = self.game_layout.get_offset_x()

@@ -14,11 +14,17 @@ from src.shared_types import Level
 
 
 class ParsingError(Exception):
+    """Raised when the config file cannot be read or parsed."""
     def __init__(self, message: str) -> None:
         super().__init__(message)
 
 
 class Config(BaseModel):
+    """Game configuration validated from the JSON config file.
+
+    An invalid or missing value is replaced by its default and a
+    warning is printed; unknown keys are ignored.
+    """
     highscore_filename: Path = Field(default=Path("highscores.json"))
     lives: Any = Field(default=3)
     difficulty_level: Any = Field(default=2)
@@ -31,6 +37,7 @@ class Config(BaseModel):
     @field_validator("highscore_filename", mode="before")
     @classmethod
     def highscore_filename_validator(cls, value: Any) -> Path:
+        """Use the default file name if the value is not a string or a path."""
         if not isinstance(value, (str, Path)):
             print("Highscore filename not valid,set to default\n")
             return Path("highscores.json")
@@ -38,6 +45,11 @@ class Config(BaseModel):
 
     @model_validator(mode="after")
     def levels_validator(self) -> "Config":
+        """Make the level list usable.
+
+        Drops invalid entries, pads the list to 10 levels, and fixes
+        sizes and seeds.
+        """
         if type(self.levels) is not list:
             print(
                 f"Config warning: levels: {self.levels} is not list. "
@@ -62,6 +74,7 @@ class Config(BaseModel):
         return self
 
     def validate_levels(self) -> None:
+        """Keep only the level entries that match the Level model."""
         correct_list: list[Level] = []
         for level in self.levels:
             try:
@@ -75,6 +88,11 @@ class Config(BaseModel):
         self.levels = correct_list
 
     def create_levels(self, missing_levels: int) -> None:
+        """Append default levels; the first level of the game gets seed 42.
+
+        Args:
+            missing_levels: Number of levels to add.
+        """
         i = 10 - missing_levels
         while i < 10:
             level: Level = Level()
@@ -84,6 +102,7 @@ class Config(BaseModel):
             i += 1
 
     def check_size(self) -> None:
+        """Reset any width or height that is not an integer in 10..50 to 20."""
         for level in self.levels[:]:
             if type(level.height) is not int:
                 print(
@@ -111,6 +130,7 @@ class Config(BaseModel):
                 level.width = 20
 
     def check_seed(self) -> None:
+        """Force seed 42 on the first level and a random seed on the others."""
         if type(self.levels[0].seed) is not int:
             print(
                 "Config warning: the first level 'seed' must be an integer; "
@@ -133,6 +153,11 @@ class Config(BaseModel):
 
     @model_validator(mode="after")
     def config_validator(self) -> "Config":
+        """Clamp the numeric settings to their allowed ranges.
+
+        Each value that is not an integer or is out of range is replaced
+        by its default, with a warning.
+        """
         if type(self.lives) is not int:
             print(
                 "Config warning: 'lives' must be an integer; "
@@ -222,6 +247,21 @@ class Config(BaseModel):
 
 
 def validation(config_path: Path) -> Config:
+    """Read a config file and return the validated configuration.
+
+    Lines whose first non-blank character is "#" are comments and
+    are ignored.
+
+    Args:
+        config_path: Path to the JSON config file.
+
+    Returns:
+        The validated configuration.
+
+    Raises:
+        ParsingError: If the file cannot be read, is not UTF-8 or is
+            not valid JSON.
+    """
     try:
         raw_config = config_path.read_text("utf-8")
         wipe_comments: list[str] = []

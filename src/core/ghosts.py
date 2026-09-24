@@ -17,6 +17,13 @@ from src.shared_types import (
 
 
 class Ghost(ABC):
+    """Base class for a ghost moving tile by tile through the maze.
+
+    A ghost is in one of three modes: "chase" (hunts Pac-Man using its
+    own targeting rule), "frightened" (flees and can be eaten) or
+    "eaten" (waits in its home corner before chasing again). Direction
+    decisions are taken on tile centres with a BFS towards the target.
+    """
     def __init__(self, home: Pos, name: GhostNames, speed: float) -> None:
         self.home: Pos = home
         self.name: GhostNames = name
@@ -34,11 +41,36 @@ class Ghost(ABC):
     def chase_target(
         self, grid: Grid, pacman_tile: Pos, pacman_facing: Direction
     ) -> Pos:
+        """Return the tile this ghost aims for in chase mode.
+
+        The result may lie outside the maze or on a wall; it is snapped to
+        the nearest floor tile by the caller.
+
+        Args:
+            grid: Current maze.
+            pacman_tile: Tile Pac-Man is standing on.
+            pacman_facing: Direction Pac-Man is facing.
+
+        Returns:
+            The target tile as (col, row).
+        """
         pass
 
     def update(
         self, dt: float, grid: Grid, pacman_tile: Pos, pacman_facing: Direction
     ) -> None:
+        """Advance the ghost by one frame.
+
+        Counts down the frightened and respawn timers, then moves the ghost
+        along its current direction and picks a new direction each time it
+        reaches a tile centre.
+
+        Args:
+            dt: Seconds elapsed since the previous frame.
+            grid: Current maze.
+            pacman_tile: Tile Pac-Man is standing on.
+            pacman_facing: Direction Pac-Man is facing.
+        """
         if self.mode == "frightened":
             self._frightened_left -= dt
             if self._frightened_left <= 0.0:
@@ -58,6 +90,14 @@ class Ghost(ABC):
             self._progress -= 1
 
     def frighten(self, duration: float) -> None:
+        """Make the ghost edible for a while.
+
+        An eaten ghost is not affected. An already frightened ghost only
+        restarts its timer; otherwise the ghost turns around on the spot.
+
+        Args:
+            duration: Seconds the ghost stays frightened.
+        """
         if self.mode == "eaten":
             return
         if self.mode == "frightened":
@@ -72,6 +112,7 @@ class Ghost(ABC):
             self._progress = 1 - self._progress
 
     def reset(self) -> None:
+        """Put the ghost back on its home tile in chase mode."""
         self.tile = self.home
         self.mode = "chase"
         self.direction = "left"
@@ -87,6 +128,11 @@ class Ghost(ABC):
         self.mode = "eaten"
 
     def screen_pos(self) -> tuple[float, float]:
+        """Return the ghost position in tiles, including the move progress.
+
+        Returns:
+            (x, y) in tile units; fractional while moving between two tiles.
+        """
         x, y = self.tile
         delta_x, delta_y = DELTA[self.direction]
         res_x = x + delta_x * self._progress
@@ -153,6 +199,7 @@ class Ghost(ABC):
 
 
 class Blinky(Ghost):
+    """Red ghost: chases Pac-Man's current tile directly."""
     def __init__(
         self,
         home: Pos,
@@ -163,16 +210,19 @@ class Blinky(Ghost):
     def chase_target(
         self, grid: Grid, pacman_tile: Pos, pacman_facing: Direction
     ) -> Pos:
+        """Target Pac-Man's current tile."""
         return pacman_tile
 
 
 class Pinky(Ghost):
+    """Pink ghost: ambushes Pac-Man by aiming ahead of him."""
     def __init__(self, home: Pos, speed: float) -> None:
         super().__init__(home, "pinky", speed)
 
     def chase_target(
         self, grid: Grid, pacman_tile: Pos, pacman_facing: Direction
     ) -> Pos:
+        """Target the tile 8 tiles in front of Pac-Man."""
         pac_x, pac_y = pacman_tile
         delta_x, delta_y = DELTA[pacman_facing]
         target_x = pac_x + (delta_x * 8)
@@ -181,12 +231,14 @@ class Pinky(Ghost):
 
 
 class Inky(Ghost):
+    """Cyan ghost: cuts Pac-Man off by aiming behind him."""
     def __init__(self, home: Pos, speed: float) -> None:
         super().__init__(home, "inky", speed)
 
     def chase_target(
         self, grid: Grid, pacman_tile: Pos, pacman_facing: Direction
     ) -> Pos:
+        """Target the tile 8 tiles behind Pac-Man."""
         pac_x, pac_y = pacman_tile
         delta_x, delta_y = DELTA[pacman_facing]
         target_x = pac_x - (delta_x * 8)
@@ -195,18 +247,32 @@ class Inky(Ghost):
 
 
 class Clyde(Ghost):
+    """Orange ghost: chases from afar, retreats when close."""
     def __init__(self, home: Pos, speed: float) -> None:
         super().__init__(home, "clyde", speed)
 
     def chase_target(
         self, grid: Grid, pacman_tile: Pos, pacman_facing: Direction
     ) -> Pos:
+        """Target Pac-Man, or the home corner when within 8 tiles of him."""
         if math.dist(pacman_tile, self.tile) <= 8:
             return self.home
         return pacman_tile
 
 
 def new_ghosts(grid: Grid, speed: float) -> list[Ghost]:
+    """Create the four ghosts, one in each corner of the maze.
+
+    Each ghost's home is the floor tile closest to its corner.
+
+    Args:
+        grid: Maze of the level.
+        speed: Ghost speed in tiles per second.
+
+    Returns:
+        [Blinky, Pinky, Inky, Clyde], homed top-left, top-right,
+        bottom-left and bottom-right.
+    """
     left_up_pos = (0, 0)
     right_up_pos = (len(grid[0]), 0)
     left_down_pos = (0, len(grid))

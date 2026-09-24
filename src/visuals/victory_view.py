@@ -19,6 +19,7 @@ DIGIT_FRAME_DUR = 180
 
 
 class Fireworks(Animation):
+    """One firework animation, started after a delay."""
     def __init__(
         self, screen: pg.Surface, name: str, delay: float, pos: Pos
     ) -> None:
@@ -35,6 +36,11 @@ class Fireworks(Animation):
         self.pos: Pos = pos
 
     def draw_firework(self, dt: float) -> None:
+        """Draw the current frame; the animation plays once.
+
+        Args:
+            dt: Seconds elapsed since the previous frame.
+        """
         self.local_elapsed += dt * 1000
         if self.local_elapsed >= self.delay:
             self.update_time(dt)
@@ -50,6 +56,7 @@ class Fireworks(Animation):
 
 
 class VictoryView:
+    """End-of-game overlay for a win or a loss, with the final score."""
     def __init__(self, screen: pg.Surface, fonts: Fonts) -> None:
         self.screen: pg.Surface = screen
         self.fonts: Fonts = fonts
@@ -75,6 +82,14 @@ class VictoryView:
         snapshot: GameState,
         lost: bool = False,
     ) -> None:
+        """Draw the end-of-game overlay over the frozen game.
+
+        Args:
+            mouse_pos: Current mouse position.
+            dt: Seconds elapsed since the previous frame.
+            snapshot: Final game state.
+            lost: True for the game-over screen, False for victory.
+        """
         self.victory_surface.fill((0, 0, 0, 170))
         self.screen.blit(self.victory_surface)
         if lost is False:
@@ -90,6 +105,14 @@ class VictoryView:
         )
 
     def create_buttons(self, lost: bool = False) -> list[MenuButton]:
+        """Create the overlay labels.
+
+        Args:
+            lost: True for the game-over labels, False for victory.
+
+        Returns:
+            The labels to draw.
+        """
         button_list: list[MenuButton] = []
         if lost is True:
             button = MenuButton(

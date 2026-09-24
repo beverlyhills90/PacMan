@@ -19,6 +19,7 @@ BLINK_PERIOD = 0.3
 
 
 class Pacman(Animation):
+    """Draws Pac-Man with his mouth animation."""
     def __init__(
         self, screen: pg.Surface, game_layout: GameLayout, size: int
     ) -> None:
@@ -51,6 +52,16 @@ class Pacman(Animation):
         dt: float,
         god_mode: bool,
     ) -> None:
+        """Draw Pac-Man for this frame.
+
+        The mouth only animates while he moves; in god mode he is drawn
+        semi-transparent.
+
+        Args:
+            pacman_state: Pac-Man's position and direction.
+            dt: Seconds elapsed since the previous frame.
+            god_mode: True when the invincibility cheat is on.
+        """
         self.update_time(dt)
         x, y = self.game_layout.tiles_to_coordinates(pacman_state.pos)
         direction = pacman_state.facing
@@ -71,6 +82,7 @@ class Pacman(Animation):
 
 
 class Ghost(Animation):
+    """Draws one ghost: normal, frightened, or blinking near the end of fright."""
     def __init__(
         self,
         screen: pg.Surface,
@@ -107,6 +119,12 @@ class Ghost(Animation):
         ]
 
     def draw_ghost(self, snapshot: GameState, dt: float) -> None:
+        """Draw this ghost for the current frame.
+
+        Args:
+            snapshot: Current game state.
+            dt: Seconds elapsed since the previous frame.
+        """
         self.update_time(dt)
         ghost = self.find_ghost(snapshot)
         if (
@@ -154,6 +172,11 @@ class Ghost(Animation):
         self.screen.blit(sprite, (x, y))
 
     def find_ghost(self, snapshot: GameState) -> GhostView:
+        """Return this ghost's view from the snapshot.
+
+        Raises:
+            VisulisationError: If the snapshot has no ghost with this name.
+        """
         for ghost_view in snapshot.ghosts:
             if ghost_view.name == self.name:
                 return ghost_view
@@ -163,6 +186,7 @@ class Ghost(Animation):
 
 
 class EntityView:
+    """Draws Pac-Man and the four ghosts."""
     def __init__(
         self, grid: Grid, game_layout: GameLayout, screen: pg.Surface
     ) -> None:
@@ -175,11 +199,13 @@ class EntityView:
         self.ghosts: list[Ghost] = self.create_ghosts()
 
     def draw_entities(self, snapshot: GameState, dt: float) -> None:
+        """Draw all entities for the current frame."""
         self.pacman.draw_pacman(snapshot.player, dt, snapshot.god_mode)
         for ghost in self.ghosts:
             ghost.draw_ghost(snapshot, dt)
 
     def create_ghosts(self) -> list[Ghost]:
+        """Create one ghost view per ghost, each with its frightened colour."""
         ghost_list: list[Ghost] = []
         ghost_names: list[str] = ["blinky", "pinky", "inky", "clyde"]
         ghost_scared: list[str] = ["blue", "white", "blue", "white"]
