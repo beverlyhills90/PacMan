@@ -73,7 +73,7 @@ All of them are toggles except _level skip_ and _extra life_, which are single a
 ### Packaged build
 
 ```bash
-make build     #build for itach.io
+make build     #build for itch.io
 ```
 
 

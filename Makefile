@@ -1,7 +1,7 @@
 PYTHON = python3
 UV = uv
 
-.PHONY: all install run debug clean lint format
+.PHONY: all install run debug clean lint format build
 
 all: install lint run
 
@@ -12,14 +12,11 @@ run:
 	$(UV) run pac-man.py config.json
 
 debug:
-	$(PYTHON) -m pdb pac-man.py config.json
+	$(UV) run python -m pdb
 
 clean:
-	rm -rf __pycache__ .mypy_cache .pytest_cache .ruff_cache
+	rm -rf __pycache__ .mypy_cache .pytest_cache .ruff_cache dist/ build/
 	find . -type d -name "__pycache__" -exec rm -r {} +
-
-test:
-	$(UV) run pytest
 
 lint:
 	uv run mypy . --exclude .venv --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
