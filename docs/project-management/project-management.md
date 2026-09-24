@@ -2,10 +2,6 @@
 
 Evidence of the process behind Pac-Man (42 project *Pacman v1.5*), team of two.
 
-Reconstructed from the repository's git history on 2026-09-23: **150 commits**,
-2026-09-08 → 2026-09-23. All figures come from `git log`, `git shortlog` and per-file
-commit statistics.
-
 ---
 
 ## 1. Team organization
