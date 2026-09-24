@@ -189,7 +189,7 @@ class Game:
             for g in self.ghosts:
                 g.frighten(4)
 
-    def save_score(self, nickname: str):
+    def save_score(self, nickname: str) -> None:
         """save score of the session into file,after nickname input"""
         try:
             TopTen.save(self.config.highscore_filename, self.score, nickname)
