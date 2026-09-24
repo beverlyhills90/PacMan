@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field, ValidationError, field_validator
 
 class HighscorePlayer(BaseModel):
     """One highscore entry: a nickname and a non-negative score."""
+
     nickname: str = Field(min_length=2, max_length=12)
     score: int = Field(ge=0)
 
@@ -20,6 +21,7 @@ class HighscorePlayer(BaseModel):
 
 class TopTen(BaseModel):
     """Highscore table stored as a JSON list of entries."""
+
     players: list[HighscorePlayer]
 
     @classmethod
@@ -28,6 +30,8 @@ class TopTen(BaseModel):
         players = []
         with open(file_path) as file:
             data = json.loads(file.read())
+        if not isinstance(data, list):
+            data = []
         for pl in data:
             try:
                 player = HighscorePlayer.model_validate(pl)

@@ -12,7 +12,7 @@ run:
 	$(UV) run pac-man.py config.json
 
 debug:
-	$(UV) run python -m pdb
+	$(UV) run python -m pdb pac-man.py config.json
 
 clean:
 	rm -rf __pycache__ .mypy_cache .pytest_cache .ruff_cache dist/ build/
