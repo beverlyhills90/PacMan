@@ -41,7 +41,7 @@ class TopTen(BaseModel):
         top = []
         try:
             top = TopTen.read_top_ten(file_path).players
-        except (OSError, json.JSONDecodeError):
+        except (OSError, json.JSONDecodeError, UnicodeDecodeError):
             pass
         top.append(HighscorePlayer(nickname=nickname, score=player_score))
         top.sort(key=lambda p: p.score, reverse=True)
