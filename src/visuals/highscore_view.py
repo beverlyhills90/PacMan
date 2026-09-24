@@ -82,7 +82,7 @@ class HighscoreView:
         button_fitting: list[str] = []
         i = 0
         for word in message_list:
-            #print(word)
+            # print(word)
             button_fitting.append(word)
             str_surface = self.fonts.small_button_font.render(
                 "".join(button_fitting), False, "white"
@@ -120,7 +120,7 @@ class HighscoreView:
             highscore_list: list[tuple[str, int]] = [
                 (player.nickname, player.score) for player in top_ten.players
             ]
-            return highscore_list
+            return highscore_list[:10]
         except (OSError, JSONDecodeError) as e:
             print(e)
             return str(e)

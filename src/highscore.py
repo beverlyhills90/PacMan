@@ -33,16 +33,18 @@ class TopTen(BaseModel):
                 continue
 
         players.sort(key=lambda p: p.score, reverse=True)
-        return cls(players=players[:10])
+        return cls(players=players)
 
     @staticmethod
     def save(file_path: Path, player_score: int, nickname: str) -> None:
         """try exept OSError and jsonDecode"""
-        top = TopTen.read_top_ten(file_path)
-        top.players.append(
-            HighscorePlayer(nickname=nickname, score=player_score)
-        )
-        top.players.sort(key=lambda p: p.score, reverse=True)
+        top = []
+        try:
+            top = TopTen.read_top_ten(file_path).players
+        except (OSError, json.JSONDecodeError):
+            pass
+        top.append(HighscorePlayer(nickname=nickname, score=player_score))
+        top.sort(key=lambda p: p.score, reverse=True)
         with open(file_path, "w") as file:
-            data = [p.model_dump() for p in top.players[:10]]
+            data = [p.model_dump() for p in top]
             json.dump(data, file, ensure_ascii=False, indent=4)
