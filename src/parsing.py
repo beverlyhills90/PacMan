@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from pydantic import (
     BaseModel,
@@ -241,11 +241,15 @@ def validation(config_path: Path) -> Config:
             )
             json_config = {}
         config = Config.model_validate(json_config)
-        return config
+        return cast(Config, config)
 
     except OSError as e:
         target = e.filename if e.filename else ""
         raise ParsingError(f"Error: {e} '{target}'")
+    except ValidationError as e:
+        raise ParsingError(
+            f"Validation Error: {e}"
+        )
     except json.JSONDecodeError as e:
         raise ParsingError(
             f"Json Error: {e.msg} on line {e.lineno - 1}, column {e.colno}"

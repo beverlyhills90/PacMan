@@ -1,4 +1,9 @@
 from src.main import main
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("Bye Bye")
+    except Exception as e:
+        print(e)
