@@ -11,6 +11,18 @@ from src.shared_types import (
 
 
 def place_pacgums(grid: Grid, start: Pos) -> tuple[set[Pos], set[Pos]]:
+    """Place the pacgums and the four super-pacgums on a maze.
+
+    Super-pacgums go on the floor tiles closest to the four corners;
+    a pacgum goes on every other floor tile except the start tile.
+
+    Args:
+        grid: Maze of the level.
+        start: Pac-Man's start tile, left empty.
+
+    Returns:
+        (pacgums, super_pacgums) as sets of (col, row) tiles.
+    """
     super_set: set[Pos] = set()
     left_up_pos = (0, 0)
     right_up_pos = (len(grid[0]), 0)
@@ -30,11 +42,13 @@ def place_pacgums(grid: Grid, start: Pos) -> tuple[set[Pos], set[Pos]]:
 
 
 def tile_at(grid: Grid, pos: Pos) -> Tile:
+    """Return the tile ("wall" or "floor") at pos = (col, row)."""
     col, row = pos
     return grid[row][col]
 
 
 def neighbor(pos: Pos, direction: Direction) -> Pos:
+    """Return the tile next to pos in the given direction."""
     nc, nr = pos
     dc, dr = DELTA[direction]
 
@@ -43,12 +57,14 @@ def neighbor(pos: Pos, direction: Direction) -> Pos:
 
 
 def find_start(grid: Grid) -> Pos:
+    """Return the floor tile closest to the centre of the maze."""
     cc, cr = (len(grid[0]) // 2, len(grid) // 2)
     res = find_target(grid, (cc, cr))
     return res
 
 
 def can_move(grid: Grid, pos: Pos, direction: Direction) -> bool:
+    """Return True if the tile next to pos in direction is not a wall."""
     nc, nr = pos
     dc, dr = DELTA[direction]
 
@@ -59,6 +75,21 @@ def can_move(grid: Grid, pos: Pos, direction: Direction) -> bool:
 
 
 def find_target(grid: Grid, target_pos: Pos) -> Pos:
+    """Return the floor tile closest to target_pos (BFS).
+
+    target_pos is first clamped into the grid, so it may lie outside
+    the maze.
+
+    Args:
+        grid: Maze to search.
+        target_pos: Wanted tile as (col, row).
+
+    Returns:
+        The nearest floor tile.
+
+    Raises:
+        WorldException: If the maze has no floor tile at all.
+    """
     cc, cr = target_pos
     if cc < 0:
         cc = 0

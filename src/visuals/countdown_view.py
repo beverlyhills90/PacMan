@@ -12,6 +12,7 @@ COUNDOWN_SEQUENCY = (0, 1, 2, 3, 4, 5, 6, 7)
 
 
 class Countdown(Animation):
+    """The 3-2-1-GO animation shown before a level starts."""
     def __init__(self, screen: pg.Surface, game: Game) -> None:
         super().__init__(screen)
         self.game = game
@@ -33,6 +34,11 @@ class Countdown(Animation):
         self.total_time_ellapsed: float = 0
 
     def draw_countdown(self, dt: float) -> None:
+        """Draw the current countdown frame.
+
+        Args:
+            dt: Seconds elapsed since the previous frame.
+        """
         self.update_time(dt)
         cur_count = self.update_count(dt)
         if not cur_count:
@@ -46,6 +52,16 @@ class Countdown(Animation):
         self.screen.blit(sprite, self.count_rect)
 
     def update_count(self, dt: float) -> str | None:
+        """Advance the countdown clock.
+
+        After 4 seconds, tells the game to start playing.
+
+        Args:
+            dt: Seconds elapsed since the previous frame.
+
+        Returns:
+            Sprite name for the current second, or None once finished.
+        """
         self.total_time_ellapsed += dt * 1000
         if self.total_time_ellapsed >= 4000:
             self.game.end_countdown()
@@ -54,6 +70,7 @@ class Countdown(Animation):
         return COUNDOWN_NAMES[int(cur_number)]
 
     def reset_animation(self) -> None:
+        """Restart the countdown from 3."""
         self.current_frame = 0
         self.total_time_ellapsed = 0
         self.animation_elapsed = 0

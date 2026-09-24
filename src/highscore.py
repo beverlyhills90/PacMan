@@ -5,18 +5,21 @@ from pydantic import BaseModel, Field, ValidationError, field_validator
 
 
 class HighscorePlayer(BaseModel):
+    """One highscore entry: a nickname and a non-negative score."""
     nickname: str = Field(min_length=2, max_length=12)
     score: int = Field(ge=0)
 
     @field_validator("nickname", mode="before")
     @classmethod
     def nickname_validator(cls, value: str) -> str:
+        """Convert the nickname to a string and cut it to 10 characters."""
         if len(str(value)) > 10:
             return str(value)[:10]
         return str(value)
 
 
 class TopTen(BaseModel):
+    """Highscore table stored as a JSON list of entries."""
     players: list[HighscorePlayer]
 
     @classmethod

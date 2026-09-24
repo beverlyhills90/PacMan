@@ -17,6 +17,7 @@ _rng = random.Random()
 
 
 class MazeError(Exception):
+    """Raised when the maze generator fails or returns an invalid maze."""
     def __init__(self, msg: str = "unknown MazeError") -> None:
         super().__init__(msg)
 

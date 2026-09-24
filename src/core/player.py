@@ -3,6 +3,11 @@ from src.shared_types import DELTA, OPPOSITE, Direction, Grid, Pos
 
 
 class Player:
+    """Pac-Man: moves tile by tile and remembers the requested turn.
+
+    A requested direction that is not possible yet is kept and applied
+    at the first tile where it becomes possible.
+    """
     def __init__(self, start_pos: Pos, speed: float) -> None:
         self._start: Pos = start_pos  # (col,row)
         self.speed: float = speed  # speed in tiles
@@ -59,6 +64,7 @@ class Player:
                 self._progress = 0
 
     def reset(self) -> None:
+        """Put Pac-Man back on his start tile, standing still."""
         self.tile = self._start
         self.direction = None
         self._next_direction = None
@@ -77,4 +83,13 @@ class Player:
 
 
 def new_player(grid: Grid, speed: float) -> Player:
+    """Create Pac-Man on the floor tile closest to the maze centre.
+
+    Args:
+        grid: Maze of the level.
+        speed: Pac-Man speed in tiles per second.
+
+    Returns:
+        The new player.
+    """
     return Player(find_start(grid), speed)

@@ -12,6 +12,7 @@ from .name_input import InputName
 
 
 class EventHandler:
+    """Routes pygame events to the current screen."""
     def __init__(
         self,
         screen: pg.Surface,
@@ -31,6 +32,17 @@ class EventHandler:
     def event_handling(
         self, dt: float, state: VisualState
     ) -> VisualState | None:
+        """Handle this frame's events for the current screen.
+
+        Closing the window quits the program.
+
+        Args:
+            dt: Seconds elapsed since the previous frame.
+            state: Current screen.
+
+        Returns:
+            The screen to switch to, or None to stay.
+        """
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
@@ -53,6 +65,17 @@ class EventHandler:
         return None
 
     def game_events(self, dt: float) -> VisualState | None:
+        """Read the keyboard during play and advance the game.
+
+        Arrow keys steer Pac-Man, Esc toggles pause, and the cheat keys
+        act when released.
+
+        Args:
+            dt: Seconds elapsed since the previous frame.
+
+        Returns:
+            Always None.
+        """
         keys = pg.key.get_pressed()
         cheats = pg.key.get_just_released()
         intent: Direction | None = None
@@ -80,12 +103,14 @@ class EventHandler:
         return None
 
     def menu_events(self, event: pg.Event) -> VisualState | None:
+        """Handle a mouse click on the main menu."""
         mouse_pos = event.pos
         if event.button == 1:
             return self.menu_view.handle_input(mouse_pos)
         return None
 
     def highscore_events(self, event: pg.Event) -> VisualState | None:
+        """Handle a mouse click on the highscore screen."""
         mouse_pos = event.pos
         if event.button == 1:
             return self.highscore_view.handle_input(mouse_pos)
@@ -98,4 +123,5 @@ class EventHandler:
         return None
 
     def victory_events(self) -> VisualState | None:
+        """Leave the end-of-game screen for the main menu."""
         return "menu"
