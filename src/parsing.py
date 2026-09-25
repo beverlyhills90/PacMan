@@ -15,6 +15,7 @@ from src.shared_types import Level
 
 class ParsingError(Exception):
     """Raised when the config file cannot be read or parsed."""
+
     def __init__(self, message: str) -> None:
         super().__init__(message)
 
@@ -25,6 +26,7 @@ class Config(BaseModel):
     An invalid or missing value is replaced by its default and a
     warning is printed; unknown keys are ignored.
     """
+
     highscore_filename: Path = Field(default=Path("highscores.json"))
     lives: Any = Field(default=3)
     difficulty_level: Any = Field(default=2)
@@ -287,9 +289,7 @@ def validation(config_path: Path) -> Config:
         target = e.filename if e.filename else ""
         raise ParsingError(f"Error: {e} '{target}'")
     except ValidationError as e:
-        raise ParsingError(
-            f"Validation Error: {e}"
-        )
+        raise ParsingError(f"Validation Error: {e}")
     except json.JSONDecodeError as e:
         raise ParsingError(
             f"Json Error: {e.msg} on line {e.lineno - 1}, column {e.colno}"

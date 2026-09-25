@@ -13,6 +13,7 @@ from .buttons import Fonts, MenuButton
 
 class HighscoreView:
     """Highscore screen: the top 10, or the error if the file is unreadable."""
+
     def __init__(
         self, screen: pg.Surface, fonts: Fonts, highscore_path: Path
     ) -> None:

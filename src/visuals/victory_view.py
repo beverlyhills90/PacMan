@@ -20,6 +20,7 @@ DIGIT_FRAME_DUR = 180
 
 class Fireworks(Animation):
     """One firework animation, started after a delay."""
+
     def __init__(
         self, screen: pg.Surface, name: str, delay: float, pos: Pos
     ) -> None:
@@ -57,6 +58,7 @@ class Fireworks(Animation):
 
 class VictoryView:
     """End-of-game overlay for a win or a loss, with the final score."""
+
     def __init__(self, screen: pg.Surface, fonts: Fonts) -> None:
         self.screen: pg.Surface = screen
         self.fonts: Fonts = fonts

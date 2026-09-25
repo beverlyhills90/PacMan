@@ -15,6 +15,7 @@ SUPER_GUM_FRAME_DUR = 540
 
 class WallConnection(IntFlag):
     """Bit mask of the neighbouring walls; selects the wall sprite."""
+
     EMPTY = 0
     UP = 1
     RIGHT = 2
@@ -24,6 +25,7 @@ class WallConnection(IntFlag):
 
 class Gum:
     """Draws a pacgum."""
+
     def __init__(self, screen: pg.Surface, game_layout: GameLayout) -> None:
         self.game_layout: GameLayout = game_layout
         self.screen: pg.Surface = screen
@@ -44,6 +46,7 @@ class Gum:
 
 class SuperGum(Animation):
     """Draws an animated super-pacgum."""
+
     def __init__(self, screen: pg.Surface, game_layout: GameLayout) -> None:
         super().__init__(screen)
         self.game_layout: GameLayout = game_layout
@@ -80,6 +83,7 @@ class SuperGum(Animation):
 
 class MazeView:
     """Draws the maze walls, the pacgums and the super-pacgums."""
+
     def __init__(
         self, grid: Grid, game_layout: GameLayout, screen: pg.Surface
     ) -> None:

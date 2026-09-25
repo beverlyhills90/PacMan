@@ -28,7 +28,7 @@ class TopTen(BaseModel):
     def read_top_ten(cls, file_path: Path) -> "TopTen":
         """try exept OSError and jsonDecode"""
         players = []
-        with open(file_path) as file:
+        with open(file_path, encoding="utf-8") as file:
             data = json.loads(file.read())
         if not isinstance(data, list):
             data = []
@@ -50,7 +50,13 @@ class TopTen(BaseModel):
             top = TopTen.read_top_ten(file_path).players
         except (OSError, json.JSONDecodeError, UnicodeDecodeError):
             pass
-        top.append(HighscorePlayer(nickname=nickname, score=player_score))
+        tmp = [pl.nickname for pl in top]
+        if nickname in tmp:
+            index = tmp.index(nickname)
+            if top[index].score < player_score:
+                top[index].score = player_score
+        else:
+            top.append(HighscorePlayer(nickname=nickname, score=player_score))
         top.sort(key=lambda p: p.score, reverse=True)
         with open(file_path, "w") as file:
             data = [p.model_dump() for p in top]

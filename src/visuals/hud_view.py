@@ -8,6 +8,7 @@ from .game_layout import GameLayout
 
 class HudView:
     """In-game HUD: score, lives, level and time left."""
+
     def __init__(
         self, screen: pg.Surface, fonts: Fonts, game_layout: GameLayout
     ) -> None:

@@ -8,6 +8,7 @@ class Player:
     A requested direction that is not possible yet is kept and applied
     at the first tile where it becomes possible.
     """
+
     def __init__(self, start_pos: Pos, speed: float) -> None:
         self._start: Pos = start_pos  # (col,row)
         self.speed: float = speed  # speed in tiles

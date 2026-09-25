@@ -7,6 +7,7 @@ from src.shared_types import VisualState
 
 class Fonts:
     """The game font in its sizes; each size has a larger hover variant."""
+
     def __init__(self) -> None:
         main_font_path = (
             Path(__file__).resolve().parent / "fonts" / "PressStart2P-vaV7.ttf"
@@ -24,6 +25,7 @@ class MenuButton:
 
     A button with action None is a plain label.
     """
+
     def __init__(
         self,
         center: tuple[float, float],
@@ -66,6 +68,7 @@ class MenuButton:
 
 class HudButton:
     """A static text label of the in-game HUD."""
+
     def __init__(
         self, left: tuple[int, int], text: str, normal_font: pg.font.Font
     ) -> None:

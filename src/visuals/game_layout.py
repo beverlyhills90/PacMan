@@ -7,6 +7,7 @@ class GameLayout:
     Space is left under the maze for the HUD. get_tile_size() must
     be called before the other methods.
     """
+
     def __init__(self, grid: Grid, screen_w: int, screen_h: int) -> None:
         self.grid = grid
         self.grid_w = len(grid[0])

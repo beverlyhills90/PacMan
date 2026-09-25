@@ -13,6 +13,7 @@ COUNDOWN_SEQUENCY = (0, 1, 2, 3, 4, 5, 6, 7)
 
 class Countdown(Animation):
     """The 3-2-1-GO animation shown before a level starts."""
+
     def __init__(self, screen: pg.Surface, game: Game) -> None:
         super().__init__(screen)
         self.game = game

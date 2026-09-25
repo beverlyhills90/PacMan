@@ -24,6 +24,7 @@ class Ghost(ABC):
     "eaten" (waits in its home corner before chasing again). Direction
     decisions are taken on tile centres with a BFS towards the target.
     """
+
     def __init__(self, home: Pos, name: GhostNames, speed: float) -> None:
         self.home: Pos = home
         self.name: GhostNames = name
@@ -200,6 +201,7 @@ class Ghost(ABC):
 
 class Blinky(Ghost):
     """Red ghost: chases Pac-Man's current tile directly."""
+
     def __init__(
         self,
         home: Pos,
@@ -216,6 +218,7 @@ class Blinky(Ghost):
 
 class Pinky(Ghost):
     """Pink ghost: ambushes Pac-Man by aiming ahead of him."""
+
     def __init__(self, home: Pos, speed: float) -> None:
         super().__init__(home, "pinky", speed)
 
@@ -232,6 +235,7 @@ class Pinky(Ghost):
 
 class Inky(Ghost):
     """Cyan ghost: cuts Pac-Man off by aiming behind him."""
+
     def __init__(self, home: Pos, speed: float) -> None:
         super().__init__(home, "inky", speed)
 
@@ -248,6 +252,7 @@ class Inky(Ghost):
 
 class Clyde(Ghost):
     """Orange ghost: chases from afar, retreats when close."""
+
     def __init__(self, home: Pos, speed: float) -> None:
         super().__init__(home, "clyde", speed)
 
