@@ -19,8 +19,8 @@ from .hud_view import HudView
 from .maze_view import MazeView
 from .menu_view import MenuView
 from .name_input import InputName
-from .victory_view import VictoryView
 from .pause_view import PauseView
+from .victory_view import VictoryView
 
 
 class Visualiser:
@@ -71,7 +71,6 @@ class Visualiser:
             dt: float = clock.tick(60) / 1000
             self.screen.fill("black")
             new_state = self.event_handler.event_handling(dt, self.state)
-            print(self.game.score)
             if new_state is not None:
                 if new_state == "menu" and self.state == "name_input":
                     self.name = self.name_input.name
@@ -186,7 +185,7 @@ class Visualiser:
             self.highscore_view,
             self.controls_view,
             self.name_input,
-            self.pause_view
+            self.pause_view,
         )
 
     def refresh_game(self) -> None:
