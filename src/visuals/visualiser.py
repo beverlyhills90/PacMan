@@ -157,7 +157,6 @@ class Visualiser:
             self.victory_view.draw_victory(mouse_pos, dt, snapshot, True)
 
         if self.state == "controls":
-
             self.controls_view.draw_control_menu(mouse_pos)
 
     def set_new_level(self) -> None:

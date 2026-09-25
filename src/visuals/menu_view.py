@@ -8,6 +8,7 @@ from .buttons import Fonts, MenuButton
 
 class MenuView:
     """Main menu: Start Game, Highscore, Instructions and Exit."""
+
     def __init__(
         self, screen: pg.Surface, fonts: Fonts, sounds: Sounds
     ) -> None:
