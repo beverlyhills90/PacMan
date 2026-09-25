@@ -148,7 +148,7 @@ class VictoryView:
         button_list.append(button)
         button = MenuButton(
             (400, 400),
-            "PRESS ANY KEY TO PLAY",
+            "PRESS ANY KEY TO ENTER NAME",
             None,
             self.fonts.small_button_font,
             self.fonts.small_button_hover_font,

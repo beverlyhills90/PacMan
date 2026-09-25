@@ -24,6 +24,7 @@ from .victory_view import VictoryView
 
 class Visualiser:
     """Owns the window, the game and every screen, and runs the main loop."""
+
     def __init__(self, player: Player, config: Config) -> None:
         self.grid: Grid
         self.config: Config = config
@@ -56,7 +57,7 @@ class Visualiser:
         self.player: Player = player
         self.name: list[str] = []
 
-        self.state: VisualState = "name_input"
+        self.state: VisualState = "menu"
 
     def main_loop(self) -> None:
         """Run the game at 60 FPS until the window is closed."""
@@ -68,10 +69,11 @@ class Visualiser:
             dt: float = clock.tick(60) / 1000
             self.screen.fill("black")
             new_state = self.event_handler.event_handling(dt, self.state)
-
+            print(self.game.score)
             if new_state is not None:
-                if new_state == "menu":
+                if new_state == "menu" and self.state == "name_input":
                     self.name = self.name_input.name
+                    self.game.save_score("".join(self.name))
                     self.refresh_game()
                     self.set_new_level()
                 self.state = new_state
@@ -115,6 +117,9 @@ class Visualiser:
         snapshot = self.game.snapshot()
 
         if self.state == "name_input":
+            self.maze_view.draw_maze(snapshot, dt)
+            self.entity_view.draw_entities(snapshot, dt)
+            self.hud_view.draw_hud(snapshot, mouse_pos)
             self.name_input.draw_imput_screen(mouse_pos)
 
         if self.state == "menu":
@@ -152,6 +157,7 @@ class Visualiser:
             self.victory_view.draw_victory(mouse_pos, dt, snapshot, True)
 
         if self.state == "controls":
+
             self.controls_view.draw_control_menu(mouse_pos)
 
     def set_new_level(self) -> None:

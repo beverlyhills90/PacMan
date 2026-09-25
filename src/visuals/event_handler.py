@@ -13,6 +13,7 @@ from .name_input import InputName
 
 class EventHandler:
     """Routes pygame events to the current screen."""
+
     def __init__(
         self,
         screen: pg.Surface,
@@ -124,4 +125,4 @@ class EventHandler:
 
     def victory_events(self) -> VisualState | None:
         """Leave the end-of-game screen for the main menu."""
-        return "menu"
+        return "name_input"

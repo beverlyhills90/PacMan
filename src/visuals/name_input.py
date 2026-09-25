@@ -7,9 +7,12 @@ from .buttons import Fonts, MenuButton
 
 class InputName:
     """Player name entry for the highscore table."""
+
     def __init__(self, screen: pg.Surface, fonts: Fonts) -> None:
         self.screen: pg.Surface = screen
         self.fonts: Fonts = fonts
+
+        self.input_surface: pg.Surface = pg.Surface((screen.size), pg.SRCALPHA)
         self.input_button: MenuButton = MenuButton(
             (400, 200),
             "Enter Your Name:",
@@ -21,6 +24,8 @@ class InputName:
 
     def draw_imput_screen(self, mouse_pos: tuple[float, float]) -> None:
         """Draw the prompt and the name typed so far."""
+        self.input_surface.fill((0, 0, 0, 170))
+        self.screen.blit(self.input_surface)
         self.input_button.draw_button(self.screen, mouse_pos, False)
         name_surface = MenuButton(
             (400, 250),
