@@ -20,6 +20,7 @@ from .maze_view import MazeView
 from .menu_view import MenuView
 from .name_input import InputName
 from .victory_view import VictoryView
+from .pause_view import PauseView
 
 
 class Visualiser:
@@ -53,6 +54,7 @@ class Visualiser:
         self.victory_view = VictoryView(self.screen, self.fonts)
         self.countdown_view = Countdown(self.screen, self.game)
         self.controls_view = ControlsView(self.screen, self.fonts)
+        self.pause_view = PauseView(self.screen, self.fonts)
 
         self.player: Player = player
         self.name: list[str] = []
@@ -107,6 +109,9 @@ class Visualiser:
             self.game.respawn()
             self.countdown_view.reset_animation()
 
+        if snapshot.status == "pause":
+            self.state = "pause"
+
     def visual(self, dt: float) -> None:
         """Draw the current screen.
 
@@ -131,10 +136,11 @@ class Visualiser:
             self.hud_view.draw_hud(snapshot, mouse_pos)
             self.countdown_view.draw_countdown(dt)
 
-        if snapshot.status == "pause":
-            pause_surface = pg.Surface((800, 800), pg.SRCALPHA)
-            pause_surface.fill((0, 0, 0, 100))
-            self.screen.blit(pause_surface)
+        if self.state == "pause":
+            self.maze_view.draw_maze(snapshot, dt)
+            self.entity_view.draw_entities(snapshot, dt)
+            self.hud_view.draw_hud(snapshot, mouse_pos)
+            self.pause_view.draw_pause(mouse_pos)
 
         if self.state == "exit":
             pg.quit()
@@ -181,6 +187,7 @@ class Visualiser:
             self.highscore_view,
             self.controls_view,
             self.name_input,
+            self.pause_view
         )
 
     def refresh_game(self) -> None:

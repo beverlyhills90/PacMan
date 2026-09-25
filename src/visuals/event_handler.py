@@ -9,6 +9,7 @@ from .controls_view import ControlsView
 from .highscore_view import HighscoreView
 from .menu_view import MenuView
 from .name_input import InputName
+from .pause_view import PauseView
 
 
 class EventHandler:
@@ -22,6 +23,7 @@ class EventHandler:
         highscore_view: HighscoreView,
         controls_view: ControlsView,
         name_input: InputName,
+        pause_view: PauseView
     ) -> None:
         self.screen: pg.Surface = screen
         self.game: Game = game
@@ -29,6 +31,7 @@ class EventHandler:
         self.highscore_view: HighscoreView = highscore_view
         self.controls_view: ControlsView = controls_view
         self.name_input: InputName = name_input
+        self.pause_view: PauseView = pause_view
 
     def event_handling(
         self, dt: float, state: VisualState
@@ -60,6 +63,11 @@ class EventHandler:
                 return self._control_menu_events(event)
             if state == "name_input" and event.type == pg.KEYDOWN:
                 return self.name_input.handle_input(event)
+            if state == "pause" and event.type == pg.MOUSEBUTTONUP:
+                pause_return = self._pause_events(event)
+                if pause_return == "playing":
+                    self.game.pause()
+                return pause_return
 
         if state == "playing":
             return self.game_events(dt)
@@ -126,3 +134,9 @@ class EventHandler:
     def victory_events(self) -> VisualState | None:
         """Leave the end-of-game screen for the main menu."""
         return "name_input"
+
+    def _pause_events(self, event: pg.Event) -> VisualState | None:
+        mouse_pos = event.pos
+        if event.button == 1:
+            return self.pause_view.handle_input(mouse_pos)
+        return None

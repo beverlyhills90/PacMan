@@ -13,12 +13,14 @@ class Level(BaseModel):
 
 class WorldException(Exception):
     """Raised when the maze cannot be used to build a level."""
+
     def __init__(self, msg: str = "Unknown world exception") -> None:
         super().__init__(msg)
 
 
 class GhostException(WorldException):
     """Raised on an invalid ghost state."""
+
     def __init__(self, msg: str = "Unknown ghost exception") -> None:
         super().__init__(msg)
 
@@ -46,6 +48,7 @@ VisualState = Literal[
     "victory_screen",
     "controls",
     "lost_screen",
+    "pause"
 ]
 Pos = tuple[int, int]  # (col, row)
 
