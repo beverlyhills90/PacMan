@@ -12,6 +12,7 @@ DIGIT_FRAME_DUR = 180
 
 class Animation(ABC):
     """Base class for sprite animations: a frame index and a clock."""
+
     def __init__(self, screen: pg.Surface) -> None:
         super().__init__()
         self.screen: pg.Surface = screen
@@ -55,6 +56,7 @@ def get_centered_x(name_width: float, screen_width: int) -> float:
 
 class Highscore(Animation):
     """Draws a score with animated digit sprites."""
+
     def __init__(self, screen: pg.Surface) -> None:
         super().__init__(screen)
         main_path = Path(__file__).resolve().parent / "sprites" / "highscore_32"

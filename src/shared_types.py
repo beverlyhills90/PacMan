@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 
 class Level(BaseModel):
     """One level entry of the config: maze width, height and seed."""
+
     width: Any = Field(default=20)
     height: Any = Field(default=20)
     seed: Any = Field(default=None)
@@ -71,6 +72,7 @@ Grid: TypeAlias = list[list[Tile]]  # (row, col)
 @dataclass(frozen=True)
 class PacmanView:
     """Read-only view of Pac-Man for rendering."""
+
     pos: tuple[float, float]
     facing: Direction
     moving: bool
@@ -79,6 +81,7 @@ class PacmanView:
 @dataclass(frozen=True)
 class GhostView:
     """Read-only view of one ghost for rendering."""
+
     name: GhostNames
     pos: tuple[float, float]
     facing: Direction
@@ -89,6 +92,7 @@ class GhostView:
 @dataclass(frozen=True)
 class GameState:
     """Read-only snapshot of the whole game, rendered once per frame."""
+
     grid: Grid
     player: PacmanView
     ghosts: list[GhostView]
