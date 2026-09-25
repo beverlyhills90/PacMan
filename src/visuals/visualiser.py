@@ -127,7 +127,7 @@ class Visualiser:
             self.name_input.draw_imput_screen(mouse_pos)
 
         if self.state == "menu":
-            self.menu_view.draw_menu(mouse_pos)
+            self.menu_view.draw_menu(mouse_pos, snapshot)
 
         if self.state == "playing":
             self.maze_view.draw_maze(snapshot, dt)

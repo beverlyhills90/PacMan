@@ -1,3 +1,5 @@
+*This project has been created as part of the 42 curriculum by ypopovic, oldanyli.*
+
 
 
 # Pac-Man
@@ -64,8 +66,8 @@ All of them are toggles except _level skip_ and _extra life_, which are single a
 
 | Key | Cheat                                                                       |
 | --- | --------------------------------------------------------------------------- |
-| `G` | invincibility — ghosts no longer kill, eating frightened ghosts still works |
-| `T` | infinite time — the level timer stops counting down                         |
+| `G` | invincibility - ghosts no longer kill, eating frightened ghosts still works |
+| `T` | infinite time - the level timer stops counting down                         |
 | `0` | slow ghosts                                                                 |
 | `1` | +1 life                                                                     |
 | `L` | skip the current level                                                      |
@@ -79,10 +81,10 @@ make build     #build for itch.io
 
 ## Resources
 
-- [Pac-Man Dossier](https://pacman.holenet.info/) — reference on ghost behaviour, modes
+- [Pac-Man Dossier](https://pacman.holenet.info/) - reference on ghost behaviour, modes
   and the original targeting rules
 - [pygame-ce documentation](https://pyga.me/docs/)
-- [pydantic documentation](https://docs.pydantic.dev/) — configuration validation
+- [pydantic documentation](https://docs.pydantic.dev/) - configuration validation
 - A-Maze-ing source code
 
 ### Use of AI
@@ -281,6 +283,6 @@ The project ran as four short sprints between 2026-09-08 and 2026-09-23, with on
 developer on the engine and one on the presentation layer, personal branches and an
 integration branch, and a type contract agreed before the parallel work started.
 
-Full details — timeline with plan versus actual, decision log, risk analysis, team
+Full details - timeline with plan versus actual, decision log, risk analysis, team
 organisation, acceptance test plan with the bugs found and fixed, and the list of
-blocking points — are in **[docs/project-management/project-management.md](docs/project-management/project-management.md)**.
+blocking points - are in **[docs/project-management/project-management.md](docs/project-management/project-management.md)**.

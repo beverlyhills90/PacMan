@@ -6,7 +6,7 @@ Evidence of the process behind Pac-Man (42 project *Pacman v1.5*), team of two.
 
 ## 1. Team organization
 
-| | Developer A (``) | Developer B (``) |
+| | Developer A (`oldanyli`) | Developer B (`ypopovic`) |
 |---|---|---|
 | Scope | engine: config, maze adapter, movement, ghost AI, game rules, tests | presentation: window, rendering, scenes, HUD, highscore screen |
 | Commits | 101 | 48 (+1 merge PR) |
@@ -21,7 +21,7 @@ Merges were done manually and once through a pull request (`Merge pull request #
 
 **How decisions were made.** Anything crossing the boundary (type names, snapshot
 fields, who triggers level transitions) was agreed before implementation and recorded in
-`src/shared_types.py`. Disagreements were settled by measurement rather than opinion —
+`src/shared_types.py`. Disagreements were settled by measurement rather than opinion -
 see the greedy-vs-BFS experiment in §3.
 
 **How issues were handled.** Each defect was reproduced with a scripted scenario outside
@@ -44,8 +44,8 @@ Game code was written by the developers; the assistant committed no source code.
 | 2. Vertical slice | 09-13 → 09-16 | 33 | tile movement, ghost skeleton, `Game`, first window | ✅ |
 | 3. Full level | 09-17 → 09-19 | 64 | 4 ghosts, pacgums, scoring, level progression | ✅ |
 | 4. Meta-game | 09-21 → 09-23 | 38 | lives, pause, countdown, cheats, highscores, difficulty | ✅ |
-| 5. Packaging | — | 0 | PyInstaller, itch.io | ✅ |
-| 6. Docs & defense | 09-23 | — | README, project management | ✅ |
+| 5. Packaging | - | 0 | PyInstaller, itch.io | ✅ |
+| 6. Docs & defense | 09-23 | - | README, project management | ✅ |
 
 No commits on 09-09, 09-10, 09-20. Busiest day: 09-17 with 42 commits.
 
@@ -63,7 +63,7 @@ Tests          .  .  .  #  .  .  .  #  ## #  #  ## ##
 
 **Plan vs actual.** Sprints 1–3 matched the estimate; the parser landed a day early and
 the adapter a day late. Sprint 4 took three days instead of two. The planned robustness
-phase is only partly done, and packaging has not started — the two items that put the
+phase is only partly done, and packaging has not started - the two items that put the
 deadline at risk (§4).
 
 ---
@@ -85,7 +85,7 @@ swapped pair is immediately visible.
 validates the returned structure (list of lists, expected size, values 0–15) and raises
 `MazeError` otherwise. This was justified: the package README documents
 `MazeGenerator(width=…, height=…)` while the real signature is `size=(w, h)`,
-`seed=None` raises `TypeError`, and generation reseeds the **global** `random` module —
+`seed=None` raises `TypeError`, and generation reseeds the **global** `random` module -
 so ghosts use a private `random.Random()` instance.
 
 **Time-based movement.** Entities keep the tile they left plus `progress ∈ [0, 1)`;
@@ -126,7 +126,7 @@ the levels, then disable it and test dying. **Highscores** are a plain JSON list
 `{nickname, score}`; saving appends, sorts descending and truncates to ten, which removes
 the special cases a "better than the last one?" comparison kept getting wrong.
 **Difficulty** (1–3) maps to `{0.5, 0.7, 0.9}` and multiplies ghost speed.
-**Running out of time** ends the game rather than costing a life — this must be stated in
+**Running out of time** ends the game rather than costing a life - this must be stated in
 the root README.
 
 ---
@@ -135,14 +135,14 @@ the root README.
 
 | Risk | Mitigation | Did it happen? |
 |---|---|---|
-| Third-party maze package is undocumented or its API differs | all contact in one adapter file, output validated, `MazeError` on failure | **Yes** — README signature wrong, `seed=None` crashes, global `random` reseeded |
-| Reviewer edits the config during the defense | validation table with clamping and messages, no traceback | Partly — parser hardened, broken-config matrix not finished |
-| Two work streams diverge and conflict | contract file agreed first, integration branch, frequent merges | **Yes** — heavy merge traffic on 09-17; resolved the same day |
-| Boundary between logic and rendering erodes | engine exposes only a frozen snapshot | **Yes** — a view wrote into `game.status`; fixed with explicit methods |
-| Ghost AI feels broken (stuck or instantly lethal) | measure before choosing; four distinct targets; speed via difficulty | **Yes** — greedy version got stuck, replaced with BFS |
-| Coordinate convention confusion | single helper for grid access, non-square mazes in tests | **Yes** — three bugs, all caught by non-square tests |
-| Packaging and itch.io left to the end | planned as its own phase | **Open risk** — not started, biggest remaining threat |
-| Documentation written the night before | this folder maintained during the work | Partly — started 09-23 |
+| Third-party maze package is undocumented or its API differs | all contact in one adapter file, output validated, `MazeError` on failure | **Yes** - README signature wrong, `seed=None` crashes, global `random` reseeded |
+| Reviewer edits the config during the defense | validation table with clamping and messages, no traceback | Partly - parser hardened, broken-config matrix not finished |
+| Two work streams diverge and conflict | contract file agreed first, integration branch, frequent merges | **Yes** - heavy merge traffic on 09-17; resolved the same day |
+| Boundary between logic and rendering erodes | engine exposes only a frozen snapshot | **Yes** - a view wrote into `game.status`; fixed with explicit methods |
+| Ghost AI feels broken (stuck or instantly lethal) | measure before choosing; four distinct targets; speed via difficulty | **Yes** - greedy version got stuck, replaced with BFS |
+| Coordinate convention confusion | single helper for grid access, non-square mazes in tests | **Yes** - three bugs, all caught by non-square tests |
+| Packaging and itch.io left to the end | planned as its own phase | **Open risk** - not started, biggest remaining threat |
+| Documentation written the night before | this folder maintained during the work | Partly - started 09-23 |
 | One developer cannot explain the other's code | reviews, shared contract file, no unreviewed code | No |
 
 ---
@@ -173,21 +173,21 @@ needs many frames: chases on real mazes, collision timing, transitions between s
 |---|---|---|---|
 | 1 | Non-UTF-8 config raised a traceback | broken-config matrix | fixed |
 | 2 | Non-string `highscore_filename` raised `ValidationError` | broken-config matrix | fixed |
-| 3 | Extra `generate()` call re-randomised the seeded maze — level 1 not reproducible | adapter scenario script | fixed |
+| 3 | Extra `generate()` call re-randomised the seeded maze - level 1 not reproducible | adapter scenario script | fixed |
 | 4 | `seed=None` crashed inside the package | adapter scenario script | fixed |
-| 5 | Start tile computed as `(row, col)` — pacman spawned inside a wall; `IndexError` on non-square mazes | non-square maze test | fixed |
-| 6 | Pacgum placement transposed — 200 of 493 pacgums outside the grid | placement script | fixed |
+| 5 | Start tile computed as `(row, col)` - pacman spawned inside a wall; `IndexError` on non-square mazes | non-square maze test | fixed |
+| 6 | Pacgum placement transposed - 200 of 493 pacgums outside the grid | placement script | fixed |
 | 7 | Pacman teleported one tile on start; reversal used `progress - 1` instead of `1 - progress` | reference comparison | fixed |
 | 8 | Greedy ghosts circled forever (175 of 480 chases failed) | 480-chase measurement | fixed (BFS) |
 | 9 | BFS bugs: inner loop nested in the candidate loop, one direction checked, wrong neighbour, `while queue` on the imported module | fork-in-the-maze test | fixed |
 | 10 | `eaten` ghosts never returned to `chase`; timers compared with `== 0` | timer scenario | fixed |
-| 11 | Circular import `world ↔ ghosts` — the project did not import at all | `import game` | fixed |
-| 12 | Pacgum sets swapped on unpacking — 620 dots drawn with the animated super-gum sprite | visual flicker report | fixed |
-| 13 | `game.update` called twice per frame + a view writing `status = "playing"` — two lives lost per collision | frame-by-frame trace | fixed |
+| 11 | Circular import `world ↔ ghosts` - the project did not import at all | `import game` | fixed |
+| 12 | Pacgum sets swapped on unpacking - 620 dots drawn with the animated super-gum sprite | visual flicker report | fixed |
+| 13 | `game.update` called twice per frame + a view writing `status = "playing"` - two lives lost per collision | frame-by-frame trace | fixed |
 | 14 | Pacgum and super-pacgum point values swapped | score check | fixed |
 | 15 | Ghost speed 1 on level 1 but 8 on level 2 | speed comparison across levels | fixed |
-| 16 | After switching cheats from list to dict, `"key" not in dict` was always false — pacman immortal, timer frozen | no-cheat baseline run | fixed |
-| 17 | Highscore reader fed dicts to `model_validate_json` — table always empty; ascending sort kept the ten worst | highscore scenarios | fixed |
+| 16 | After switching cheats from list to dict, `"key" not in dict` was always false - pacman immortal, timer frozen | no-cheat baseline run | fixed |
+| 17 | Highscore reader fed dicts to `model_validate_json` - table always empty; ascending sort kept the ten worst | highscore scenarios | fixed |
 | 18 | `save` crashed with `IndexError` on an empty table | highscore scenarios | fixed |
 | 19 | Highscore read/write have no `try/except`; missing or corrupt file crashes | highscore scenarios | **open** |
 | 20 | Score is saved on victory only, not on game over | code review | **open** |
